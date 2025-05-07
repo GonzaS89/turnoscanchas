@@ -9,12 +9,12 @@ export const Canchas = ({ idCancha }) => {
   return (
     <div className='flex justify-center items-center gap-6'>
       {canchas.map((cancha) => (
-        <Link to={'/reservadeturno'}>
+        <Link to={'/reservadeturno'} key={cancha.id}>
           <div
-            key={cancha.id}
-            className='h-[250px] w-[200px] flex flex-col gap-6 items-center justify-center shadow-sm shadow-white rounded-xl bg-slate-100 cursor-pointer hover:scale-110 duration-500 ease-out' onClick={()=> idCancha(cancha.id)}>
+            
+            className='h-[300px] w-[250px] flex flex-col gap-6 items-center justify-center shadow-sm shadow-white rounded-xl bg-slate-100 cursor-pointer hover:scale-110 duration-500 ease-out' onClick={()=> idCancha(cancha.id)}>
             <img src={cancha.logo} alt="" className='w-40 rounded-full' />
-            <h2 className='uppercase font-bold'>{cancha.nombre}</h2>
+            <h2 className='uppercase font-bold text-2xl'>{cancha.nombre}</h2>
           </div>
         </Link>
 
