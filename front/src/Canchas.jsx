@@ -12,9 +12,9 @@ export const Canchas = ({ idCancha }) => {
         <Link to={'/reservadeturno'} key={cancha.id}>
           <div
             key={cancha.id}
-            className='h-[250px] w-[200px] flex flex-col gap-6 items-center justify-center shadow-sm shadow-white rounded-xl bg-slate-100 cursor-pointer hover:scale-110 duration-500 ease-out' onClick={()=> idCancha(cancha.id)}>
-            <img src={cancha.logo} alt="" className='w-40 rounded-full' />
-            <h2 className='uppercase font-bold'>{cancha.nombre}</h2>
+            className='flex h-16 w-[250px] gap-6 items-center justify-between shadow-sm shadow-white rounded-xl bg-slate-100 cursor-pointer hover:scale-110 duration-500 ease-out' onClick={()=> idCancha(cancha.id)}>
+            <img src={cancha.logo} alt="" className='h-full rounded-full' />
+            <h2 className='uppercase w-3/4 text-sm'>{cancha.nombre}</h2>
           </div>
         </Link>
 
