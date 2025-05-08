@@ -1,18 +1,20 @@
 import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const db = await mysql.createConnection({
-    host:'b7dytv4f6tpscr3avqdp-mysql.services.clever-cloud.com',
-    user:'uhuznve5mzltadzd',
-    password:'bfPKxGTF8W67LbHDPbpj',
-    database:'b7dytv4f6tpscr3avqdp'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 });
 
-db.connect((error) => {
-    if(error){
-        console.error('error al conectar la DB')
-    }else {
-        console.log('Db conectada con éxito')
-    }
-});
+try {
+  await db.connect();
+  console.log('DB conectada con éxito');
+} catch (error) {
+  console.error('Error al conectar la DB:', error.message);
+}
 
 export default db;
