@@ -31,6 +31,29 @@ app.get('/api/turnos_canchas/canchas', async (req, res) => {
   }
 })
 
+app.put("/api/turnos/:idTurno", async (req, res) => {
+  const { nombre, telefono } = req.body;
+  const { idTurno } = req.params; // Obtenemos el turno_id de los parámetros de la ruta
+
+  try {
+    const [resultado] = await db.execute(
+      `UPDATE turnos_canchas
+       SET nombre = ?, telefono = ?, estado = 'reservado'
+       WHERE id = ?`,
+      [nombre, telefono, idTurno]
+    );
+
+    if (resultado.affectedRows > 0) {
+      res.json({ mensaje: "Turno reservado correctamente" });
+    } else {
+      res.status(404).json({ error: "Turno no encontrado" });
+    }
+  } catch (error) {
+    console.error("Error al actualizar turno:", error);
+    res.status(500).json({ error: "Error al reservar turno" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Backend corriendo en http://localhost:${PORT}`);
 });

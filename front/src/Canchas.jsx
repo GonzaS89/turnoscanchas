@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useObtenerCancha } from '../customHooks/useObtenerCancha';
+import { useCanchas } from '../customHooks/useCanchas';
 
 export const Canchas = ({ idCancha }) => {
 
-  const { datos: canchas } = useObtenerCancha();
+  const { datos : canchas } = useCanchas();
 
   return (
     <div className='flex flex-col justify-center items-center gap-4'>

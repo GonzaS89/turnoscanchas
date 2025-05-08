@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useObtenerCancha } from '../customHooks/useObtenerCancha';
+import { useCanchas } from '../customHooks/useCanchas';
 import { useObtenerTurnosxCancha } from '../customHooks/useObtenerTurnosxCancha';
 
 
 export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
-  const { datos: canchas } = useObtenerCancha();
+  const { datos: canchas } = useCanchas();
   const { turnos } = useObtenerTurnosxCancha(id);
   const cancha = canchas.find((cancha) => cancha.id === id);
 
@@ -32,11 +32,16 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
         <h2 className='text-slate-100 text-center text-2xl lg:text-3xl mt-10 z-50'>Turnos disponibles</h2>
         {turnos && (
           <div className='grid grid-cols-2 lg:grid-cols-3 gap-4 mt-8'>
-            {turnos.map((turno) => (
-              <div className={`${turno.estado === 'reservado' ? 'bg-gray-800 cursor-not-allowed' : 'bg-slate-300 cursor-pointer'} py-4 px-8 rounded-lg relative flex justify-center`}>
-                <p>{formatearHora(turno.hora)}</p>
-                <p className={`text-red-700 uppercase absolute -rotate-[25deg] ${turno.estado === 'reservado' ? 'flex' : 'hidden'}`}>Reservado</p>
+            {turnos.map((turno, index) => (
+              <div
+                key={index}
+                className={`${turno.estado === 'reservado' ? 'bg-gray-800 cursor-not-allowed' : 'bg-slate-100 cursor-pointer'} py-3 px-8 rounded-lg relative flex justify-center`}
+                onClick={() => enviarIdTurno(turno.id)}>
+                <Link to={'/confirmaciondeturno'}>  <p className='text-slate-700'>{formatearHora(turno.hora)}</p>
+                  <p className={`text-red-700 uppercase absolute -rotate-[25deg] ${turno.estado === 'reservado' ? 'flex' : 'hidden'}`}>Reservado</p></Link>
               </div>
+
+
             ))}
           </div>
         )}

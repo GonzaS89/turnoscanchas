@@ -8,19 +8,22 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 function App() {
 
   const [idCancha, setIdCancha] = useState();
+  const [idTurno, setIdTurno] = useState();
 
-  const recibirIdCancha = (id) => {
-    setIdCancha(id);  
-  }
+  const recibirIdCancha = (id) => setIdCancha(id);
+  const recibirIdTurno = id => setIdTurno(id);
+
+
 
   return (
-    <div className='min-h-screen flex justify-center overflow-hidden'>
+    <div className='min-h-screen flex justify-center relative'>
+      <span className='banner-cancha top-0 absolute brightness-[45%] h-full -z-10'></span>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Canchas idCancha={recibirIdCancha}/>}></Route>
-          <Route path='/reservadeturno' element={<ReservaDeTurno id={idCancha}/>}>
+          <Route path='/' element={<Canchas idCancha={recibirIdCancha} />}></Route>
+          <Route path='/reservadeturno' element={<ReservaDeTurno id={idCancha} enviarIdTurno={recibirIdTurno} />}>
           </Route>
-          <Route path='/confirmaciondeturno' element={<ConfirmarTurno />}></Route>
+          <Route path='/confirmaciondeturno' element={<ConfirmarTurno idTurno={idTurno} idCancha={idCancha} />}></Route>
         </Routes>
       </BrowserRouter>
 
