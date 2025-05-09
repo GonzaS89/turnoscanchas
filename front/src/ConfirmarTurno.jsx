@@ -68,7 +68,6 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
 
   return (
     <div className='bg-inherit flex flex-col justify-evenly h-screen w-screen relative items-center overflow-hidden'>
-      <span className='banner-cancha top-0 absolute brightness-[45%] h-full -z-10'></span>
       {
         cancha ? (
           //   <div className='relative flex items-center justify-center gap-4 text-slate-100 top-0'>

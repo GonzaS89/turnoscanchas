@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Logo from './assets/logo-turnogol.png'
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
 
@@ -16,16 +17,16 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
   }
 
   return (
-    <div className="bg-inherit flex flex-col justify-evenly h-screen w-screen font-principal relative">
-      <span className="banner-cancha top-0 absolute brightness-[45%] h-full"></span>
+    <div className="flex flex-col justify-evenly items-center h-screen w-screen font-poppins relative">
+      <img src={Logo} alt="" className="w-36"/>
       {cancha ? (
         <div className="flex z-20 items-center justify-center gap-4">
           <img
             src={cancha.logo}
             alt=""
-            className="h-[90px] w-[90px] rounded-full"
+            className="h-[80px] w-[80px] rounded-full"
           />
-          <h2 className="uppercase text-3xl text-slate-100 font-principal shadow-md shadow-black">
+          <h2 className="uppercase text-2xl text-slate-100 font-principal">
             {cancha.nombre}
           </h2>
         </div>
@@ -33,11 +34,11 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
         <p></p>
       )}
       <div className="flex flex-col items-center w-full lg:w-1/2 my-0 mx-auto">
-        <h2 className="text-slate-100 text-center text-2xl lg:text-3xl mt-10 z-50">
+        <h2 className="text-slate-100 text-center font-bold text-2xl lg:text-3xl mt-10 z-50">
           Turnos disponibles
         </h2>
         {turnos && (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 mt-8">
             {turnos.map((turno, index) => (
               <div
                 key={index}
@@ -49,7 +50,7 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
                 onClick={() => enviarIdTurno(turno.id)}
               >
                 <Link to={"/confirmaciondeturno"} className="flex">
-                  <p className="text-slate-700">{formatearHora(turno.hora)}</p>
+                  <p className="text-gray-">{formatearHora(turno.hora)}</p>
                   <p className={`text-red-700 uppercase absolute -rotate-12 ${
                       turno.estado === "reservado" ? "flex" : "hidden"
                     }`}

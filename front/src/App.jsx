@@ -5,6 +5,7 @@ import { ReservaDeTurno } from './ReservaDeTurno';
 import { ConfirmarTurno } from './ConfirmarTurno';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+
 function App() {
 
   const [idCancha, setIdCancha] = useState();
@@ -16,8 +17,7 @@ function App() {
 
 
   return (
-    <div className='min-h-screen flex justify-center relative'>
-      <span className='banner-cancha top-0 absolute brightness-[45%] h-full -z-10'></span>
+    <div className='min-h-screen flex flex-col items-center justify-around relative fondo-app'>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Canchas idCancha={recibirIdCancha} />}></Route>

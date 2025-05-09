@@ -6,7 +6,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        principal : ["Luckiest Guy", "cursive"]
+        principal : ["Luckiest Guy", "cursive"],
+        poppins : ["Poppins", "sans-serif"]
       }
     },
   },

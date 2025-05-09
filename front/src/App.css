@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Luckiest+Guy&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 
 .logo {
   height: 6em;
@@ -43,4 +44,9 @@ width:100vw;
 background-size:cover;
 background-position:center center;
 mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+}
+
+.fondo-app{
+  background: #2A7B9B;
+background: linear-gradient(180deg, rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%);
 }
