@@ -1,68 +1,70 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import Logo from './assets/logo-turnogol.png'
-import { useCanchas } from "../customHooks/useCanchas";
-import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
+import React from 'react';
+import { useCanchas } from '../customHooks/useCanchas';
+import { useObtenerTurnosxCancha } from '../customHooks/useObtenerTurnosxCancha';
 
-export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
+export const ReservaDeTurno = ({ id }) => {
+
   const { datos: canchas } = useCanchas();
   const { turnos } = useObtenerTurnosxCancha(id);
-  const cancha = canchas.find((cancha) => cancha.id === id);
 
-  function formatearHora(horaSQL) {
-    if (!horaSQL) return "";
+  const cancha = canchas.find((item) => item.id === id);
+  const fechaHoy = new Date().toISOString().split("T")[0]; 
 
-    const [hora, minutos] = horaSQL.split(":");
-    return `${hora}:${minutos} hs`;
-  }
+
+  const formatearFecha = (fechaStr) => {
+    const fecha = new Date(fechaStr);
+    const año = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const día = String(fecha.getDate()).padStart(2, '0');
+    return `${año}-${mes}-${día}`;
+  };
+
+  const formatearHora = (horaStr) => horaStr.slice(0, 5);
+
+  
+  // Filtrar turnos que coincidan con la fecha de hoy
+  const turnosDeHoy = turnos?.filter((turno) => formatearFecha(turno.fecha) === fechaHoy);
+
+  console.log(fechaHoy)
 
   return (
-    <div className="flex flex-col justify-evenly items-center h-screen w-screen font-poppins relative">
-      <img src={Logo} alt="" className="w-36"/>
-      {cancha ? (
-        <div className="flex z-20 items-center justify-center gap-4">
-          <img
-            src={cancha.logo}
-            alt=""
-            className="h-[80px] w-[80px] rounded-full"
-          />
-          <h2 className="uppercase text-2xl text-slate-100 font-principal">
-            {cancha.nombre}
-          </h2>
-        </div>
-      ) : (
-        <p></p>
-      )}
-      <div className="flex flex-col items-center w-full lg:w-1/2 my-0 mx-auto">
-        <h2 className="text-slate-100 text-center font-bold text-2xl lg:text-3xl mt-10 z-50">
-          Turnos disponibles
-        </h2>
-        {turnos && (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 mt-8">
-            {turnos.map((turno, index) => (
-              <div
-                key={index}
-                className={`${
-                  turno.estado === "reservado"
-                    ? "bg-gray-800 cursor-not-allowed"
-                    : "bg-slate-100 cursor-pointer"
-                } py-3 px-8 rounded-lg relative flex`}
-                onClick={() => enviarIdTurno(turno.id)}
-              >
-                <Link to={"/confirmaciondeturno"} className="flex">
-                  <p className="text-gray-">{formatearHora(turno.hora)}</p>
-                  <p className={`text-red-700 uppercase absolute -rotate-12 ${
-                      turno.estado === "reservado" ? "flex" : "hidden"
-                    }`}
-                  >
-                    Reservado
-                  </p>
-                </Link>
-              </div>
-            ))}
-          </div>
+    <section className="w-full h-screen flex flex-col justify-center gap-8 bg-gradient-to-b from-white via-green-50 to-green-400 p-5">
+      <header className="mb-6">
+        <h1 className="text-3xl font-extrabold text-center text-green-700 tracking-tight drop-shadow-sm">
+          Elegí tu Turno ⚽
+        </h1>
+        {cancha && (
+          <p className="text-center text-sm text-gray-500 mt-1 uppercase">
+            Cancha: <span className="font-medium">{cancha.nombre}</span>
+          </p>
         )}
-      </div>
-    </div>
+      </header>
+
+      {turnosDeHoy ? (
+        <div className="flex flex-col gap-4 py-4 overflow-scroll">
+          {turnosDeHoy.length === 0 ? (
+            <p className="text-center text-lg text-gray-600">No hay turnos disponibles para hoy.</p>
+          ) : (
+            turnosDeHoy.map((turno) => (
+              <button
+                key={turno.id}
+                disabled={turno.estado === 'reservado'}
+                className={`flex items-center gap-4 py-6 bg-white rounded-2xl p-4 shadow-md hover:shadow-lg hover:bg-green-100 transition-all duration-200 active:scale-95 group ${turno.estado === 'reservado' ? 'cursor-not-allowed bg-gray-200 text-gray-500' : 'text-green-600'}`}
+                onClick={() => console.log("Reservar turno", turno.id)}
+              >
+                <p className="text-lg font-semibold text-gray-800 group-hover:text-green-800 transition">
+                  {formatearHora(turno.hora)}
+                </p>
+                {turno.estado === 'reservado' ? (
+                  <p className="text-xs text-gray-500">Reservado</p>
+                ) : (
+                  <p className="text-xs text-gray-500">Disponible</p>
+                )}
+              </button>
+            ))
+          )}
+        </div>
+      ) : null}
+    </section>
   );
 };
