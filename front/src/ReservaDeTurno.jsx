@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useCanchas } from '../customHooks/useCanchas';
 import { useObtenerTurnosxCancha } from '../customHooks/useObtenerTurnosxCancha';
 
-export const ReservaDeTurno = ({ id }) => {
+export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
 
   const { datos: canchas } = useCanchas();
   const { turnos } = useObtenerTurnosxCancha(id);
@@ -41,26 +42,29 @@ export const ReservaDeTurno = ({ id }) => {
       </header>
 
       {turnosDeHoy ? (
-        <div className="flex flex-col gap-4 py-4 overflow-scroll">
+        <div className="flex flex-col gap-4 py-4 h-[500px] overflow-scroll">
           {turnosDeHoy.length === 0 ? (
             <p className="text-center text-lg text-gray-600">No hay turnos disponibles para hoy.</p>
           ) : (
             turnosDeHoy.map((turno) => (
-              <button
+              <Link to={'/confirmaciondeturno'} className='w-full'>
+               <button
                 key={turno.id}
                 disabled={turno.estado === 'reservado'}
-                className={`flex items-center gap-4 py-6 bg-white rounded-2xl p-4 shadow-md hover:shadow-lg hover:bg-green-100 transition-all duration-200 active:scale-95 group ${turno.estado === 'reservado' ? 'cursor-not-allowed bg-gray-200 text-gray-500' : 'text-green-600'}`}
-                onClick={() => console.log("Reservar turno", turno.id)}
+                className={`flex items-center gap-4 py-6 w-full bg-white rounded-2xl p-4 shadow-md hover:shadow-lg hover:bg-green-100 transition-all duration-200 active:scale-95 group ${turno.estado === 'reservado' ? 'cursor-not-allowed bg-gray-200 text-gray-500' : 'text-green-600'}`}
+                onClick={() => enviarIdTurno(turno.id)}
               >
                 <p className="text-lg font-semibold text-gray-800 group-hover:text-green-800 transition">
                   {formatearHora(turno.hora)}
                 </p>
                 {turno.estado === 'reservado' ? (
-                  <p className="text-xs text-gray-500">Reservado</p>
+                  <p className="text-xs text-gray-800">Reservado</p>
                 ) : (
                   <p className="text-xs text-gray-500">Disponible</p>
                 )}
               </button>
+              </Link>
+             
             ))
           )}
         </div>
