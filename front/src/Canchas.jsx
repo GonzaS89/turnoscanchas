@@ -1,10 +1,11 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCanchas } from '../customHooks/useCanchas';
+import { useObtenerTurnosxCancha } from '../customHooks/useObtenerTurnosxCancha';
 
 export const Canchas = ({ idCancha }) => {
 
   const { datos : canchas } = useCanchas();
+  
 
   return (
     
@@ -40,6 +41,7 @@ export const Canchas = ({ idCancha }) => {
                   {cancha.nombre}
                 </p>
                 <p className="text-xs text-gray-500">Toque para reservar</p>
+               
               </div>
   
               <div className="text-green-600 text-xl font-bold">

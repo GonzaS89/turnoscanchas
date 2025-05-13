@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'
 import { useCanchas } from '../customHooks/useCanchas';
 import { useObtenerTurnosxCancha } from '../customHooks/useObtenerTurnosxCancha';
-import { FaCheckCircle } from 'react-icons/fa'; // Icono para el check de confirmación
+import { FaCheckCircle } from 'react-icons/fa'; 
 
 export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   const { datos: canchas } = useCanchas();
@@ -11,12 +12,12 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   const cancha = canchas.find((cancha) => cancha.id === idCancha);
   const turno = turnos && turnos.find((turno) => turno.id === idTurno);
 
-  console.log(idTurno)
-
-  const [formData, setFormData] = useState({ nombre: '', telefono: '' });
+  const [formData, setFormData] = useState({ nombre: '', telefono: '', dni: '' });
   const [isData, setIsData] = useState(false);
   const [showModal, setShowModal] = useState(false); // Para mostrar el modal de confirmación
   const [turnoConfirmado, setTurnoConfirmado] = useState(false); // Para saber si el turno fue confirmado
+
+  const navigate = useNavigate();
 
   function formatearFecha(fechaString) {
     const fecha = new Date(fechaString);
@@ -51,6 +52,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
         {
           nombre: formData.nombre,
           telefono: formData.telefono,
+          dni: formData.dni
         }
       );
 
@@ -64,6 +66,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
 
   // Manejar el cierre del modal
   const closeModal = () => {
+    navigate('/')
     setShowModal(false);
     setFormData({ nombre: '', telefono: '' });
     setIsData(false);
@@ -96,12 +99,25 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
                   required
                 />
               </div>
+              {/* Campo para DNI */}
+              <div className="flex flex-col">
+                <label className="text-sm font-semibold text-gray-700 mb-2">DNI</label>
+                <input
+                  type="number"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Ingresá tu dni"
+                  name="dni"
+                  value={formData.dni}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
               {/* Campo para teléfono */}
               <div className="flex flex-col">
                 <label className="text-sm font-semibold text-gray-700 mb-2">Teléfono</label>
                 <input
-                  type="text"
+                  type="number"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                   placeholder="Ingresá tu teléfono"
                   name="telefono"
@@ -110,6 +126,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
                   required
                 />
               </div>
+              
 
               {/* Botón para enviar el formulario */}
               <button
@@ -132,14 +149,16 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
                 <h3 className="text-xl font-semibold text-center text-gray-800 mb-6">Confirmar Reserva</h3>
 
                 <div className="mb-4">
-                  <p className="font-semibold text-lg text-gray-700">Cancha: {cancha.nombre}</p>
+                  <p className="font-semibold text-lg text-gray-700 capitalize">Cancha: {cancha.nombre}</p>
                   <p className="font-semibold text-lg text-gray-700">Hora: {turno && formatearHora(turno.hora)}</p>
                   <p className="font-semibold text-lg text-gray-700">Fecha: {turno && formatearFecha(turno.fecha)}</p>
                   <p className="font-semibold text-lg text-gray-700">A nombre de: {formData.nombre}</p>
+                  <p className="font-semibold text-lg text-gray-700">DNI: {formData.dni}</p>
                   <p className="font-semibold text-lg text-gray-700">Teléfono: {formData.telefono}</p>
                 </div>
 
                 <div className="flex justify-center gap-4">
+        
                   {/* Botón para confirmar el turno */}
                   <button
                     className="bg-green-600 text-white py-3 px-6 rounded-lg font-semibold"
@@ -149,7 +168,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
                   >
                     Confirmar Turno
                   </button>
-
+  
                   {/* Botón para cerrar el modal */}
                   <button
                     className="bg-gray-400 text-white py-3 px-6 rounded-lg font-semibold"
@@ -165,12 +184,12 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
           {/* Si el turno fue confirmado, mostrar el check */}
           {turnoConfirmado && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white p-6 rounded-lg max-w-xs w-full text-center">
+              <div className="bg-white p-6 rounded-lg max-w-xs w-full text-center flex flex-col items-center">
                 <FaCheckCircle className="text-green-600 text-6xl mb-4" />
                 <h3 className="font-semibold text-lg text-gray-800">¡Turno Confirmado!</h3>
                 <p className="text-gray-700">Tu turno ha sido reservado correctamente.</p>
                 <button
-                  className="mt-6 bg-green-600 text-white py-3 px-6 rounded-lg font-semibold"
+                  className="mt-6 w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold"
                   onClick={closeModal}
                 >
                   Cerrar

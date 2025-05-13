@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 import './App.css'
 import { Canchas } from './Canchas';
 import { ReservaDeTurno } from './ReservaDeTurno';
@@ -10,9 +10,15 @@ function App() {
 
   const [idCancha, setIdCancha] = useState();
   const [idTurno, setIdTurno] = useState();
+  const [turnosLibres, setTurnosLibres] = useState();
 
   const recibirIdCancha = (id) => setIdCancha(id);
   const recibirIdTurno = id => setIdTurno(id);
+
+  const recibirTurnosLibres = turnos => {
+    console.log(turnos)
+    setTurnosLibres(turnos)
+  }
 
 
 
@@ -21,7 +27,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Canchas idCancha={recibirIdCancha} />}></Route>
-          <Route path='/reservadeturno' element={<ReservaDeTurno id={idCancha} enviarIdTurno={recibirIdTurno} />}>
+          <Route path='/reservadeturno' element={<ReservaDeTurno id={idCancha} enviarIdTurno={recibirIdTurno} turnosLibres={recibirTurnosLibres}/>}>
           </Route>
           <Route path='/confirmaciondeturno' element={<ConfirmarTurno idTurno={idTurno} idCancha={idCancha} />}></Route>
         </Routes>
