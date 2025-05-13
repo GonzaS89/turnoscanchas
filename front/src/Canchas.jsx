@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { useCanchas } from '../customHooks/useCanchas';
-import { useObtenerTurnosxCancha } from '../customHooks/useObtenerTurnosxCancha';
 
 export const Canchas = ({ idCancha }) => {
 

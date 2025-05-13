@@ -1,41 +1,53 @@
-import { use, useState } from 'react';
-import './App.css'
+import { useState } from 'react';
+import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import { PantallaInicial } from './PantallaInicial';
 import { Canchas } from './Canchas';
 import { ReservaDeTurno } from './ReservaDeTurno';
 import { ConfirmarTurno } from './ConfirmarTurno';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
+import { LoginCancha } from './LoginCancha'; // <-- Asegurate de tener este componente creado
+import { PanelCancha } from './PanelCancha';
 
 function App() {
-
   const [idCancha, setIdCancha] = useState();
   const [idTurno, setIdTurno] = useState();
   const [turnosLibres, setTurnosLibres] = useState();
 
-  const recibirIdCancha = (id) => setIdCancha(id);
-  const recibirIdTurno = id => setIdTurno(id);
-
-  const recibirTurnosLibres = turnos => {
-    console.log(turnos)
-    setTurnosLibres(turnos)
-  }
-
-
-
   return (
-    <div className='min-h-screen flex flex-col items-center justify-around relative fondo-app'>
+    <div className="min-h-screen flex flex-col items-center justify-around relative fondo-app">
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Canchas idCancha={recibirIdCancha} />}></Route>
-          <Route path='/reservadeturno' element={<ReservaDeTurno id={idCancha} enviarIdTurno={recibirIdTurno} turnosLibres={recibirTurnosLibres}/>}>
-          </Route>
-          <Route path='/confirmaciondeturno' element={<ConfirmarTurno idTurno={idTurno} idCancha={idCancha} />}></Route>
+
+          {/* Pantalla inicial */}
+          <Route path="/" element={<PantallaInicial />} />
+
+          {/* Vista para jugadores */}
+          <Route path="/canchas" element={<Canchas idCancha={setIdCancha} />} />
+          <Route
+            path="/reservadeturno"
+            element={
+              <ReservaDeTurno
+                id={idCancha}
+                enviarIdTurno={setIdTurno}
+                turnosLibres={setTurnosLibres}
+              />
+            }
+          />
+          <Route
+            path="/confirmaciondeturno"
+            element={<ConfirmarTurno idTurno={idTurno} idCancha={idCancha} />}
+          />
+
+          {/* Vista para dueños */}
+          <Route path="/login-cancha" element={<LoginCancha />} />
+          <Route path="/panelcancha" element={<PanelCancha />} /> 
+          {/* Agregar más rutas para dueños según lo que necesites después del login */}
+
         </Routes>
       </BrowserRouter>
-
-
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -57,6 +57,31 @@ app.put("/api/turnos/:idTurno", async (req, res) => {
   }
 });
 
+/* LIBERAR TURNO */
+
+app.put("/api/turnos_canchas/liberar", async (req, res) => {
+  const { id } = req.body;
+
+  try {
+    const [resultado] = await db.execute(
+      `UPDATE turnos_canchas 
+       SET estado = 'disponible', nombre = NULL, dni = NULL  
+       WHERE id = ?`,
+      [id]
+    );
+
+    if (resultado.affectedRows > 0) {
+      res.json({ mensaje: "Turno liberado correctamente" });
+    } else {
+      res.status(404).json({ error: "Turno no encontrado" });
+    }
+  } catch (error) {
+    console.error("Error al liberar turno:", error);
+    res.status(500).json({ error: "Error al liberar turno" });
+  }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Backend corriendo en http://localhost:${PORT}`);
 });
