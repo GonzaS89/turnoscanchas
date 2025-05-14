@@ -38,11 +38,11 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   };
 
   // Función para formatear la hora
-  function formatearHora(horaSQL) {
-    if (!horaSQL) return '';
-    const [hora, minutos] = horaSQL.split(':');
-    return `${hora}:${minutos} hs`;
-  }
+  const formatearFecha = (fechaStr) => {
+    const [año, mes, día] = fechaStr.split("T")[0].split("-");
+    return `${día}-${mes}`;
+  };
+  
 
   // Reservar el turno mediante la API
   const reservarTurno = async () => {
