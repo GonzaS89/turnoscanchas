@@ -94,10 +94,10 @@ export const PanelCancha = () => {
                 <h3 className="text-xl font-semibold text-gray-800">{fecha}</h3>
                 <button
                   onClick={() => toggleFechaVisibility(fecha)}
-                  className="text-green-600 hover:text-green-700"
+                  className="text-sm text-gray-500 shadow-lg py-2 px-2 border-2 border-gray-200 rounded-sm"
                 >
                   {fechaVisible[fecha] ? "Ocultar" : "Mostrar"} turnos
-                </button> x
+                </button>
               </div>
               {fechaVisible[fecha] && ( 
                <ul className="space-y-4 mt-4">

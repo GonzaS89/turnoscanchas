@@ -20,8 +20,6 @@ export const LoginCancha = () => {
       (cancha) => cancha.usuario === usuario && cancha.contrasena === contrasena
     );
 
-    console.log(canchaEncontrada)
-
     if (canchaEncontrada) {
       navigate("/panelcancha", { state: { cancha: canchaEncontrada } });
     } else {

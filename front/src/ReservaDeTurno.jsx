@@ -46,9 +46,12 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
             </p>
           ) : (
             turnosDeHoy.map((turno) => (
-              <Link to={"/confirmaciondeturno"} key={turno.id} className="w-full">
+              <Link
+                to={"/confirmaciondeturno"}
+                key={turno.id}
+                className="w-full"
+              >
                 <button
-                  
                   disabled={turno.estado === "reservado"}
                   onClick={() => enviarIdTurno(turno.id)}
                   className={`
