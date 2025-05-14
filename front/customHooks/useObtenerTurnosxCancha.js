@@ -7,6 +7,7 @@ export const useObtenerTurnosxCancha = (id) => {
   const [turnos, setTurnos] = useState();
 
   useEffect(() => {
+    console.log("ID recibido:", id);
     const obtenerDatos = async () => {
       try {
         const res = await axios.get(`${API_URL}?id=${id}`);

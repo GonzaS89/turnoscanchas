@@ -5,10 +5,21 @@ import { useEffect } from "react";
 
 export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
   const { datos: canchas } = useCanchas();
-  const { turnos } = useObtenerTurnosxCancha(id);
-
   const cancha = canchas.find((item) => item.id === id);
-  const fechaHoy = new Date().toLocaleDateString("sv-SE"); // formato "YYYY-MM-DD"
+  const { turnos } = useObtenerTurnosxCancha(cancha?.id);
+
+  // useEffect(() => {
+  //   console.log(turnos)
+  // },[turnos])
+
+  
+  const fechaHoy = new Date().toISOString().split("T")[0]; // formato "YYYY-MM-DD"
+
+const turnosDeHoy = turnos?.filter((turno) => {
+  const fechaTurno = turno.fecha.split("T")[0]; // también "YYYY-MM-DD"
+  return fechaTurno === fechaHoy;
+});
+
 
   const formatearFecha = (fechaStr) => {
     const fecha = new Date(fechaStr);
@@ -21,9 +32,7 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
   const formatearHora = (horaStr) => horaStr.slice(0, 5);
 
   // Filtrar turnos que coincidan con la fecha de hoy
-  const turnosDeHoy = turnos?.filter(
-    (turno) => formatearFecha(turno.fecha) === fechaHoy
-  );
+  
 
   return (
     <div className="w-full h-screen flex flex-col justify-center gap-8 bg-gradient-to-b from-white via-green-50 to-green-400 p-5">
