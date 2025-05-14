@@ -15,10 +15,15 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
   
   const fechaHoy = new Date().toISOString().split("T")[0]; // formato "YYYY-MM-DD"
 
-const turnosDeHoy = turnos?.filter((turno) => {
-  const fechaTurno = turno.fecha.split("T")[0]; // también "YYYY-MM-DD"
-  return fechaTurno === fechaHoy;
-});
+  const turnosDeHoy = turnos?.filter((turno) => {
+    const fechaTurno = turno.fecha.split("T")[0]; // también "YYYY-MM-DD"
+    return fechaTurno === fechaHoy;
+  }).sort((a, b) => {
+    const horaA = a.hora === "00:00" ? "24:00" : a.hora;
+    const horaB = b.hora === "00:00" ? "24:00" : b.hora;
+    return horaA.localeCompare(horaB); // Ordenar las horas de menor a mayor
+  });
+  
 
 
   const formatearFecha = (fechaStr) => {
