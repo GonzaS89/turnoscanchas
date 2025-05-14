@@ -19,10 +19,18 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
     const fechaTurno = turno.fecha.split("T")[0]; // también "YYYY-MM-DD"
     return fechaTurno === fechaHoy;
   }).sort((a, b) => {
-    const horaA = a.hora === "00:00" ? "23:59" : a.hora; // Mantener 00:00 al final
-    const horaB = b.hora === "00:00" ? "23:59" : b.hora; // Mantener 00:00 al final
-    return horaA.localeCompare(horaB); // Ordenar de menor a mayor
+    // Convertir las horas en minutos desde las 00:00 para hacer una comparación correcta
+    const getMinutos = (horaStr) => {
+      const [hora, minutos] = horaStr.split(":").map(Number);
+      return hora === 0 ? 1440 : hora * 60 + minutos; // 1440 minutos para las 00:00
+    };
+  
+    const minutosA = getMinutos(a.hora);
+    const minutosB = getMinutos(b.hora);
+  
+    return minutosA - minutosB; // Ordenar de menor a mayor
   });
+  
   
   
 
