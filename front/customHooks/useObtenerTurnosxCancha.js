@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_URL = "turnoscanchas-production.up.railway.app/api/turnos_canchas/canchas";
+const API_URL = "https://turnoscanchas-production.up.railway.app/api/turnos_canchas/canchas";
 
 export const useObtenerTurnosxCancha = (id) => {
   const [turnos, setTurnos] = useState();
