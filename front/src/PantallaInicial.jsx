@@ -15,7 +15,7 @@ export const PantallaInicial = () => {
           to="/canchas"
           className="bg-white text-green-700 text-lg font-semibold p-4 rounded-2xl shadow-md hover:shadow-lg hover:bg-green-100 transition-all duration-200 active:scale-95 text-center"
         >
-          Soy Jugador / Quiero reservar
+          Quiero reservar un turno
         </Link>
 
         <Link

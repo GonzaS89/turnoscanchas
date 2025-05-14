@@ -11,7 +11,7 @@ export const VerTurnos = () => {
     const [turnosAgrupados, setTurnosAgrupados] = useState({});
     const [fechaVisible, setFechaVisible] = useState({});
 
-    useEffect(() => {
+    useEffect(() => { 
         if (cancha?.id) {
             axios
                 .get(`https://turnoscanchas-production.up.railway.app/api/turnos_canchas/canchas?id=${cancha.id}`)
@@ -58,7 +58,7 @@ export const VerTurnos = () => {
 
     const ponerDisponible = async (turnoId) => {
         try {
-            await axios.put(`http://localhost:3001/api/turnos_canchas/liberar`, { id: turnoId });
+            await axios.put(`https://turnoscanchas-production.up.railway.app/api/turnos_canchas/liberar`, { id: turnoId });
 
             setTurnos((prevTurnos) =>
                 prevTurnos.map((turno) =>
@@ -77,7 +77,7 @@ export const VerTurnos = () => {
         if (!confirmar) return;
 
         try {
-            await axios.delete(`http://localhost:3001/api/turnos_canchas/${turnoId}`);
+            await axios.delete(`https://turnoscanchas-production.up.railway.app/api/turnos_canchas/${turnoId}`);
             setTurnos((prevTurnos) => prevTurnos.filter((turno) => turno.id !== turnoId));
         } catch (error) {
             console.error("Error al eliminar turno:", error);

@@ -15,7 +15,6 @@ import { AgregarTurno } from './AgregarTurno';
 function App() {
   const [idCancha, setIdCancha] = useState();
   const [idTurno, setIdTurno] = useState();
-  const [turnosLibres, setTurnosLibres] = useState();
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-around relative fondo-app">
@@ -33,7 +32,7 @@ function App() {
               <ReservaDeTurno
                 id={idCancha}
                 enviarIdTurno={setIdTurno}
-                turnosLibres={setTurnosLibres}
+               
               />
             }
           />

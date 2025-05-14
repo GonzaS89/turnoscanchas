@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCanchas } from '../customHooks/useCanchas';
 import { useObtenerTurnosxCancha } from '../customHooks/useObtenerTurnosxCancha';
 import { FaCheckCircle } from 'react-icons/fa'; 
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   const { datos: canchas } = useCanchas();

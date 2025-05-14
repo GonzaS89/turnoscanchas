@@ -24,7 +24,6 @@ export const AgregarTurno = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-git
     try {
       await Promise.all(
         horarios.map((hora) =>
