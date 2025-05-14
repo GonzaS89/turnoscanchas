@@ -35,13 +35,14 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
     const [año, mes, día] = fechaStr.split("T")[0].split("-");
     return `${día}-${mes}`;
   };
-  
+
+  const formatearHora = (hora) => hora.slice(0, 5);
 
   // Reservar el turno mediante la API
   const reservarTurno = async () => {
     try {
       const res = await axios.put(
-        `turnoscanchas-production.up.railway.app/api/turnos/${idTurno}`,
+        `https://turnoscanchas-production.up.railway.app/api/turnos/${idTurno}`,
         {
           nombre: formData.nombre,
           telefono: formData.telefono,
@@ -143,7 +144,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
 
                 <div className="mb-4">
                   <p className="font-semibold text-lg text-gray-700 capitalize">Cancha: {cancha.nombre}</p>
-                  <p className="font-semibold text-lg text-gray-700">Hora: {turno && formatearHora(turno.hora)}</p>
+                  <p className="font-semibold text-lg text-gray-700">Hora: {(formatearHora(turno.hora))}</p>
                   <p className="font-semibold text-lg text-gray-700">Fecha: {turno && formatearFecha(turno.fecha)}</p>
                   <p className="font-semibold text-lg text-gray-700">A nombre de: {formData.nombre}</p>
                   <p className="font-semibold text-lg text-gray-700">DNI: {formData.dni}</p>
