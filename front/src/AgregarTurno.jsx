@@ -28,7 +28,7 @@ export const AgregarTurno = () => {
     try {
       await Promise.all(
         horarios.map((hora) =>
-          axios.post("http://localhost:3001/api/turnos_canchas", {
+          axios.post("https://turnoscanchas.onrender.com/api/turnos_canchas", {
             hora,
             cancha_id: cancha.id,
             estado: "disponible"

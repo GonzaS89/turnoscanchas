@@ -48,7 +48,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   const reservarTurno = async () => {
     try {
       const res = await axios.put(
-        `http://localhost:3001/api/turnos/${idTurno}`,
+        `https://turnoscanchas.onrender.com/api/turnos/${idTurno}`,
         {
           nombre: formData.nombre,
           telefono: formData.telefono,
