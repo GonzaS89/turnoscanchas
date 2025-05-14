@@ -14,7 +14,7 @@ export const VerTurnos = () => {
     useEffect(() => {
         if (cancha?.id) {
             axios
-                .get(`https://turnoscanchas.onrender.com/api/turnos_canchas/canchas?id=${cancha.id}`)
+                .get(`turnoscanchas-production.up.railway.app/api/turnos_canchas/canchas?id=${cancha.id}`)
                 .then((res) => {
                     const turnosOrdenados = res.data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
                     setTurnos(turnosOrdenados);
