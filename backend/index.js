@@ -99,6 +99,26 @@ app.post("/api/turnos_canchas", async (req, res) => {
   }
 });
 
+/* BORRAR TURNO */
+
+app.delete("/api/turnos_canchas/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [resultado] = await db.execute("DELETE FROM turnos_canchas WHERE id = ?", [id]);
+
+    if (resultado.affectedRows > 0) {
+      res.json({ mensaje: "Turno eliminado correctamente" });
+    } else {
+      res.status(404).json({ error: "Turno no encontrado" });
+    }
+  } catch (error) {
+    console.error("Error al eliminar turno:", error);
+    res.status(500).json({ error: "Error al eliminar turno" });
+  }
+});
+
+
 
 
 app.listen(PORT, () => {
