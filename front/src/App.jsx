@@ -8,6 +8,9 @@ import { ReservaDeTurno } from './ReservaDeTurno';
 import { ConfirmarTurno } from './ConfirmarTurno';
 import { LoginCancha } from './LoginCancha'; // <-- Asegurate de tener este componente creado
 import { PanelCancha } from './PanelCancha';
+import { VerTurnos } from './VerTurnos';
+import { AgregarTurno } from './AgregarTurno';
+
 
 function App() {
   const [idCancha, setIdCancha] = useState();
@@ -42,6 +45,8 @@ function App() {
           {/* Vista para dueños */}
           <Route path="/login-cancha" element={<LoginCancha />} />
           <Route path="/panelcancha" element={<PanelCancha />} /> 
+          <Route path='/verturnos' element={<VerTurnos />}></Route>
+          <Route path='/agregarturno' element={<AgregarTurno />}></Route>
           {/* Agregar más rutas para dueños según lo que necesites después del login */}
 
         </Routes>

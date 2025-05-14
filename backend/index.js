@@ -81,6 +81,25 @@ app.put("/api/turnos_canchas/liberar", async (req, res) => {
   }
 });
 
+/* CODIGO PARA CREAR TURNOS */
+
+app.post("/api/turnos_canchas", async (req, res) => {
+  const { fecha, hora, cancha_id, estado } = req.body;
+
+  try {
+    const [resultado] = await db.execute(
+      "INSERT INTO turnos_canchas (hora, cancha_id, estado) VALUES (?, ?, ?)",
+      [hora, cancha_id, estado]
+    );
+
+    res.status(201).json({ mensaje: "Turno creado", id: resultado.insertId });
+  } catch (error) {
+    console.error("Error al crear turno:", error);
+    res.status(500).json({ error: "Error al crear turno" });
+  }
+});
+
+
 
 app.listen(PORT, () => {
   console.log(`Backend corriendo en http://localhost:${PORT}`);
