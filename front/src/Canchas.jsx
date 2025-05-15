@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useCanchas } from '../customHooks/useCanchas';
-import { useTodosLosTurnos } from '../customHooks/useTodosLosTurnos';
+// import { useTodosLosTurnos } from '../customHooks/useTodosLosTurnos';
 
 export const Canchas = ({ idCancha }) => {
   const { datos: canchas } = useCanchas();
-  const contarDisponibles = (canchaId) =>
-    turnos.filter(
-      (t) => t.cancha_id === canchaId && t.estado === "disponible"
-    ).length;
+  // const contarDisponibles = (canchaId) =>
+  //   turnos.filter(
+  //     (t) => t.cancha_id === canchaId && t.estado === "disponible"
+  //   ).length;
 
   return (
     <section className="w-full min-h-screen flex flex-col items-center justify-around bg-gradient-to-b from-white via-green-50 to-green-400 p-5">
