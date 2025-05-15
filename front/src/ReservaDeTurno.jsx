@@ -1,4 +1,4 @@
-import { data, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
 import { useEffect } from "react";
@@ -13,7 +13,7 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
   // },[turnos])
 
   
-  const fechaHoy = new Date().toISOString().split("T")[0]; // formato "YYYY-MM-DD"
+  const fechaHoy = new Date().toLocaleDateString("sv-SE"); // "YYYY-MM-DD"
 
   const turnosDeHoy = turnos?.filter((turno) => {
     const fechaTurno = turno.fecha.split("T")[0]; // también "YYYY-MM-DD"
@@ -30,8 +30,6 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
   
     return minutosA - minutosB; // Ordenar de menor a mayor
   });
-  
-  
   
 
 

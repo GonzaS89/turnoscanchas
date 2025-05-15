@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom'
-import { useCanchas } from '../customHooks/useCanchas';
-import { useObtenerTurnosxCancha } from '../customHooks/useObtenerTurnosxCancha';
-import { FaCheckCircle } from 'react-icons/fa'; 
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useCanchas } from "../customHooks/useCanchas";
+import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
+import { FaCheckCircle } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   const { datos: canchas } = useCanchas();
@@ -13,14 +13,16 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   const cancha = canchas.find((cancha) => cancha.id === idCancha);
   const turno = turnos && turnos.find((turno) => turno.id === idTurno);
 
-  const [formData, setFormData] = useState({ nombre: '', telefono: '', dni: '' });
+  const [formData, setFormData] = useState({
+    nombre: "",
+    telefono: "",
+    dni: "",
+  });
   const [isData, setIsData] = useState(false);
   const [showModal, setShowModal] = useState(false); // Para mostrar el modal de confirmación
   const [turnoConfirmado, setTurnoConfirmado] = useState(false); // Para saber si el turno fue confirmado
 
   const navigate = useNavigate();
-
-  
 
   // Manejar el cambio de los campos del formulario
   const handleChange = (e) => {
@@ -47,23 +49,26 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
         {
           nombre: formData.nombre,
           telefono: formData.telefono,
-          dni: formData.dni
+          dni: formData.dni,
         }
       );
 
-      console.log('Turno reservado correctamente', res.data);
+      console.log("Turno reservado correctamente", res.data);
       setTurnoConfirmado(true); // Setea que el turno ha sido confirmado
     } catch (err) {
-      console.error('Error al reservar turno:', err.response?.data || err.message);
-      alert('Error al reservar turno');
+      console.error(
+        "Error al reservar turno:",
+        err.response?.data || err.message
+      );
+      alert("Error al reservar turno");
     }
   };
 
   // Manejar el cierre del modal
   const closeModal = () => {
-    navigate('/')
+    navigate("/");
     setShowModal(false);
-    setFormData({ nombre: '', telefono: '' });
+    setFormData({ nombre: "", telefono: "" });
     setIsData(false);
   };
 
@@ -72,120 +77,187 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
       {cancha ? (
         <div className="w-full flex justify-center items-center relative">
           {/* Formulario para ingresar los datos */}
-          <form
-            className="bg-white shadow-lg rounded-lg w-full max-w-md p-6 flex flex-col items-center gap-6"
+
+          <motion.form
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-white/90 shadow-lg rounded-lg max-w-md p-6 flex flex-col gap-6 border border-gray-100 backdrop-blur"
             onSubmit={(e) => e.preventDefault()}
           >
-            <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+            <h2 className="text-2xl font-bold text-center text-green-700 mb-4">
               Confirmá tu identidad
             </h2>
 
-            <div className="flex flex-col w-full gap-6">
-              {/* Campo para nombre */}
-              <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-700 mb-2">Nombre y apellido</label>
-                <input
-                  type="text"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Ingresá tu nombre"
-                  name="nombre"
-                  value={formData.nombre}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              {/* Campo para DNI */}
-              <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-700 mb-2">DNI</label>
-                <input
-                  type="number"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Ingresá tu dni"
-                  name="dni"
-                  value={formData.dni}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+            {/* Nombre y apellido */}
+            <label className="flex flex-col gap-1 text-gray-700 font-semibold">
+              Nombre y apellido
+              <input
+                type="text"
+                name="nombre"
+                placeholder="Ingresá tu nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                required
+                className="p-3 border border-green-300 rounded-md focus:ring-2 focus:ring-green-400"
+              />
+            </label>
 
-              {/* Campo para teléfono */}
-              <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-700 mb-2">Teléfono</label>
-                <input
-                  type="number"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Ingresá tu teléfono"
-                  name="telefono"
-                  value={formData.telefono}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              
+            {/* DNI */}
+            <label className="flex flex-col gap-1 text-gray-700 font-semibold">
+              DNI
+              <input
+                type="number"
+                name="dni"
+                placeholder="Ingresá tu dni"
+                value={formData.dni}
+                onChange={handleChange}
+                required
+                className="p-3 border border-green-300 rounded-md focus:ring-2 focus:ring-green-400"
+              />
+            </label>
 
-              {/* Botón para enviar el formulario */}
-              <button
-                type="submit"
-                className={`py-3 uppercase rounded-lg text-white font-bold w-full ${formData.nombre && formData.telefono && formData.telefono.length === 10 ? 'bg-green-600' : 'bg-gray-400 pointer-events-none'}`}
-                onClick={() => {
-                  setIsData(true);
-                  setShowModal(true); // Mostrar el modal de confirmación
-                }}
-              >
-                Ingresar datos
-              </button>
-            </div>
-          </form>
+            {/* Teléfono */}
+            <label className="flex flex-col gap-1 text-gray-700 font-semibold">
+              Teléfono
+              <input
+                type="number"
+                name="telefono"
+                placeholder="Ingresá tu teléfono"
+                value={formData.telefono}
+                onChange={handleChange}
+                required
+                className="p-3 border border-green-300 rounded-md focus:ring-2 focus:ring-green-400"
+              />
+            </label>
+
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              type="submit"
+              disabled={
+                !(
+                  formData.nombre &&
+                  formData.telefono &&
+                  formData.telefono.length === 10
+                )
+              }
+              onClick={() => {
+                setIsData(true);
+                setShowModal(true);
+              }}
+              className={`py-3 rounded-md text-white font-bold w-full transition ${
+                formData.nombre &&
+                formData.telefono &&
+                formData.telefono.length === 10
+                  ? "bg-green-600 hover:bg-green-700 shadow"
+                  : "bg-gray-300 cursor-not-allowed"
+              }`}
+            >
+              Confirmar turno
+            </motion.button>
+          </motion.form>
 
           {/* Modal de confirmación de datos */}
-          {showModal && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white p-6 rounded-lg max-w-lg w-full">
-                <h3 className="text-xl font-semibold text-center text-gray-800 mb-6">Confirmar Reserva</h3>
+          <AnimatePresence>
+            {showModal && (
+              <div
+                className={`fixed inset-0 ${
+                  turnoConfirmado ? "-z-10" : "z-50"
+                } flex items-center justify-center bg-black bg-opacity-60 px-6`}
+              >
+                <div className="bg-white rounded-3xl max-w-xl w-full p-10 flex flex-col items-center justify-center shadow-[0_10px_30px_rgba(0,128,0,0.3)] border border-green-100 ring-4 ring-green-200">
+                  <h3 className="text-3xl font-extrabold text-center text-green-800 mb-8 tracking-tight">
+                    Confirmación de Reserva
+                  </h3>
 
-                <div className="mb-4">
-                  <p className="font-semibold text-lg text-gray-700 capitalize">Cancha: {cancha.nombre}</p>
-                  <p className="font-semibold text-lg text-gray-700">Hora: {(formatearHora(turno.hora))}</p>
-                  <p className="font-semibold text-lg text-gray-700">Fecha: {turno && formatearFecha(turno.fecha)}</p>
-                  <p className="font-semibold text-lg text-gray-700">A nombre de: {formData.nombre}</p>
-                  <p className="font-semibold text-lg text-gray-700">DNI: {formData.dni}</p>
-                  <p className="font-semibold text-lg text-gray-700">Teléfono: {formData.telefono}</p>
-                </div>
+                  <div className="mb-8 space-y-4 text-gray-700 text-[17px] leading-relaxed font-sans max-w-md w-full">
+                    <div>
+                      <span className="font-semibold text-green-700 tracking-wide">
+                        Cancha:
+                      </span>{" "}
+                      <span className="capitalize font-semibold">
+                        {cancha.nombre}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-green-700 tracking-wide">
+                        Hora:
+                      </span>{" "}
+                      <span className="capitalize font-semibold">
+                        {formatearHora(turno.hora)}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-green-700 tracking-wide">
+                        Fecha:
+                      </span>{" "}
+                      <span className="capitalize font-semibold">
+                        {formatearFecha(turno.fecha)}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-green-700 tracking-wide">
+                        A nombre de:
+                      </span>{" "}
+                      <span className="capitalize font-semibold">
+                        {formData.nombre}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-green-700 tracking-wide">
+                        DNI:
+                      </span>{" "}
+                      <span className="capitalize font-semibold">
+                        {formData.dni}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-green-700 tracking-wide">
+                        Teléfono:
+                      </span>{" "}
+                      <span className="capitalize font-semibold">
+                        {formData.telefono}
+                      </span>
+                    </div>
+                  </div>
 
-                <div className="flex justify-center gap-4">
-        
-                  {/* Botón para confirmar el turno */}
-                  <button
-                    className="bg-green-600 text-white py-3 px-6 rounded-lg font-semibold"
-                    onClick={async () => {
-                      await reservarTurno();
-                    }}
-                  >
-                    Confirmar Turno
-                  </button>
-  
-                  {/* Botón para cerrar el modal */}
-                  <button
-                    className="bg-gray-400 text-white py-3 px-6 rounded-lg font-semibold"
-                    onClick={closeModal}
-                  >
-                    Cancelar
-                  </button>
+                  <div className="flex flex-col sm:flex-row justify-center gap-6 mt-6 w-full max-w-md">
+                    <button
+                      className="bg-gradient-to-r from-green-700 via-green-600 to-green-500 hover:from-green-800 hover:to-green-700 text-white py-4 px-8 rounded-2xl font-semibold shadow-lg transition-transform duration-150 ease-in-out active:scale-95 w-full sm:w-auto"
+                      onClick={async () => {
+                        await reservarTurno();
+                      }}
+                    >
+                      Confirmar Reserva
+                    </button>
+
+                    <button
+                      className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-4 px-8 rounded-2xl font-semibold shadow-md transition w-full sm:w-auto"
+                      onClick={closeModal}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </AnimatePresence>
 
           {/* Si el turno fue confirmado, mostrar el check */}
           {turnoConfirmado && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white p-6 rounded-lg max-w-xs w-full text-center flex flex-col items-center">
-                <FaCheckCircle className="text-green-600 text-6xl mb-4" />
-                <h3 className="font-semibold text-lg text-gray-800">¡Turno Confirmado!</h3>
-                <p className="text-gray-700">Tu turno ha sido reservado correctamente.</p>
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60 px-6">
+              <div className="bg-white rounded-3xl max-w-sm w-full p-10 flex flex-col items-center justify-center shadow-[0_10px_30px_rgba(0,128,0,0.3)] border border-green-100 ring-4 ring-green-200">
+                <FaCheckCircle className="text-green-700 text-8xl mb-6 drop-shadow-md" />
+                <h3 className="text-3xl font-extrabold text-green-800 mb-4 tracking-tight text-center">
+                  ¡Turno Confirmado!
+                </h3>
+                <p className="text-gray-600 text-base leading-relaxed max-w-xs text-center mb-8">
+                  Tu turno ha sido reservado correctamente.
+                </p>
                 <button
-                  className="mt-6 w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold"
                   onClick={closeModal}
+                  className="w-full bg-gradient-to-r from-green-700 via-green-600 to-green-500 hover:from-green-800 hover:to-green-700 text-white font-semibold py-4 rounded-2xl shadow-lg transition-transform duration-150 ease-in-out active:scale-95"
+                  aria-label="Cerrar modal de confirmación"
                 >
                   Cerrar
                 </button>
@@ -194,7 +266,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
           )}
         </div>
       ) : (
-        ''
+        ""
       )}
     </div>
   );
