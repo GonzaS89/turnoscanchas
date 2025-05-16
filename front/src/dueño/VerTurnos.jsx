@@ -62,7 +62,7 @@ export const VerTurnos = () => {
   const ponerDisponible = async (turnoId) => {
     try {
       await axios.put(
-        `https://turnoscanchas-production.up.railway.app/api/turnos_canchas/liberar`,
+        `https://turnoscanchas-production.up.railway.app/api/turnos/liberar`,
         { id: turnoId }
       );
 
@@ -81,9 +81,8 @@ export const VerTurnos = () => {
   const confirmarPendiente = async (turnoId) => {
     try {
       await axios.put(
-        `https://turnoscanchas-production.up.railway.app/api/turnos_canchas/confirmar`,
-        { id: turnoId }
-      );
+        `https://turnoscanchas-production.up.railway.app/api/turnos/confirmar`,{turnoId})
+      ;
 
       setTurnos((prevTurnos) =>
         prevTurnos.map((turno) =>

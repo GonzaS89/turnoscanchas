@@ -59,7 +59,7 @@ app.put("/api/turnos/:idTurno", async (req, res) => {
 
 /* CONFIRMAR TURNO QUE ESTABA EN PENDIENTE */
 
-app.put("/api/turnos/confirmar/:idTurno", async (req, res) => {
+app.put("/api/turnos/confirmar", async (req, res) => {
   const { idTurno } = req.params; // Obtenemos el turno_id de los parámetros de la ruta
 
   try {
@@ -83,7 +83,7 @@ app.put("/api/turnos/confirmar/:idTurno", async (req, res) => {
 
 /* LIBERAR TURNO */
 
-app.put("/api/turnos_canchas/liberar", async (req, res) => {
+app.put("/api/turnos/liberar", async (req, res) => {
   const { id } = req.body;
 
   try {
