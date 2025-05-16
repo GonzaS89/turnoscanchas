@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
 import { FaCheckCircle } from "react-icons/fa";
+import { IoMdAlert } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
+
+const serverLocal = 'http://localhost:3001';
+const serverExterno = 'https://turnoscanchas-production.up.railway.app';
 
 export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   const { datos: canchas } = useCanchas();
@@ -45,7 +49,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   const reservarTurno = async () => {
     try {
       const res = await axios.put(
-        `https://turnoscanchas-production.up.railway.app/api/turnos/${idTurno}`,
+        `${serverLocal}/api/turnos/${idTurno}`,
         {
           nombre: formData.nombre,
           telefono: formData.telefono,
@@ -246,17 +250,17 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
           {/* Si el turno fue confirmado, mostrar el check */}
           {turnoConfirmado && (
             <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60 px-6">
-              <div className="bg-white rounded-3xl max-w-sm w-full p-10 flex flex-col items-center justify-center shadow-[0_10px_30px_rgba(0,128,0,0.3)] border border-green-100 ring-4 ring-green-200">
-                <FaCheckCircle className="text-green-700 text-8xl mb-6 drop-shadow-md" />
-                <h3 className="text-3xl font-extrabold text-green-800 mb-4 tracking-tight text-center">
-                  ¡Turno Confirmado!
+              <div className="bg-white rounded-3xl max-w-sm w-full p-10 flex flex-col items-center justify-center shadow-[0_10px_30px_rgba(0,128,0,0.3)] border border-yellow-100 ring-4 ring-yellow-200">
+                <IoMdAlert className="text-yellow-400 text-8xl mb-6 drop-shadow-md" />
+                <h3 className="text-3xl font-extrabold text-yellow-500 mb-4 tracking-tight text-center">
+                  ¡Turno Pendiente de confirmación!
                 </h3>
                 <p className="text-gray-600 text-base leading-relaxed max-w-xs text-center mb-8">
-                  Tu turno ha sido reservado correctamente.
+                  La confirmación se completará cuando el encargo confirme el depósito de la seña
                 </p>
                 <button
                   onClick={closeModal}
-                  className="w-full bg-gradient-to-r from-green-700 via-green-600 to-green-500 hover:from-green-800 hover:to-green-700 text-white font-semibold py-4 rounded-2xl shadow-lg transition-transform duration-150 ease-in-out active:scale-95"
+                  className="w-full bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-600 text-white font-semibold py-4 rounded-2xl shadow-lg transition-transform duration-150 ease-in-out active:scale-95"
                   aria-label="Cerrar modal de confirmación"
                 >
                   Cerrar

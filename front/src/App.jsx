@@ -3,13 +3,13 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { PantallaInicial } from './PantallaInicial';
-import { Canchas } from './Canchas';
-import { ReservaDeTurno } from './ReservaDeTurno';
-import { ConfirmarTurno } from './ConfirmarTurno';
-import { LoginCancha } from './LoginCancha'; // <-- Asegurate de tener este componente creado
-import { PanelCancha } from './PanelCancha';
-import { VerTurnos } from './VerTurnos';
-import { AgregarTurno } from './AgregarTurno';
+import { Canchas } from './cliente/Canchas';
+import { ReservaDeTurno } from './cliente/ReservaDeTurno';
+import { ConfirmarTurno } from './cliente/ConfirmarTurno';
+import { LoginCancha } from './dueño/LoginCancha'; // <-- Asegurate de tener este componente creado
+import { PanelCancha } from './dueño/PanelCancha';
+import { VerTurnos } from './dueño/VerTurnos';
+import { AgregarTurno } from './dueño/AgregarTurno';
 
 
 function App() {

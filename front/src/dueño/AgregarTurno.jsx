@@ -27,7 +27,7 @@ export const AgregarTurno = () => {
     try {
       await Promise.all(
         horarios.map((hora) =>
-          axios.post("https://turnoscanchas-production.up.railway.app/api/turnos_canchas", {
+          axios.post(`https://turnoscanchas-production.up.railway.app/api/turnos_canchas`, {
             hora,
             cancha_id: cancha.id,
             estado: "disponible"
