@@ -41,7 +41,7 @@ app.put("/api/turnos/:idTurno", async (req, res) => {
   try {
     const [resultado] = await db.execute(
       `UPDATE turnos_canchas
-       SET nombre = ?, telefono = ?, dni =  ?, estado = 'reservado'
+       SET nombre = ?, telefono = ?, dni =  ?, estado = 'pendiente'
        WHERE id = ?`,
       [nombre, telefono, dni, idTurno]
     );
