@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
+import { FaCheckCircle } from "react-icons/fa";
 
 export const AgregarTurno = () => {
   const navigate = useNavigate();
@@ -8,6 +9,8 @@ export const AgregarTurno = () => {
   const cancha = location.state?.cancha;
 
   const [horarios, setHorarios] = useState([""]);
+  const [showModal, setShowModal] = useState(false);
+  const [confIngresos, setConfIngresos] = useState(false);
 
   const handleHorarioChange = (index, value) => {
     const nuevosHorarios = [...horarios];
@@ -22,8 +25,7 @@ export const AgregarTurno = () => {
     setHorarios(nuevosHorarios);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
       await Promise.all(
         horarios.map((hora) =>
@@ -35,8 +37,14 @@ export const AgregarTurno = () => {
         )
       );
 
-      alert("Turnos agregados correctamente");
-      navigate(-1);
+      setShowModal(true);
+      setConfIngresos(false);
+      setHorarios([""]);
+
+      setTimeout(() => {
+        navigate(-1);
+      }, 1500);
+
     } catch (error) {
       console.error("Error al agregar turnos:", error);
       alert("Error al guardar los turnos");
@@ -51,7 +59,7 @@ export const AgregarTurno = () => {
           Cancha: <span className="uppercase font-semibold">{cancha?.nombre}</span>
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
           {horarios.map((hora, index) => (
             <div key={index} className="flex items-center gap-2">
               <input
@@ -85,13 +93,52 @@ export const AgregarTurno = () => {
           </div>
 
           <button
-            type="submit"
+            type="button"
+            onClick={() => setConfIngresos(true)}
             className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl shadow-lg transition uppercase tracking-wider"
           >
             Guardar Turnos
           </button>
         </form>
       </div>
+
+      {/* MODAL CONFIRMACIÓN */}
+      {confIngresos && (
+        <div className="w-full h-screen bg-black bg-opacity-50 absolute top-0 left-0 z-50 flex items-center justify-center px-4">
+          <div className="bg-white py-6 px-6 rounded-xl flex flex-col items-center gap-4 shadow-xl">
+            <h2 className="text-center text-xl text-gray-700">
+              ¿Confirmás el ingreso de {horarios.length > 1 ? 'los siguientes turnos' : 'el siguiente turno'}?
+            </h2>
+            <p className="text-lg text-slate-800 font-bold">{horarios.join(" - ")}</p>
+            <div className="flex gap-4 mt-4">
+              <button
+                className="py-2 px-4 text-white bg-green-700 hover:bg-green-800 rounded"
+                onClick={handleSubmit}
+              >
+                Confirmar
+              </button>
+              <button
+                className="py-2 px-4 text-white bg-red-600 hover:bg-red-700 rounded"
+                onClick={() => setConfIngresos(false)}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL ÉXITO */}
+      {showModal && (
+        <div className="w-full h-screen bg-black bg-opacity-50 absolute top-0 left-0 z-50 flex items-center justify-center px-4">
+          <div className="bg-white flex flex-col items-center py-8 px-6 gap-8 rounded-xl shadow-xl">
+            <FaCheckCircle className="text-7xl text-green-600" />
+            <h2 className="text-green-600 font-light text-3xl text-center">
+              {horarios.length > 1 ? 'Turnos agregados' : 'Turno agregado'} correctamente
+            </h2>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

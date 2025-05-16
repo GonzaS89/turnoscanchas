@@ -78,6 +78,25 @@ export const VerTurnos = () => {
     }
   };
 
+  const confirmarPendiente = async (turnoId) => {
+    try {
+      await axios.put(
+        `https://turnoscanchas-production.up.railway.app/api/turnos_canchas/confirmar`,
+        { id: turnoId }
+      );
+
+      setTurnos((prevTurnos) =>
+        prevTurnos.map((turno) =>
+          turno.id === turnoId
+            ? { ...turno, estado: "reservado", nombre: null, dni: null }
+            : turno
+        )
+      );
+    } catch (error) {
+      console.error("Error al poner disponible:", error);
+    }
+  };
+
   const eliminarTurno = async (turnoId) => {
     const confirmar = window.confirm(
       "¿Estás seguro de que querés eliminar este turno?"
@@ -166,7 +185,7 @@ export const VerTurnos = () => {
                         ) :  turno.estado === 'pendiente' &&
                         (
                             <div className="flex flex-col gap-2">
-                                <button className="py-2 px-4 bg-green-400 text-gray-100 uppercase text-sm rounded-lg">Confirmar</button>
+                                <button className="py-2 px-4 bg-green-400 text-gray-100 uppercase text-sm rounded-lg" onClick={()=> confirmarPendiente(turno.id)}>Confirmar</button>
                                 <button className="py-2 px-4 bg-red-500 text-gray-100 uppercase text-sm rounded-lg" onClick={() => ponerDisponible(turno.id)}>Liberar</button>
                             </div>
                         )}

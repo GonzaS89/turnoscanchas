@@ -57,6 +57,30 @@ app.put("/api/turnos/:idTurno", async (req, res) => {
   }
 });
 
+/* CONFIRMAR TURNO QUE ESTABA EN PENDIENTE */
+
+app.put("/api/turnos/confirmar/:idTurno", async (req, res) => {
+  const { idTurno } = req.params; // Obtenemos el turno_id de los parámetros de la ruta
+
+  try {
+    const [resultado] = await db.execute(
+      `UPDATE turnos_canchas
+       SET estado = 'reservado'
+       WHERE id = ?`,
+      [idTurno]
+    );
+
+    if (resultado.affectedRows > 0) {
+      res.json({ mensaje: "Turno reservado correctamente" });
+    } else {
+      res.status(404).json({ error: "Turno no encontrado" });
+    }
+  } catch (error) {
+    console.error("Error al actualizar turno:", error);
+    res.status(500).json({ error: "Error al reservar turno" });
+  }
+});
+
 /* LIBERAR TURNO */
 
 app.put("/api/turnos_canchas/liberar", async (req, res) => {

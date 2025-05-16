@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
-import { useEffect } from "react";
 
 export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
   const { datos: canchas } = useCanchas();
