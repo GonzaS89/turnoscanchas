@@ -49,7 +49,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   const reservarTurno = async () => {
     try {
       const res = await axios.put(
-        `https://turnoscanchas-production.up.railway.app/api/turnos/${idTurno}`,
+        `${serverLocal}/api/turnos/${idTurno}`,
         {
           nombre: formData.nombre,
           telefono: formData.telefono,

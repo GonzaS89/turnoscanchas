@@ -1,26 +1,35 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaTrashAlt } from "react-icons/fa";
+
 
 export const VerTurnos = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const cancha = location.state?.cancha;
 
+  console.log(cancha.id)
+
   const [turnos, setTurnos] = useState([]);
   const [turnosAgrupados, setTurnosAgrupados] = useState({});
   const [fechaVisible, setFechaVisible] = useState({});
+
+  const serverLocal = 'http://localhost:3001';
+  const serverExterno = 'https://turnoscanchas-production.up.railway.app';
+
 
   useEffect(() => {
     if (cancha?.id) {
       axios
         .get(
-          `https://turnoscanchas-production.up.railway.app/api/turnos_canchas/canchas?id=${cancha.id}`
+          `${serverLocal}/api/turnos_canchas/canchas?id=${cancha.id}`
         )
         .then((res) => {
           const turnosOrdenados = res.data.sort(
             (a, b) => new Date(b.fecha) - new Date(a.fecha)
           );
+          console.log(turnosOrdenados)
           setTurnos(turnosOrdenados);
         })
         .catch((err) => console.error("Error al obtener turnos:", err));
@@ -62,8 +71,7 @@ export const VerTurnos = () => {
   const ponerDisponible = async (turnoId) => {
     try {
       await axios.put(
-        `https://turnoscanchas-production.up.railway.app/api/turnos/liberar`,
-        { id: turnoId }
+        `${serverLocal}/api/turnos/liberar/${turnoId}`
       );
 
       setTurnos((prevTurnos) =>
@@ -81,8 +89,8 @@ export const VerTurnos = () => {
   const confirmarPendiente = async (turnoId) => {
     try {
       await axios.put(
-        `https://turnoscanchas-production.up.railway.app/api/turnos/confirmar`,{turnoId})
-      ;
+        `${serverLocal}/api/turnos/confirmar/${turnoId}`)
+        ;
 
       setTurnos((prevTurnos) =>
         prevTurnos.map((turno) =>
@@ -104,7 +112,7 @@ export const VerTurnos = () => {
 
     try {
       await axios.delete(
-        `https://turnoscanchas-production.up.railway.app/api/turnos_canchas/${turnoId}`
+        `${serverLocal}/api/turnos_canchas/${turnoId}`
       );
       setTurnos((prevTurnos) =>
         prevTurnos.filter((turno) => turno.id !== turnoId)
@@ -122,7 +130,7 @@ export const VerTurnos = () => {
 
       <div className="bg-white rounded-xl p-6 shadow-xl w-full mt-8 border-t-2">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
-          Turnos del día
+          Turnos por fechas
         </h2>
         {Object.keys(turnosAgrupados).length === 0 ? (
           <p className="text-gray-500">No hay turnos cargados.</p>
@@ -133,7 +141,7 @@ export const VerTurnos = () => {
                 <h3 className="text-xl font-semibold text-gray-800">{fecha}</h3>
                 <button
                   onClick={() => toggleFechaVisibility(fecha)}
-                  className="text-green-600 hover:text-green-700"
+                  className="py-2 px-4 shadow-lg border-2 text-gray-600"
                 >
                   {fechaVisible[fecha] ? "Ocultar" : "Mostrar"} turnos
                 </button>
@@ -143,12 +151,11 @@ export const VerTurnos = () => {
                   {turnosPorFecha.map((turno) => (
                     <li
                       key={turno.id}
-                      className={`relative p-6 border rounded-2xl flex flex-col justify-between items-center gap-4 shadow-lg border-l-8 ${
-                        turno.estado === "disponible" 
-                          ? "bg-green-50  border-l-green-500" 
+                      className={`relative overflow-hidden p-6 border rounded-2xl flex flex-col justify-between items-center gap-4 shadow-lg border-l-8 ${turno.estado === "disponible"
+                          ? "bg-green-50  border-l-green-500"
                           : turno.estado === 'pendiente' ? 'bg-yellow-50 border-l-yellow-300'
-                          : "bg-red-50 border-l-red-500"
-                      }`}
+                            : "bg-red-50 border-l-red-500"
+                        }`}
                     >
                       <div className="flex flex-col justify-center items-center gap-4">
                         <span className="text-xl font-bold text-gray-800">
@@ -165,11 +172,10 @@ export const VerTurnos = () => {
 
                       <div className="flex items-center gap-4 flex-wrap justify-center">
                         <span
-                          className={`text-sm font-bold uppercase ${
-                            turno.estado === "reservado"
+                          className={`text-sm font-bold uppercase ${turno.estado === "reservado"
                               ? "text-red-500"
-                              : "text-green-600"
-                          }`}
+                              : "text-green-900"
+                            }`}
                         >
                           {turno.estado === "disponible" ? "disponible" : ""}
                         </span>
@@ -181,21 +187,21 @@ export const VerTurnos = () => {
                           >
                             Liberar
                           </button>
-                        ) :  turno.estado === 'pendiente' &&
+                        ) : turno.estado === 'pendiente' &&
                         (
-                            <div className="flex flex-col gap-2">
-                                <button className="py-2 px-4 bg-green-400 text-gray-100 uppercase text-sm rounded-lg" onClick={()=> confirmarPendiente(turno.id)}>Confirmar</button>
-                                <button className="py-2 px-4 bg-red-500 text-gray-100 uppercase text-sm rounded-lg" onClick={() => ponerDisponible(turno.id)}>Liberar</button>
-                            </div>
+                          <div className="flex flex-col gap-2">
+                            <button className="py-2 px-4 bg-green-400 text-gray-100 uppercase text-sm rounded-lg" onClick={() => console.log(turno.id)}>Confirmar</button>
+                            <button className="py-2 px-4 bg-red-500 text-gray-100 uppercase text-sm rounded-lg" onClick={() => ponerDisponible(turno.id)}>Liberar</button>
+                          </div>
                         )}
 
                         {turno.estado === "disponible" && (
                           <button
                             onClick={() => eliminarTurno(turno.id)}
-                            className="absolute top-0 right-2 text-red-500 hover:text-red-700 text-lg"
+                            className="absolute h-full bg-red-600 top-0 right-0 px-3"
                             title="Eliminar turno"
                           >
-                            ❌
+                            <FaTrashAlt className="text-2xl text-white" />
                           </button>
                         )}
                       </div>

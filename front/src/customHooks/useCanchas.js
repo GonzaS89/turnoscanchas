@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const API_URL = 'https://turnoscanchas-production.up.railway.app/api/canchas'
+const serverLocal = 'http://localhost:3001';
+const serverExterno = 'https://turnoscanchas-production.up.railway.app'
+
 
 export const useCanchas = () => {
 
@@ -10,7 +12,7 @@ export const useCanchas = () => {
     useEffect(() => {
         const obtenerDatos = async () => {
             try {
-                const res = await axios.get(API_URL);
+                const res = await axios.get(`${serverLocal}/api/canchas`);
                 setDatos(res.data)
             } catch {
                 console.error('Error al obtener canchas');

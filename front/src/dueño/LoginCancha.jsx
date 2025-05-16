@@ -11,6 +11,8 @@ export const LoginCancha = () => {
 
   const { datos: canchas } = useCanchas();
 
+  console.log(canchas)
+
   const handleLogin = (e) => {
     e.preventDefault();
    

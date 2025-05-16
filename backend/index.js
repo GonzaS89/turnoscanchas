@@ -17,7 +17,17 @@ app.get('/api/canchas', async (req, res) => {
     res.json(resultado);
   } catch {
     console.error('Error al obtener canchas');
-    res.status(500).send('Error al obtener obras sociales');
+    res.status(500).send('Error al obtener canchas');
+  }
+})
+
+app.get('/api/turnos_canchas', async (req, res) => {
+  try {
+    const [resultado] = await db.execute('SELECT * FROM turnos_canchas');
+    res.json(resultado);
+  } catch {
+    console.error('Error al obtener canchas');
+    res.status(500).send('Error al obtener canchas');
   }
 })
 
@@ -81,15 +91,34 @@ app.put("/api/turnos/confirmar", async (req, res) => {
   }
 });
 
+// Suponiendo que la tabla se llama turnos_canchas
+app.get("/api/turnos_canchas/canchas", async (req, res) => {
+  const { id } = req.query;
+
+  try {
+    const [turnos] = await db.execute(
+      "SELECT * FROM turnos_canchas WHERE cancha_id = ?",
+      [id]
+    );
+
+    res.json(turnos);
+  } catch (error) {
+    console.error("Error al obtener turnos:", error);
+    res.status(500).json({ error: "Error al obtener turnos" });
+  }
+});
+
+
 /* LIBERAR TURNO */
 
-app.put("/api/turnos/liberar", async (req, res) => {
-  const { id } = req.body;
+app.put("/api/turnos/liberar/:id", async (req, res) => {
+  console.log("Datos recibidos:", req.body); 
+  const { id } = req.params;
 
   try {
     const [resultado] = await db.execute(
       `UPDATE turnos_canchas 
-       SET estado = 'disponible', nombre = NULL, dni = NULL  
+       SET estado = 'disponible', nombre = NULL, dni = NULL , telefono = NULL 
        WHERE id = ?`,
       [id]
     );

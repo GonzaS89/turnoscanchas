@@ -3,9 +3,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export const PanelCancha = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const cancha = location.state?.cancha;
+
+  console.log(cancha)
 
   const [vista, setVista] = useState(""); // Para determinar qué vista mostrar después
 
