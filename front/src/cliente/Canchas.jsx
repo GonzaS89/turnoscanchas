@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useCanchas } from '../customHooks/useCanchas';
+import {useCanchas} from '../customHooks/useCanchas'
 // import { useTodosLosTurnos } from '../customHooks/useTodosLosTurnos';
 
 export const Canchas = ({ idCancha }) => {

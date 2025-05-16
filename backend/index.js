@@ -16,7 +16,7 @@ app.get('/api/canchas', async (req, res) => {
     const [resultado] = await db.execute('SELECT * FROM canchas');
     res.json(resultado);
   } catch {
-    console.error('Error al obtener obras sociales');
+    console.error('Error al obtener canchas');
     res.status(500).send('Error al obtener obras sociales');
   }
 })
