@@ -125,7 +125,7 @@ export const VerTurnos = () => {
   return (
     <section className="min-h-screen w-full py-6 px-4 bg-gradient-to-b from-white via-green-50 to-green-200 flex flex-col items-center">
       <header className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-green-700 uppercase">Turnos</h1>
+        <h1 className="text-2xl font-bold text-green-700 uppercase">Gestión de turnos</h1>
       </header>
 
       <div className="bg-white rounded-xl p-6 shadow-xl w-full mt-8 border-t-2">
@@ -151,14 +151,14 @@ export const VerTurnos = () => {
                   {turnosPorFecha.map((turno) => (
                     <li
                       key={turno.id}
-                      className={`relative overflow-hidden p-6 border rounded-2xl flex flex-col justify-between items-center gap-4 shadow-lg border-l-8 ${turno.estado === "disponible"
-                          ? "bg-green-50  border-l-green-500"
-                          : turno.estado === 'pendiente' ? 'bg-yellow-50 border-l-yellow-300'
-                            : "bg-red-50 border-l-red-500"
+                      className={`relative overflow-hidden h-20 border rounded-2xl flex flex-col justify-between items-center gap-4 shadow-lg ${turno.estado === "disponible"
+                          ? "bg-gray-100 bg-opacity-60"
+                          : turno.estado === 'pendiente' ? 'bg-yellow-50 '
+                            : "bg-red-50 "
                         }`}
                     >
-                      <div className="flex flex-col justify-center items-center gap-4">
-                        <span className="text-xl font-bold text-gray-800">
+                      <div className="flex flex-col justify-center items-center gap-4 relative w-full h-full">
+                        <span className="text-2xl font-semibold text-gray-500 absolute font-principal">
                           {turno.hora.split(":").slice(0, 2).join(":")} HS
                         </span>
                         {turno.nombre && (
@@ -168,18 +168,18 @@ export const VerTurnos = () => {
                             {turno.telefono}
                           </span>
                         )}
+                        
                       </div>
-
-                      <div className="flex items-center gap-4 flex-wrap justify-center">
-                        <span
-                          className={`text-sm font-bold uppercase ${turno.estado === "reservado"
+                      {/* <span
+                          className={`absolute text-lg uppercase ${turno.estado === "reservado"
                               ? "text-red-500"
-                              : "text-green-900"
+                              : "text-green-600"
                             }`}
                         >
                           {turno.estado === "disponible" ? "disponible" : ""}
-                        </span>
+                        </span> */}
 
+                      <div className="flex items-center gap-4 flex-wrap justify-center">
                         {turno.estado === "reservado" ? (
                           <button
                             onClick={() => ponerDisponible(turno.id)}
