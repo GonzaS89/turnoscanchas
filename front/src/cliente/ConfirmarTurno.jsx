@@ -77,7 +77,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-white via-green-50 to-green-400 flex flex-col justify-center h-screen w-full items-center p-5">
+    <div className="bg-gradient-to-b from-white via-green-50 to-green-400 flex flex-col justify-center h-screen w-full items-center px-6">
       {cancha ? (
         <div className="w-full flex justify-center items-center relative">
           {/* Formulario para ingresar los datos */}
@@ -86,7 +86,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="bg-white/90 shadow-lg rounded-lg max-w-md p-6 flex flex-col gap-6 border border-gray-100 backdrop-blur"
+            className="bg-white/90 shadow-lg rounded-lg p-6 flex flex-col gap-6 border border-gray-100 backdrop-blur w-full"
             onSubmit={(e) => e.preventDefault()}
           >
             <h2 className="text-2xl font-bold text-center text-green-700 mb-4">
@@ -256,7 +256,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
                   ¡Turno Pendiente de confirmación!
                 </h3>
                 <p className="text-gray-600 text-base leading-relaxed max-w-xs text-center mb-8">
-                  La confirmación se completará cuando el encargo confirme el depósito de la seña
+                  La confirmación se completará cuando el encargado confirme el depósito de la seña
                 </p>
                 <button
                   onClick={closeModal}

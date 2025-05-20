@@ -9,14 +9,14 @@ export const VerTurnos = () => {
   const location = useLocation();
   const cancha = location.state?.cancha;
 
-  console.log(cancha.id)
-
   const [turnos, setTurnos] = useState([]);
   const [turnosAgrupados, setTurnosAgrupados] = useState({});
   const [fechaVisible, setFechaVisible] = useState({});
 
   const serverLocal = 'http://localhost:3001';
   const serverExterno = 'https://turnoscanchas-production.up.railway.app';
+
+  const isReservado = (estado) => (estado === "reservado" || estado === "pendiente")
 
 
   useEffect(() => {
@@ -29,7 +29,6 @@ export const VerTurnos = () => {
           const turnosOrdenados = res.data.sort(
             (a, b) => new Date(b.fecha) - new Date(a.fecha)
           );
-          console.log(turnosOrdenados)
           setTurnos(turnosOrdenados);
         })
         .catch((err) => console.error("Error al obtener turnos:", err));
@@ -152,34 +151,33 @@ export const VerTurnos = () => {
       {turnosPorFecha.map((turno) => (
         <li
           key={turno.id}
-          className={`relative overflow-hidden min-h-24 border rounded-2xl flex flex-col justify-center items-center gap-4 shadow-md px-4 py-2 ${
+          className={`relative overflow-hidden min-h-24 border rounded-2xl flex font-poppins items-center gap-2 shadow-md px-4 py-6 ${
             turno.estado === "disponible"
               ? "bg-gray-50"
               : turno.estado === "pendiente"
               ? "bg-yellow-100"
-              : "bg-red-100"
+              : "bg-green-400"
           }`}
         >
-          <div className="flex flex-col items-center justify-center gap-2 w-full h-full">
-            <span className="text-lg font-bold text-gray-800">
+          <div className="flex flex-col items-left justify-center gap-2 w-3/4 h-full relative">
+            <span className="text-2xl font-bold text-gray-800">
               {turno.hora.split(":").slice(0, 2).join(":")} HS
             </span>
-
-            {turno.nombre && (
-              <div className="text-center text-sm text-gray-700 leading-snug">
-                <p className="font-semibold">Reservado por:</p>
-                <p className="text-base font-medium text-gray-900">{turno.nombre}</p>
+            {/* <p className="absolute text-5xl font-principal opacity-10">{turno.estado}</p> */}
+            {isReservado(turno.estado) ? (
+              <div className={"text-sm leading-snug"}>
+                <p>Reservado por: {turno.nombre}</p>
                 <p>DNI: <span className="font-medium">{turno.dni}</span></p>
                 <p>Tel: <span className="font-medium">{turno.telefono}</span></p>
               </div>
-            )}
+            ) : ""}
           </div>
 
-          <div className="flex items-center gap-4 flex-wrap justify-center">
+          <div className="flex items-center gap-4 flex-wrap justify-center w-1/4">
             {turno.estado === "reservado" && (
               <button
                 onClick={() => ponerDisponible(turno.id)}
-                className="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-1 rounded-md shadow transition uppercase"
+                className="p-2 w-full bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg"
               >
                 Liberar
               </button>
@@ -188,7 +186,7 @@ export const VerTurnos = () => {
             {turno.estado === "pendiente" && (
               <div className="flex flex-col gap-2">
                 <button
-                  className="py-2 px-4 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg"
+                  className="p-2 w-full bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg"
                   onClick={() => confirmarPendiente(turno.id)}
                 >
                   Confirmar
@@ -197,7 +195,7 @@ export const VerTurnos = () => {
                   className="py-2 px-4 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg"
                   onClick={() => ponerDisponible(turno.id)}
                 >
-                  Liberar
+                  Cancelar
                 </button>
               </div>
             )}

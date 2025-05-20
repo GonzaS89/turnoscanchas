@@ -59,7 +59,7 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
       </header>
 
       {turnosDeHoy ? (
-        <div className="flex flex-col gap-4 py-4 h-[500px] overflow-scroll">
+        <div className="flex flex-col gap-4 py-4 overflow-scroll h-screen">
           {turnosDeHoy.length === 0 ? (
             <p className="text-center text-lg text-gray-600">
               No hay turnos disponibles para hoy.
@@ -78,9 +78,9 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
     group flex items-center justify-between w-full px-6 py-5 rounded-2xl shadow-md
     transition-all duration-200 ease-in-out transform
     ${
-      turno.estado === "reservado"
-        ? "bg-gray-100 text-gray-500 cursor-not-allowed"
-        : "bg-white text-green-700 hover:bg-green-100 hover:shadow-lg active:scale-95"
+      turno.estado === "reservado" || turno.estado === 'pendiente'
+        ? "bg-gray-300 cursor-not-allowed"
+        : "bg-white hover:bg-green-100 hover:shadow-lg active:scale-95"
     }
   `}
                 >
@@ -88,10 +88,10 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
                   <span
                     className={`
       text-3xl transition-transform duration-200 
-      ${turno.estado === "reservado" ? "" : "group-hover:scale-110"}
+      ${turno.estado === "reservado" || turno.estado === "pendiente" ? "" : "group-hover:scale-110"}
     `}
                   >
-                    {turno.estado === "reservado" ? "❌" : "🟢"}
+                    {turno.estado === "reservado" || turno.estado === "pendiente" ? "❌" : "🟢"}
                   </span>
 
                   {/* Contenido */}
@@ -99,7 +99,7 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
                     <p
                       className={`
         text-3xl font-extrabold tracking-tight 
-        ${turno.estado === "reservado" ? "text-gray-600" : "text-green-800"}
+        ${turno.estado === "reservado" || turno.estado === "pendiente" ? "text-gray-600" : "text-green-800"}
       `}
                     >
                       {formatearHora(turno.hora)}
@@ -107,10 +107,10 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
                     <p
                       className={`
         text-xs font-semibold uppercase tracking-wider 
-        ${turno.estado === "reservado" ? "text-gray-500" : "text-green-600"}
+        ${turno.estado === "reservado" || turno.estado === "pendiente" ? "text-gray-500" : "text-green-600"}
       `}
                     >
-                      {turno.estado === "reservado"
+                      {turno.estado === "reservado" || turno.estado === "pendiente"
                         ? "Reservado"
                         : "Disponible"}
                     </p>
