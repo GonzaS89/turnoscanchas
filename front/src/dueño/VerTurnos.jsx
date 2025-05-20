@@ -153,10 +153,10 @@ export const VerTurnos = () => {
           key={turno.id}
           className={`relative overflow-hidden min-h-24 border rounded-2xl flex font-poppins items-center gap-2 shadow-md px-4 py-6 ${
             turno.estado === "disponible"
-              ? "bg-gray-50"
+              ? "bg-green-200"
               : turno.estado === "pendiente"
               ? "bg-yellow-100"
-              : "bg-green-400"
+              : "bg-red-200"
           }`}
         >
           <div className="flex flex-col items-left justify-center gap-2 w-3/4 h-full relative">

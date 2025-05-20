@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
@@ -6,7 +6,7 @@ import { FaCheckCircle } from "react-icons/fa";
 export const AgregarTurno = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const cancha = location.state?.cancha;
+  const cancha = location.state?.cancha; 2
 
   const serverLocal = 'http://localhost:3001';
   const serverExterno = 'https://https://turnoscanchas-production.up.railway.app';
@@ -27,6 +27,37 @@ export const AgregarTurno = () => {
     const nuevosHorarios = horarios.filter((_, i) => i !== index);
     setHorarios(nuevosHorarios);
   };
+
+  const [horariosExistentes, setHorariosExistentes] = useState([]);
+
+  useEffect(() => {
+    const obtenerHorarios = async () => {
+      try {
+        const { data } = await axios.get(`${serverLocal}/api/turnos_canchas/canchas`, {
+          params: { id: cancha.id }
+        });
+        console.log("Turnos recibidos del backend:", data);
+        setHorariosExistentes(data);
+      } catch (error) {
+        console.error("Error al obtener horarios existentes:", error);
+      }
+    };
+
+    if (cancha?.id) {
+      obtenerHorarios();
+    }
+  }, [cancha]);
+
+
+  const fechaHoy = new Date().toISOString().split("T")[0]; // Ej: "2025-05-20"
+
+  const turnosHoy = horariosExistentes.filter((turno) => {
+    const fechaTurno = turno.fecha.split("T")[0]; // "2025-05-20"
+    return fechaTurno === fechaHoy;
+  });
+
+
+
 
   const handleSubmit = async () => {
     try {
@@ -54,6 +85,8 @@ export const AgregarTurno = () => {
     }
   };
 
+
+
   return (
     <section className="min-h-screen w-full py-10 px-4 bg-gradient-to-b from-white via-green-50 to-green-200 flex justify-center items-center">
       <div className="bg-white rounded-3xl shadow-xl p-8 max-w-md w-full">
@@ -61,6 +94,22 @@ export const AgregarTurno = () => {
         <p className="text-center text-sm text-gray-600 mb-6">
           Cancha: <span className="uppercase font-semibold">{cancha?.nombre}</span>
         </p>
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-green-700 mb-2">
+            Horarios cargados para hoy ({fechaHoy}):
+          </h3>
+          {turnosHoy.length > 0 ? (
+            <ul className="list-disc list-inside text-gray-700">
+              {turnosHoy.map((turno) => (
+                <li key={turno.id}>{turno.hora}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500">No hay horarios cargados para hoy.</p>
+          )}
+        </div>
+
+
 
         <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
           {horarios.map((hora, index) => (
