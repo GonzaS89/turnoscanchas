@@ -44,9 +44,9 @@ app.get('/api/turnos_canchas/canchas', async (req, res) => {
   }
 })
 
-app.put("/api/turnos/:idTurno", async (req, res) => {
+app.put("/api/turnos/:turnoId", async (req, res) => {
   const { nombre, telefono, dni } = req.body;
-  const { idTurno } = req.params; // Obtenemos el turno_id de los parámetros de la ruta
+  const { turnoId : idTurno } = req.params; // Obtenemos el turno_id de los parámetros de la ruta
 
   try {
     const [resultado] = await db.execute(
@@ -69,15 +69,15 @@ app.put("/api/turnos/:idTurno", async (req, res) => {
 
 /* CONFIRMAR TURNO QUE ESTABA EN PENDIENTE */
 
-app.put("/api/turnos/confirmar", async (req, res) => {
-  const { idTurno } = req.params; // Obtenemos el turno_id de los parámetros de la ruta
+app.put("/api/turnos/confirmar/:turnoId", async (req, res) => {
+  const { turnoId } = req.params;
 
   try {
     const [resultado] = await db.execute(
       `UPDATE turnos_canchas
        SET estado = 'reservado'
        WHERE id = ?`,
-      [idTurno]
+      [turnoId]
     );
 
     if (resultado.affectedRows > 0) {
@@ -90,6 +90,7 @@ app.put("/api/turnos/confirmar", async (req, res) => {
     res.status(500).json({ error: "Error al reservar turno" });
   }
 });
+
 
 // Suponiendo que la tabla se llama turnos_canchas
 app.get("/api/turnos_canchas/canchas", async (req, res) => {

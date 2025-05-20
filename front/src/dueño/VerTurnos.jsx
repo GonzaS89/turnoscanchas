@@ -137,79 +137,88 @@ export const VerTurnos = () => {
         ) : (
           Object.entries(turnosAgrupados).map(([fecha, turnosPorFecha]) => (
             <div key={fecha} className="mb-6">
-              <div className="flex justify-between items-center">
-                <h3 className="text-xl font-semibold text-gray-800">{fecha}</h3>
+  <div className="flex justify-between items-center">
+    <h3 className="text-2xl font-semibold text-gray-900">{fecha}</h3>
+    <button
+      onClick={() => toggleFechaVisibility(fecha)}
+      className="py-2 px-4 shadow-md border-2 border-gray-300 text-sm text-gray-700 font-medium hover:bg-gray-100 transition"
+    >
+      {fechaVisible[fecha] ? "Ocultar" : "Mostrar"} turnos
+    </button>
+  </div>
+
+  {fechaVisible[fecha] && (
+    <ul className="space-y-4 mt-5">
+      {turnosPorFecha.map((turno) => (
+        <li
+          key={turno.id}
+          className={`relative overflow-hidden min-h-24 border rounded-2xl flex flex-col justify-center items-center gap-4 shadow-md px-4 py-2 ${
+            turno.estado === "disponible"
+              ? "bg-gray-50"
+              : turno.estado === "pendiente"
+              ? "bg-yellow-100"
+              : "bg-red-100"
+          }`}
+        >
+          <div className="flex flex-col items-center justify-center gap-2 w-full h-full">
+            <span className="text-lg font-bold text-gray-800">
+              {turno.hora.split(":").slice(0, 2).join(":")} HS
+            </span>
+
+            {turno.nombre && (
+              <div className="text-center text-sm text-gray-700 leading-snug">
+                <p className="font-semibold">Reservado por:</p>
+                <p className="text-base font-medium text-gray-900">{turno.nombre}</p>
+                <p>DNI: <span className="font-medium">{turno.dni}</span></p>
+                <p>Tel: <span className="font-medium">{turno.telefono}</span></p>
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center gap-4 flex-wrap justify-center">
+            {turno.estado === "reservado" && (
+              <button
+                onClick={() => ponerDisponible(turno.id)}
+                className="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-1 rounded-md shadow transition uppercase"
+              >
+                Liberar
+              </button>
+            )}
+
+            {turno.estado === "pendiente" && (
+              <div className="flex flex-col gap-2">
                 <button
-                  onClick={() => toggleFechaVisibility(fecha)}
-                  className="py-2 px-4 shadow-lg border-2 text-gray-600"
+                  className="py-2 px-4 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg"
+                  onClick={() => confirmarPendiente(turno.id)}
                 >
-                  {fechaVisible[fecha] ? "Ocultar" : "Mostrar"} turnos
+                  Confirmar
+                </button>
+                <button
+                  className="py-2 px-4 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg"
+                  onClick={() => ponerDisponible(turno.id)}
+                >
+                  Liberar
                 </button>
               </div>
-              {fechaVisible[fecha] && (
-                <ul className="space-y-4 mt-4">
-                  {turnosPorFecha.map((turno) => (
-                    <li
-                      key={turno.id}
-                      className={`relative overflow-hidden h-20 border rounded-2xl flex flex-col justify-between items-center gap-4 shadow-lg ${turno.estado === "disponible"
-                          ? "bg-gray-100 bg-opacity-60"
-                          : turno.estado === 'pendiente' ? 'bg-yellow-50 '
-                            : "bg-red-50 "
-                        }`}
-                    >
-                      <div className="flex flex-col justify-center items-center gap-4 relative w-full h-full">
-                        <span className="text-2xl font-semibold text-gray-500 absolute font-principal">
-                          {turno.hora.split(":").slice(0, 2).join(":")} HS
-                        </span>
-                        {turno.nombre && (
-                          <span className="text-sm text-center text-gray-600 uppercase">
-                            Reservado por: <br /> {turno.nombre} <br />
-                            {turno.dni} <br />
-                            {turno.telefono}
-                          </span>
-                        )}
-                        
-                      </div>
-                      {/* <span
-                          className={`absolute text-lg uppercase ${turno.estado === "reservado"
-                              ? "text-red-500"
-                              : "text-green-600"
-                            }`}
-                        >
-                          {turno.estado === "disponible" ? "disponible" : ""}
-                        </span> */}
+            )}
 
-                      <div className="flex items-center gap-4 flex-wrap justify-center">
-                        {turno.estado === "reservado" ? (
-                          <button
-                            onClick={() => ponerDisponible(turno.id)}
-                            className="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-1 rounded-md shadow transition uppercase"
-                          >
-                            Liberar
-                          </button>
-                        ) : turno.estado === 'pendiente' &&
-                        (
-                          <div className="flex flex-col gap-2">
-                            <button className="py-2 px-4 bg-green-400 text-gray-100 uppercase text-sm rounded-lg" onClick={() => console.log(turno.id)}>Confirmar</button>
-                            <button className="py-2 px-4 bg-red-500 text-gray-100 uppercase text-sm rounded-lg" onClick={() => ponerDisponible(turno.id)}>Liberar</button>
-                          </div>
-                        )}
+            {turno.estado === "disponible" && (
+              <button
+                onClick={() => eliminarTurno(turno.id)}
+                className="absolute h-full bg-red-600 top-0 right-0 px-3"
+                title="Eliminar turno"
+              >
+                <FaTrashAlt className="text-xl text-white" />
+              </button>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
 
-                        {turno.estado === "disponible" && (
-                          <button
-                            onClick={() => eliminarTurno(turno.id)}
-                            className="absolute h-full bg-red-600 top-0 right-0 px-3"
-                            title="Eliminar turno"
-                          >
-                            <FaTrashAlt className="text-2xl text-white" />
-                          </button>
-                        )}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+
           ))
         )}
       </div>
