@@ -88,20 +88,21 @@ export const VerTurnos = () => {
   const confirmarPendiente = async (turnoId) => {
     try {
       await axios.put(
-        `${serverLocal}/api/turnos/confirmar/${turnoId}`)
-        ;
-
+        `${serverLocal}/api/turnos/confirmar/${turnoId}`
+      );
+  
       setTurnos((prevTurnos) =>
         prevTurnos.map((turno) =>
           turno.id === turnoId
-            ? { ...turno, estado: "reservado", nombre: null, dni: null }
+            ? { ...turno, estado: "reservado" } // 🛠️ este es el fix
             : turno
         )
       );
     } catch (error) {
-      console.error("Error al poner disponible:", error);
+      console.error("Error al confirmar turno:", error);
     }
   };
+  
 
   const eliminarTurno = async (turnoId) => {
     const confirmar = window.confirm(
@@ -153,10 +154,10 @@ export const VerTurnos = () => {
           key={turno.id}
           className={`relative overflow-hidden min-h-24 border rounded-2xl flex font-poppins items-center gap-2 shadow-md px-4 py-6 ${
             turno.estado === "disponible"
-              ? "bg-green-200"
+              ? "bg-gray-100"
               : turno.estado === "pendiente"
               ? "bg-yellow-100"
-              : "bg-red-200"
+              : "bg-green-200"
           }`}
         >
           <div className="flex flex-col items-left justify-center gap-2 w-3/4 h-full relative">

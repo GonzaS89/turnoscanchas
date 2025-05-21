@@ -67,6 +67,7 @@ app.put("/api/turnos/:turnoId", async (req, res) => {
   }
 });
 
+
 /* CONFIRMAR TURNO QUE ESTABA EN PENDIENTE */
 
 app.put("/api/turnos/confirmar/:turnoId", async (req, res) => {
@@ -113,7 +114,7 @@ app.get("/api/turnos_canchas/canchas", async (req, res) => {
 /* LIBERAR TURNO */
 
 app.put("/api/turnos/liberar/:id", async (req, res) => {
-  console.log("Datos recibidos:", req.body); 
+  console.log("Datos recibidos:", req.body);
   const { id } = req.params;
 
   try {
