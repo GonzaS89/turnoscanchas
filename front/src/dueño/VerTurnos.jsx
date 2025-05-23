@@ -23,7 +23,7 @@ export const VerTurnos = () => {
     if (cancha?.id) {
       axios
         .get(
-          `${serverLocal}/api/turnos_canchas/canchas?id=${cancha.id}`
+          `${serverExterno}/api/turnos_canchas/canchas?id=${cancha.id}`
         )
         .then((res) => {
           const turnosOrdenados = res.data.sort(
@@ -70,7 +70,7 @@ export const VerTurnos = () => {
   const ponerDisponible = async (turnoId) => {
     try {
       await axios.put(
-        `${serverLocal}/api/turnos/liberar/${turnoId}`
+        `${serverExterno}/api/turnos/liberar/${turnoId}`
       );
 
       setTurnos((prevTurnos) =>
@@ -88,9 +88,9 @@ export const VerTurnos = () => {
   const confirmarPendiente = async (turnoId) => {
     try {
       await axios.put(
-        `${serverLocal}/api/turnos/confirmar/${turnoId}`
+        `${serverExterno}/api/turnos/confirmar/${turnoId}`
       );
-  
+
       setTurnos((prevTurnos) =>
         prevTurnos.map((turno) =>
           turno.id === turnoId
@@ -102,7 +102,7 @@ export const VerTurnos = () => {
       console.error("Error al confirmar turno:", error);
     }
   };
-  
+
 
   const eliminarTurno = async (turnoId) => {
     const confirmar = window.confirm(
@@ -112,7 +112,7 @@ export const VerTurnos = () => {
 
     try {
       await axios.delete(
-        `${serverLocal}/api/turnos_canchas/${turnoId}`
+        `${serverExterno}/api/turnos_canchas/${turnoId}`
       );
       setTurnos((prevTurnos) =>
         prevTurnos.filter((turno) => turno.id !== turnoId)
@@ -127,7 +127,7 @@ export const VerTurnos = () => {
       <header className="flex justify-between items-center mb-6 w-full max-w-4xl px-2">
         <h1 className="text-2xl font-bold text-green-700 uppercase">Gestión de turnos</h1>
       </header>
-  
+
       <div className="bg-white rounded-xl p-6 shadow-xl w-full max-w-4xl border-t-2">
         <h2 className="text-lg font-semibold text-gray-800 mb-6">
           Turnos por fechas
@@ -146,26 +146,25 @@ export const VerTurnos = () => {
                   {fechaVisible[fecha] ? "Ocultar" : "Mostrar"} turnos
                 </button>
               </div>
-  
+
               {fechaVisible[fecha] && (
                 <ul className="space-y-5 px-2">
                   {turnosPorFecha.map((turno) => (
                     <li
                       key={turno.id}
-                      className={`relative min-h-[90px] border rounded-2xl flex flex-col sm:flex-row font-poppins gap-4 shadow-md p-4 ${
-                        turno.estado === "disponible"
-                          ? "bg-gray-100"
-                          : turno.estado === "pendiente"
+                      className={`relative min-h-[90px] border rounded-2xl flex flex-col sm:flex-row font-poppins gap-4 shadow-md p-4 ${turno.estado === "disponible"
+                        ? "bg-gray-100"
+                        : turno.estado === "pendiente"
                           ? "bg-yellow-100"
                           : "bg-green-200"
-                      }`}
+                        }`}
                     >
                       <div className="flex flex-row sm:flex-col items-center sm:items-start justify-between sm:justify-center w-full sm:w-24">
                         <span className="text-3xl font-bold text-gray-800">
-                          {turno.hora.slice(0,5)} HS
+                          {turno.hora.slice(0, 5)} HS
                         </span>
                       </div>
-  
+
                       <div className="flex flex-col justify-center w-full sm:w-3/4">
                         {isReservado(turno.estado) ? (
                           <div className="text-sm sm:text-base leading-snug text-gray-800">
@@ -177,7 +176,7 @@ export const VerTurnos = () => {
                           <p className="text-gray-600 text-center sm:text-left font-semibold">Disponible</p>
                         )}
                       </div>
-  
+
                       <div className="flex flex-col sm:flex-row gap-3 items-center justify-center sm:w-1/4">
                         {turno.estado === "reservado" && (
                           <button
@@ -187,7 +186,7 @@ export const VerTurnos = () => {
                             Liberar
                           </button>
                         )}
-  
+
                         {turno.estado === "pendiente" && (
                           <div className="flex flex-col sm:flex-row gap-2 w-full">
                             <button
@@ -204,14 +203,14 @@ export const VerTurnos = () => {
                             </button>
                           </div>
                         )}
-  
+
                         {turno.estado === "disponible" && (
                           <button
                             onClick={() => eliminarTurno(turno.id)}
                             className="py-3 px-3 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm transition"
                             title="Eliminar turno"
                           >
-                            <FaTrashAlt className="text-xl"/>
+                            <FaTrashAlt className="text-xl" />
                           </button>
                         )}
                       </div>
@@ -225,5 +224,5 @@ export const VerTurnos = () => {
       </div>
     </section>
   );
-  
+
 };

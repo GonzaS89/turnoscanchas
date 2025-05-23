@@ -11,7 +11,7 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
   //   console.log(turnos)
   // },[turnos])
 
-  
+
   const fechaHoy = new Date().toLocaleDateString("sv-SE"); // "YYYY-MM-DD"
 
   const turnosDeHoy = turnos?.filter((turno) => {
@@ -23,13 +23,13 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
       const [hora, minutos] = horaStr.split(":").map(Number);
       return hora === 0 ? 1440 : hora * 60 + minutos; // 1440 minutos para las 00:00
     };
-  
+
     const minutosA = getMinutos(a.hora);
     const minutosB = getMinutos(b.hora);
-  
+
     return minutosA - minutosB; // Ordenar de menor a mayor
   });
-  
+
 
 
   const formatearFecha = (fechaStr) => {
@@ -43,7 +43,7 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
   const formatearHora = (horaStr) => horaStr.slice(0, 5);
 
   // Filtrar turnos que coincidan con la fecha de hoy
-  
+
 
   return (
     <div className="w-full h-screen flex flex-col justify-center gap-8 bg-gradient-to-b from-white via-green-50 to-green-400 p-5">
@@ -77,11 +77,10 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
                   className={`
     group flex items-center justify-between w-full px-6 py-5 rounded-2xl shadow-md
     transition-all duration-200 ease-in-out transform
-    ${
-      turno.estado === "reservado" || turno.estado === 'pendiente'
-        ? "bg-gray-300 cursor-not-allowed"
-        : "bg-white hover:bg-green-100 hover:shadow-lg active:scale-95"
-    }
+    ${turno.estado === "reservado" || turno.estado === 'pendiente'
+                      ? "bg-gray-300 cursor-not-allowed"
+                      : "bg-white hover:bg-green-100 hover:shadow-lg active:scale-95"
+                    }
   `}
                 >
                   {/* Emoji con animación si está disponible */}

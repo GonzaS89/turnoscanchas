@@ -12,7 +12,7 @@ export const useObtenerTurnosxCancha = (id) => {
     console.log("ID recibido:", id);
     const obtenerDatos = async () => {
       try {
-        const res = await axios.get(`${serverLocal}/api/turnos_canchas/canchas?id=${id}`);
+        const res = await axios.get(`${serverExterno}/api/turnos_canchas/canchas?id=${id}`);
         setTurnos(res.data);
       } catch (error) {
         console.error("Error al obtener turnos:", error);

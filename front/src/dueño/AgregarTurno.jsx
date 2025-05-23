@@ -33,7 +33,7 @@ export const AgregarTurno = () => {
   useEffect(() => {
     const obtenerHorarios = async () => {
       try {
-        const { data } = await axios.get(`${serverLocal}/api/turnos_canchas/canchas`, {
+        const { data } = await axios.get(`${serverExterno}/api/turnos_canchas/canchas`, {
           params: { id: cancha.id }
         });
         console.log("Turnos recibidos del backend:", data);
@@ -61,7 +61,7 @@ export const AgregarTurno = () => {
     try {
       await Promise.all(
         horarios.map((hora) =>
-          axios.post(`${serverLocal}/api/turnos_canchas`, {
+          axios.post(`${serverExterno}/api/turnos_canchas`, {
             hora,
             cancha_id: cancha.id,
             estado: "disponible"
