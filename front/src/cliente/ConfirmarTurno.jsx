@@ -49,7 +49,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   const reservarTurno = async () => {
     try {
       const res = await axios.put(
-        `${serverLocal}/api/turnos/${idTurno}`,
+        `${serverExterno}/api/turnos/${idTurno}`,
         {
           nombre: formData.nombre,
           telefono: formData.telefono,
