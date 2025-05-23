@@ -9,7 +9,7 @@ export const AgregarTurno = () => {
   const cancha = location.state?.cancha; 2
 
   const serverLocal = 'http://localhost:3001';
-  const serverExterno = 'https://https://turnoscanchas-production.up.railway.app';
+  const serverExterno = 'https://turnoscanchas-production.up.railway.app';
 
   const [horarios, setHorarios] = useState([""]);
   const [showModal, setShowModal] = useState(false);
