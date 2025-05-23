@@ -1,52 +1,69 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FcCalendar } from "react-icons/fc";
-import { FcPlus } from "react-icons/fc";
+import { FcCalendar, FcPlus } from "react-icons/fc";
+import { IoSettingsSharp } from "react-icons/io5";
 
 export const PanelCancha = () => {
   const location = useLocation();
   const cancha = location.state?.cancha;
-
-  console.log(cancha);
-
-  const [vista, setVista] = useState(""); // Para determinar qué vista mostrar después
-
-  //   const cerrarSesion = () => navigate("/");
+  const [vista, setVista] = useState("");
 
   return (
-    <section className="min-h-screen w-full justify-around py-10 px-6 bg-gradient-to-b from-white via-green-50 to-green-200 flex flex-col items-center relative">
-      <p className="absolute top-0 text-white text-center py-4 w-full bg-green-600 bg-opacity-60">¡Bienvenido {cancha.propietario_nombre}!</p>
-      <header className="w-full max-w-4xl flex justify-between items-center mb-10">
-        <h1 className="text-3xl font-bold text-green-700 uppercase text-center w-full">
-          Panel de gestión
+    <section className="min-h-screen w-full bg-gradient-to-b from-white via-green-50 to-green-100 px-4 py-10 flex flex-col items-center">
+      {/* Título */}
+      <header className="text-center mb-10 flex flex-col items-center gap-12">
+        <p className="text-xl text-green-800 font-medium mb-2 capitalize">
+          Hola, {cancha?.propietario_nombre || "propietario"} 👋
+        </p>
+        <h1 className="text-3xl font-bold text-green-700 uppercase text-center tracking-wide">
+          Gestión de cancha <br /> 
+          <span className="text-xs text-gray-500">cancha: {cancha?.nombre || "tu cancha"}</span>
         </h1>
       </header>
 
-      <div className="w-full max-w-4xl flex flex-col gap-4">
-        <Link to={"/verturnos"} state={{ cancha }}>
+      {/* Botones de acción */}
+      <div className="w-full max-w-3xl flex flex-col gap-6">
+        {/* Ver Turnos */}
+        <Link to="/verturnos" state={{ cancha }}>
           <button
             onClick={() => setVista("verTurnos")}
-            className=" w-full bg-white hover:bg-green-100 border-2 border-green-300 p-6 rounded-2xl shadow text-green-900 font-semibold text-lg transition flex items-center justify-between"
+            className="w-full flex items-center justify-between p-6 rounded-2xl bg-white hover:bg-green-100 border border-green-300 shadow transition"
           >
-            <FcCalendar className="text-5xl"/>
-            <p className="w-3/4 uppercase">Ver turnos</p>
+            <FcCalendar className="text-5xl" />
+            <span className="text-lg font-semibold text-green-800 uppercase w-3/4 text-right">
+              Ver turnos
+            </span>
           </button>
         </Link>
 
-        <Link to={"/agregarturno"} state={{ cancha }}>
+        {/* Agregar Turnos */}
+        <Link to="/agregarturno" state={{ cancha }}>
           <button
             onClick={() => setVista("agregarTurno")}
-            className="w-full bg-white hover:bg-blue-100 border-2 border-blue-300 p-6 rounded-2xl shadow text-blue-900 font-semibold text-lg transition flex items-center justify-between"
+            className="w-full flex items-center justify-between p-6 rounded-2xl bg-white hover:bg-blue-100 border border-blue-300 shadow transition"
           >
-            <FcPlus className="text-5xl"/>
-            <p className="w-3/4 uppercase">Agregar turnos</p>
+            <FcPlus className="text-5xl" />
+            <span className="text-lg font-semibold text-blue-800 uppercase w-3/4 text-right">
+              Agregar turnos
+            </span>
           </button>
         </Link>
-      </div>
 
-      {/* Podés ir mostrando el componente que quieras según la vista seleccionada */}
-      {/* {vista === "verTurnos" && <ComponenteVerTurnos cancha={cancha} />} */}
+        {/* Mi Cuenta */}
+        <Link to="/" state={{ cancha }}>
+          <button
+            onClick={() => setVista("miCuenta")}
+            className="w-full flex items-center justify-between p-6 rounded-2xl bg-white hover:bg-gray-100 border border-gray-300 shadow transition"
+          >
+            <IoSettingsSharp className="text-5xl text-gray-600" />
+            <span className="text-lg font-semibold text-gray-800 uppercase w-3/4 text-right">
+              Mi cuenta
+            </span>
+          </button>
+        </Link>
+
+      </div>
     </section>
   );
 };
