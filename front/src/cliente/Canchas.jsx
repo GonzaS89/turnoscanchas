@@ -26,7 +26,7 @@ export const Canchas = ({ idCancha }) => {
               key={cancha.id}
               to="/reservadeturno"
               state={{ idCancha: cancha.id }}
-              className="flex items-center gap-4 rounded-2xl p-4 shadow-md hover:shadow-lg bg-white hover:bg-green-100 transition-all duration-200 active:scale-95 group"
+              className="flex items-center gap-4 rounded-2xl p-4 shadow-md hover:shadow-lg bg-white hover:bg-green-100 transition-all duration-200 active:scale-95 group "
               onClick={() => idCancha(cancha.id)}
             >
               <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-green-300 shadow-sm">
