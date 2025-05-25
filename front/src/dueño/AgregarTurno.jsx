@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  FaCheckCircle, 
-  FaPlus, 
-  FaTimes, 
+import {
+  FaCheckCircle,
+  FaPlus,
+  FaTimes,
   FaArrowLeft,
-  FaClock
+  FaClock,
 } from "react-icons/fa";
 
 export const AgregarTurno = () => {
@@ -15,7 +15,7 @@ export const AgregarTurno = () => {
   const location = useLocation();
   const cancha = location.state?.cancha;
 
-  const serverExterno = 'https://turnoscanchas-production.up.railway.app';
+  const serverExterno = "https://turnoscanchas-production.up.railway.app";
 
   const [horarios, setHorarios] = useState([""]);
   const [showModal, setShowModal] = useState(false);
@@ -28,9 +28,12 @@ export const AgregarTurno = () => {
     const obtenerHorarios = async () => {
       try {
         setIsLoading(true);
-        const { data } = await axios.get(`${serverExterno}/api/turnos_canchas/canchas`, {
-          params: { id: cancha.id }
-        });
+        const { data } = await axios.get(
+          `${serverExterno}/api/turnos_canchas/canchas`,
+          {
+            params: { id: cancha.id },
+          }
+        );
         setHorariosExistentes(data);
       } catch (error) {
         console.error("Error al obtener horarios existentes:", error);
@@ -43,9 +46,31 @@ export const AgregarTurno = () => {
   }, [cancha]);
 
   // Formatear fecha actual
-  const fechaHoy = new Date().toISOString().split("T")[0];
+  // 1. Primero, obtenemos la fecha actual en formato ISO (YYYY-MM-DD)
+  const hoy = new Date();
+  const fechaHoyISO = hoy.toISOString().split("T")[0]; // Esto dará "2024-05-26" (UTC)
+
+  // 2. Alternativa más robusta para zona horaria local:
+  const fechaHoyLocal = new Date(
+    hoy.getTime() - hoy.getTimezoneOffset() * 60000
+  )
+    .toISOString()
+    .split("T")[0];
+
+  // 3. Función para normalizar fechas (maneja UTC y convierte a local)
+  const normalizarFecha = (fechaISO) => {
+    const fecha = new Date(fechaISO);
+    return new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000)
+      .toISOString()
+      .split("T")[0];
+  };
+
+  // 4. Filtrado CORREGIDO:
   const turnosHoy = horariosExistentes
-    .filter(turno => turno.fecha.split("T")[0] === fechaHoy)
+    .filter((turno) => {
+      const fechaTurnoNormalizada = normalizarFecha(turno.fecha);
+      return fechaTurnoNormalizada === fechaHoyLocal;
+    })
     .sort((a, b) => a.hora.localeCompare(b.hora));
 
   // Manejo de horarios
@@ -54,6 +79,10 @@ export const AgregarTurno = () => {
     nuevosHorarios[index] = value;
     setHorarios(nuevosHorarios);
   };
+
+  useEffect(() => {
+    console.log(turnosHoy);
+  }, [horariosExistentes]);
 
   const agregarCampo = () => setHorarios([...horarios, ""]);
 
@@ -67,11 +96,11 @@ export const AgregarTurno = () => {
     try {
       setIsLoading(true);
       await Promise.all(
-        horarios.map(hora => 
+        horarios.map((hora) =>
           axios.post(`${serverExterno}/api/turnos_canchas`, {
             hora,
             cancha_id: cancha.id,
-            estado: "disponible"
+            estado: "disponible",
           })
         )
       );
@@ -111,11 +140,9 @@ export const AgregarTurno = () => {
             <FaArrowLeft />
             <span className="hidden sm:inline">Volver</span>
           </button>
-          
           <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
             Agregar Turnos
           </h2>
-          
           <div className="w-6"></div> {/* Spacer para alinear */}
         </div>
 
@@ -132,7 +159,7 @@ export const AgregarTurno = () => {
             <FaClock className="text-emerald-600" />
             Turnos para hoy:
           </h3>
-          
+
           {isLoading ? (
             <div className="flex justify-center">
               <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-emerald-500"></div>
@@ -140,8 +167,8 @@ export const AgregarTurno = () => {
           ) : turnosHoy.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {turnosHoy.map((turno) => (
-                <span 
-                  key={turno.id} 
+                <span
+                  key={turno.id}
                   className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium"
                 >
                   {turno.hora.slice(0, 5)}
@@ -149,7 +176,9 @@ export const AgregarTurno = () => {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500 text-sm">No hay turnos cargados para hoy.</p>
+            <p className="text-gray-500 text-sm">
+              No hay turnos cargados para hoy.
+            </p>
           )}
         </div>
 
@@ -195,11 +224,11 @@ export const AgregarTurno = () => {
             <button
               type="button"
               onClick={() => setConfIngresos(true)}
-              disabled={horarios.some(h => !h)}
+              disabled={horarios.some((h) => !h)}
               className={`w-full py-3 px-4 rounded-lg font-medium transition-all ${
-                horarios.some(h => !h)
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-emerald-600 to-green-700 hover:from-emerald-700 hover:to-green-800 text-white shadow-md hover:shadow-lg'
+                horarios.some((h) => !h)
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-gradient-to-r from-emerald-600 to-green-700 hover:from-emerald-700 hover:to-green-800 text-white shadow-md hover:shadow-lg"
               }`}
             >
               Guardar Turnos
@@ -226,11 +255,12 @@ export const AgregarTurno = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-4">
                 Confirmar turnos
               </h3>
-              
+
               <p className="text-gray-600 mb-6">
-                ¿Estás seguro de agregar {horarios.length} {horarios.length === 1 ? 'turno' : 'turnos'}?
+                ¿Estás seguro de agregar {horarios.length}{" "}
+                {horarios.length === 1 ? "turno" : "turnos"}?
               </p>
-              
+
               <ul className="space-y-2 mb-6">
                 {horarios.map((hora, i) => (
                   <li key={i} className="flex items-center gap-2">
@@ -240,7 +270,7 @@ export const AgregarTurno = () => {
                   </li>
                 ))}
               </ul>
-              
+
               <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setConfIngresos(false)}
@@ -256,8 +286,19 @@ export const AgregarTurno = () => {
                   {isLoading ? (
                     <>
                       <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Procesando...
                     </>

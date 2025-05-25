@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  FaTrashAlt, 
-  FaCheck, 
-  FaTimes, 
+import {
+  FaTrashAlt,
+  FaCheck,
+  FaTimes,
   FaArrowLeft,
   FaCalendarAlt,
   FaUser,
   FaIdCard,
-  FaPhone
+  FaPhone,
+  FaClock
 } from "react-icons/fa";
 import { FcClock } from "react-icons/fc";
 
@@ -25,16 +26,21 @@ export const VerTurnos = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const serverExterno = 'https://turnoscanchas-production.up.railway.app';
+  const serverExterno = "https://turnoscanchas-production.up.railway.app";
 
-  const isReservado = (estado) => (estado === "reservado" || estado === "pendiente");
+  const isReservado = (estado) =>
+    estado === "reservado" || estado === "pendiente";
 
   useEffect(() => {
     const fetchTurnos = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`${serverExterno}/api/turnos_canchas/canchas?id=${cancha.id}`);
-        const turnosOrdenados = res.data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        const res = await axios.get(
+          `${serverExterno}/api/turnos_canchas/canchas?id=${cancha.id}`
+        );
+        const turnosOrdenados = res.data.sort(
+          (a, b) => new Date(b.fecha) - new Date(a.fecha)
+        );
         setTurnos(turnosOrdenados);
       } catch (err) {
         console.error("Error al obtener turnos:", err);
@@ -113,7 +119,9 @@ export const VerTurnos = () => {
 
     try {
       await axios.delete(`${serverExterno}/api/turnos_canchas/${turnoId}`);
-      setTurnos((prevTurnos) => prevTurnos.filter((turno) => turno.id !== turnoId));
+      setTurnos((prevTurnos) =>
+        prevTurnos.filter((turno) => turno.id !== turnoId)
+      );
     } catch (error) {
       console.error("Error al eliminar turno:", error);
       alert("Error al eliminar el turno");
@@ -121,9 +129,18 @@ export const VerTurnos = () => {
   };
 
   const formatFecha = (fechaStr) => {
-    const options = { weekday: 'long', day: 'numeric', month: 'long' };
     const fecha = new Date(fechaStr);
-    return fecha.toLocaleDateString('es-ES', options);
+
+    // Ajustar por zona horaria si es necesario (opcional, dependiendo de tu backend)
+    const fechaAjustada = new Date(
+      fecha.getTime() + fecha.getTimezoneOffset() * 60000
+    );
+
+    const options = { weekday: "long", day: "numeric", month: "long" };
+    const fechaFormateada = fechaAjustada.toLocaleDateString("es-ES", options);
+
+    // Capitalizar la primera letra del día (ej: "sábado" → "Sábado")
+    return fechaFormateada.replace(/\b\w/, (letra) => letra.toUpperCase());
   };
 
   return (
@@ -143,17 +160,15 @@ export const VerTurnos = () => {
             <FaArrowLeft className="text-lg" />
             <span className="hidden sm:inline">Volver</span>
           </button>
-          
           <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
             Gestión de Turnos
           </h1>
-          
           <div className="w-8"></div> {/* Spacer para alinear */}
         </header>
 
         {/* Información de la cancha */}
         <div className="bg-white rounded-xl shadow-md p-4 mb-8 border border-emerald-100">
-          <h2 className="text-lg font-semibold text-emerald-800 mb-2">
+          <h2 className="text-lg font-semibold text-emerald-800 mb-2 uppercase">
             {cancha?.nombre || "Tu cancha"}
           </h2>
           <p className="text-gray-600 text-sm">
@@ -173,8 +188,12 @@ export const VerTurnos = () => {
         ) : Object.keys(turnosAgrupados).length === 0 ? (
           <div className="bg-white rounded-xl shadow-md p-8 text-center">
             <FaCalendarAlt className="mx-auto text-4xl text-gray-400 mb-4" />
-            <h3 className="text-xl font-medium text-gray-700 mb-2">No hay turnos registrados</h3>
-            <p className="text-gray-500">Aún no hay turnos cargados para esta cancha</p>
+            <h3 className="text-xl font-medium text-gray-700 mb-2">
+              No hay turnos registrados
+            </h3>
+            <p className="text-gray-500">
+              Aún no hay turnos cargados para esta cancha
+            </p>
           </div>
         ) : (
           <div className="space-y-8">
@@ -213,7 +232,13 @@ export const VerTurnos = () => {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.2 }}
-                          className={`p-4 ${turno.estado === "disponible" ? "bg-white" : turno.estado === "pendiente" ? "bg-yellow-50" : "bg-green-50"}`}
+                          className={`p-4 ${
+                            turno.estado === "disponible"
+                              ? "bg-white"
+                              : turno.estado === "pendiente"
+                              ? "bg-yellow-50"
+                              : "bg-green-50"
+                          }`}
                         >
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             {/* Información del turno */}
@@ -222,7 +247,7 @@ export const VerTurnos = () => {
                                 <FcClock className="text-3xl" />
                                 <span className="sr-only">{turno.hora}</span>
                               </div>
-                              
+
                               <div>
                                 <p className="text-xl font-bold text-gray-800 mb-1">
                                   {turno.hora} hs
@@ -243,9 +268,24 @@ export const VerTurnos = () => {
                                         Tel: {turno.telefono}
                                       </p>
                                     )}
+                                    {/* Añadimos este elemento para mostrar el estado */}
+                                    {turno.estado === "reservado" && (
+                                      <p className="flex items-center gap-2 text-sm font-medium text-green-600">
+                                        <FaCheck className="text-green-500" />
+                                        Reservado
+                                      </p>
+                                    )}
+                                    {turno.estado === "pendiente" && (
+                                      <p className="flex items-center gap-2 text-sm font-medium text-yellow-600">
+                                        <FaClock className="text-yellow-500" />
+                                        Pendiente de confirmación
+                                      </p>
+                                    )}
                                   </div>
                                 ) : (
-                                  <p className="text-emerald-600 font-medium">Disponible</p>
+                                  <p className="text-emerald-600 font-medium">
+                                    Disponible
+                                  </p>
                                 )}
                               </div>
                             </div>
