@@ -3,11 +3,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
-import { FaCheckCircle } from "react-icons/fa";
-import { IoMdAlert } from "react-icons/io";
+import { FaCheckCircle, FaClock, FaUser, FaIdCard, FaPhone } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
-const serverLocal = 'http://localhost:3001';
 const serverExterno = 'https://turnoscanchas-production.up.railway.app';
 
 export const ConfirmarTurno = ({ idCancha, idTurno }) => {
@@ -15,20 +13,19 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
   const { turnos } = useObtenerTurnosxCancha(idCancha);
 
   const cancha = canchas.find((cancha) => cancha.id === idCancha);
-  const turno = turnos && turnos.find((turno) => turno.id === idTurno);
+  const turno = turnos?.find((turno) => turno.id === idTurno);
 
   const [formData, setFormData] = useState({
     nombre: "",
     telefono: "",
     dni: "",
   });
-  const [isData, setIsData] = useState(false);
-  const [showModal, setShowModal] = useState(false); // Para mostrar el modal de confirmación
-  const [turnoConfirmado, setTurnoConfirmado] = useState(false); // Para saber si el turno fue confirmado
+  const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [turnoConfirmado, setTurnoConfirmado] = useState(false);
 
   const navigate = useNavigate();
 
-  // Manejar el cambio de los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -37,241 +34,253 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
     }));
   };
 
-  // Función para formatear la hora
   const formatearFecha = (fechaStr) => {
-    const [año, mes, día] = fechaStr.split("T")[0].split("-");
-    return `${día}-${mes}`;
+    const fecha = new Date(fechaStr);
+    return fecha.toLocaleDateString('es-AR', { day: 'numeric', month: 'long' });
   };
 
   const formatearHora = (hora) => hora.slice(0, 5);
 
-  // Reservar el turno mediante la API
   const reservarTurno = async () => {
     try {
-      const res = await axios.put(
-        `${serverExterno}/api/turnos/${idTurno}`,
-        {
-          nombre: formData.nombre,
-          telefono: formData.telefono,
-          dni: formData.dni,
-        }
-      );
-
-      console.log("Turno reservado correctamente", res.data);
-      setTurnoConfirmado(true); // Setea que el turno ha sido confirmado
+      setIsLoading(true);
+      await axios.put(`${serverExterno}/api/turnos/${idTurno}`, {
+        nombre: formData.nombre,
+        telefono: formData.telefono,
+        dni: formData.dni,
+      });
+      setTurnoConfirmado(true);
     } catch (err) {
-      console.error(
-        "Error al reservar turno:",
-        err.response?.data || err.message
-      );
-      alert("Error al reservar turno");
+      console.error("Error al reservar turno:", err.response?.data || err.message);
+      alert("Error al reservar el turno");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Manejar el cierre del modal
   const closeModal = () => {
     navigate("/");
     setShowModal(false);
-    setFormData({ nombre: "", telefono: "" });
-    setIsData(false);
+    setFormData({ nombre: "", telefono: "", dni: "" });
   };
 
   return (
-    <div className="bg-gradient-to-b from-white via-green-50 to-green-400 flex flex-col justify-center h-screen w-full items-center px-6">
-      {cancha ? (
-        <div className="w-full flex justify-center items-center relative">
-          {/* Formulario para ingresar los datos */}
-
-          <motion.form
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="bg-white/90 shadow-lg rounded-lg p-6 flex flex-col gap-6 border border-gray-100 backdrop-blur w-full"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <h2 className="text-2xl font-bold text-center text-green-700 mb-4">
-              Confirmá tu identidad
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen w-full bg-gradient-to-b from-white via-green-50 to-green-100 flex flex-col items-center justify-center p-6"
+    >
+      {cancha && turno && (
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="w-full max-w-md"
+        >
+          {/* Tarjeta de información */}
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-6 border border-emerald-100">
+            <h2 className="text-2xl font-bold text-center text-emerald-800 mb-4">
+              Confirmá tu turno
             </h2>
-
-            {/* Nombre y apellido */}
-            <label className="flex flex-col gap-1 text-gray-700 font-semibold">
-              Nombre y apellido
-              <input
-                type="text"
-                name="nombre"
-                placeholder="Ingresá tu nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                required
-                className="p-3 border border-green-300 rounded-md focus:ring-2 focus:ring-green-400"
-              />
-            </label>
-
-            {/* DNI */}
-            <label className="flex flex-col gap-1 text-gray-700 font-semibold">
-              DNI
-              <input
-                type="number"
-                name="dni"
-                placeholder="Ingresá tu dni"
-                value={formData.dni}
-                onChange={handleChange}
-                required
-                className="p-3 border border-green-300 rounded-md focus:ring-2 focus:ring-green-400"
-              />
-            </label>
-
-            {/* Teléfono */}
-            <label className="flex flex-col gap-1 text-gray-700 font-semibold">
-              Teléfono
-              <input
-                type="number"
-                name="telefono"
-                placeholder="Ingresá tu teléfono"
-                value={formData.telefono}
-                onChange={handleChange}
-                required
-                className="p-3 border border-green-300 rounded-md focus:ring-2 focus:ring-green-400"
-              />
-            </label>
-
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              type="submit"
-              disabled={
-                !(
-                  formData.nombre &&
-                  formData.telefono &&
-                  formData.telefono.length === 10
-                )
-              }
-              onClick={() => {
-                setIsData(true);
-                setShowModal(true);
-              }}
-              className={`py-3 rounded-md text-white font-bold w-full transition ${
-                formData.nombre &&
-                formData.telefono &&
-                formData.telefono.length === 10
-                  ? "bg-green-600 hover:bg-green-700 shadow"
-                  : "bg-gray-300 cursor-not-allowed"
-              }`}
-            >
-              Confirmar turno
-            </motion.button>
-          </motion.form>
-
-          {/* Modal de confirmación de datos */}
-          <AnimatePresence>
-            {showModal && (
-              <div
-                className={`fixed inset-0 ${
-                  turnoConfirmado ? "-z-10" : "z-50"
-                } flex items-center justify-center bg-black bg-opacity-60 px-6`}
-              >
-                <div className="bg-white rounded-3xl max-w-xl w-full p-10 flex flex-col items-center justify-center shadow-[0_10px_30px_rgba(0,128,0,0.3)] border border-green-100 ring-4 ring-green-200">
-                  <h3 className="text-3xl font-extrabold text-center text-green-800 mb-8 tracking-tight">
-                    Confirmación de Reserva
-                  </h3>
-
-                  <div className="mb-8 space-y-4 text-gray-700 text-[17px] leading-relaxed font-sans max-w-md w-full">
-                    <div>
-                      <span className="font-semibold text-green-700 tracking-wide">
-                        Cancha:
-                      </span>{" "}
-                      <span className="capitalize font-semibold">
-                        {cancha.nombre}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-green-700 tracking-wide">
-                        Hora:
-                      </span>{" "}
-                      <span className="capitalize font-semibold">
-                        {formatearHora(turno.hora)}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-green-700 tracking-wide">
-                        Fecha:
-                      </span>{" "}
-                      <span className="capitalize font-semibold">
-                        {formatearFecha(turno.fecha)}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-green-700 tracking-wide">
-                        A nombre de:
-                      </span>{" "}
-                      <span className="capitalize font-semibold">
-                        {formData.nombre}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-green-700 tracking-wide">
-                        DNI:
-                      </span>{" "}
-                      <span className="capitalize font-semibold">
-                        {formData.dni}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-green-700 tracking-wide">
-                        Teléfono:
-                      </span>{" "}
-                      <span className="capitalize font-semibold">
-                        {formData.telefono}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row justify-center gap-6 mt-6 w-full max-w-md">
-                    <button
-                      className="bg-gradient-to-r from-green-700 via-green-600 to-green-500 hover:from-green-800 hover:to-green-700 text-white py-4 px-8 rounded-2xl font-semibold shadow-lg transition-transform duration-150 ease-in-out active:scale-95 w-full sm:w-auto"
-                      onClick={async () => {
-                        await reservarTurno();
-                      }}
-                    >
-                      Confirmar Reserva
-                    </button>
-
-                    <button
-                      className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-4 px-8 rounded-2xl font-semibold shadow-md transition w-full sm:w-auto"
-                      onClick={closeModal}
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </AnimatePresence>
-
-          {/* Si el turno fue confirmado, mostrar el check */}
-          {turnoConfirmado && (
-            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60 px-6">
-              <div className="bg-white rounded-3xl max-w-sm w-full p-10 flex flex-col items-center justify-center shadow-[0_10px_30px_rgba(0,128,0,0.3)] border border-yellow-100 ring-4 ring-yellow-200">
-                <IoMdAlert className="text-yellow-400 text-8xl mb-6 drop-shadow-md" />
-                <h3 className="text-3xl font-extrabold text-yellow-500 mb-4 tracking-tight text-center">
-                  ¡Turno Pendiente de confirmación!
-                </h3>
-                <p className="text-gray-600 text-base leading-relaxed max-w-xs text-center mb-8">
-                  La confirmación se completará cuando el encargado confirme el depósito de la seña
-                </p>
-                <button
-                  onClick={closeModal}
-                  className="w-full bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-600 text-white font-semibold py-4 rounded-2xl shadow-lg transition-transform duration-150 ease-in-out active:scale-95"
-                  aria-label="Cerrar modal de confirmación"
-                >
-                  Cerrar
-                </button>
+            
+            <div className="flex items-center justify-center mb-6">
+              <div className="p-3 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full shadow-md">
+                <FaClock className="text-white text-2xl" />
               </div>
             </div>
-          )}
-        </div>
-      ) : (
-        ""
+            
+            <div className="space-y-4 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                  <FaUser className="text-emerald-600" />
+                </div>
+                <input
+                  type="text"
+                  name="nombre"
+                  placeholder="Nombre completo"
+                  value={formData.nombre}
+                  onChange={handleChange}
+                  required
+                  className="flex-1 p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                  <FaIdCard className="text-emerald-600" />
+                </div>
+                <input
+                  type="number"
+                  name="dni"
+                  placeholder="DNI"
+                  value={formData.dni}
+                  onChange={handleChange}
+                  required
+                  className="flex-1 p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                  <FaPhone className="text-emerald-600" />
+                </div>
+                <input
+                  type="tel"
+                  name="telefono"
+                  placeholder="Teléfono"
+                  value={formData.telefono}
+                  onChange={handleChange}
+                  required
+                  className="flex-1 p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+            </div>
+            
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              disabled={!formData.nombre || !formData.dni || !formData.telefono}
+              onClick={() => setShowModal(true)}
+              className={`w-full py-3 rounded-lg font-bold text-white ${
+                formData.nombre && formData.dni && formData.telefono
+                  ? "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-md"
+                  : "bg-gray-300 cursor-not-allowed"
+              } transition-all`}
+            >
+              Continuar
+            </motion.button>
+          </div>
+          
+          {/* Resumen del turno */}
+          <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+            <h3 className="font-semibold text-emerald-800 mb-2">Resumen del turno:</h3>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600">Cancha:</span>
+              <span className="font-medium">{cancha.nombre}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600">Fecha:</span>
+              <span className="font-medium">{formatearFecha(turno.fecha)}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600">Hora:</span>
+              <span className="font-medium">{formatearHora(turno.hora)} hs</span>
+            </div>
+          </div>
+        </motion.div>
       )}
-    </div>
+
+      {/* Modal de Confirmación */}
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md"
+            >
+              <h3 className="text-xl font-bold text-emerald-800 mb-4">Confirmar reserva</h3>
+              
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <FaUser className="text-emerald-600 text-sm" />
+                  </div>
+                  <span className="font-medium">{formData.nombre}</span>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <FaIdCard className="text-emerald-600 text-sm" />
+                  </div>
+                  <span className="font-medium">DNI: {formData.dni}</span>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <FaPhone className="text-emerald-600 text-sm" />
+                  </div>
+                  <span className="font-medium">Tel: {formData.telefono}</span>
+                </div>
+              </div>
+              
+              <div className="bg-emerald-50 rounded-lg p-4 mb-6">
+                <p className="font-semibold text-emerald-800 mb-1">Detalles del turno:</p>
+                <p>{cancha?.nombre} - {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs</p>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+                >
+                  Volver
+                </button>
+                <button
+                  onClick={reservarTurno}
+                  disabled={isLoading}
+                  className="flex-1 py-2 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition flex items-center justify-center gap-2"
+                >
+                  {isLoading ? (
+                    <>
+                      <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Procesando...
+                    </>
+                  ) : (
+                    "Confirmar reserva"
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal de Éxito */}
+      <AnimatePresence>
+        {turnoConfirmado && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className="bg-white rounded-xl shadow-xl p-8 text-center max-w-sm w-full"
+            >
+              <div className="mb-6 flex justify-center">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                  <FaCheckCircle className="text-green-500 text-4xl" />
+                </div>
+              </div>
+              
+              <h3 className="text-xl font-bold text-gray-800 mb-3">¡Reserva exitosa!</h3>
+              <p className="text-gray-600 mb-6">
+                Tu turno en {cancha?.nombre} para el {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs ha sido reservado.
+              </p>
+              
+              <button
+                onClick={closeModal}
+                className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition font-medium"
+              >
+                Finalizar
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };

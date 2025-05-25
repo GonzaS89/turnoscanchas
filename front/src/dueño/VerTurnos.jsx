@@ -1,8 +1,18 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaTrashAlt } from "react-icons/fa";
-
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  FaTrashAlt, 
+  FaCheck, 
+  FaTimes, 
+  FaArrowLeft,
+  FaCalendarAlt,
+  FaUser,
+  FaIdCard,
+  FaPhone
+} from "react-icons/fa";
+import { FcClock } from "react-icons/fc";
 
 export const VerTurnos = () => {
   const navigate = useNavigate();
@@ -12,27 +22,29 @@ export const VerTurnos = () => {
   const [turnos, setTurnos] = useState([]);
   const [turnosAgrupados, setTurnosAgrupados] = useState({});
   const [fechaVisible, setFechaVisible] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const serverLocal = 'http://localhost:3001';
   const serverExterno = 'https://turnoscanchas-production.up.railway.app';
 
-  const isReservado = (estado) => (estado === "reservado" || estado === "pendiente")
-
+  const isReservado = (estado) => (estado === "reservado" || estado === "pendiente");
 
   useEffect(() => {
-    if (cancha?.id) {
-      axios
-        .get(
-          `${serverExterno}/api/turnos_canchas/canchas?id=${cancha.id}`
-        )
-        .then((res) => {
-          const turnosOrdenados = res.data.sort(
-            (a, b) => new Date(b.fecha) - new Date(a.fecha)
-          );
-          setTurnos(turnosOrdenados);
-        })
-        .catch((err) => console.error("Error al obtener turnos:", err));
-    }
+    const fetchTurnos = async () => {
+      try {
+        setIsLoading(true);
+        const res = await axios.get(`${serverExterno}/api/turnos_canchas/canchas?id=${cancha.id}`);
+        const turnosOrdenados = res.data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        setTurnos(turnosOrdenados);
+      } catch (err) {
+        console.error("Error al obtener turnos:", err);
+        setError("Error al cargar los turnos. Intente nuevamente.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (cancha?.id) fetchTurnos();
   }, [cancha]);
 
   useEffect(() => {
@@ -47,7 +59,7 @@ export const VerTurnos = () => {
 
     Object.keys(agrupados).forEach((fecha) => {
       agrupados[fecha] = agrupados[fecha]
-        .map((t) => ({ ...t, hora: t.hora.slice(0, 5) })) // limpiar segundos
+        .map((t) => ({ ...t, hora: t.hora.slice(0, 5) }))
         .sort((a, b) => {
           const horaA = a.hora === "00:00" ? "24:00" : a.hora;
           const horaB = b.hora === "00:00" ? "24:00" : b.hora;
@@ -58,8 +70,6 @@ export const VerTurnos = () => {
     setTurnosAgrupados(agrupados);
   }, [turnos]);
 
-  const cerrarSesion = () => navigate("/");
-
   const toggleFechaVisibility = (fecha) => {
     setFechaVisible((prevState) => ({
       ...prevState,
@@ -69,10 +79,7 @@ export const VerTurnos = () => {
 
   const ponerDisponible = async (turnoId) => {
     try {
-      await axios.put(
-        `${serverExterno}/api/turnos/liberar/${turnoId}`
-      );
-
+      await axios.put(`${serverExterno}/api/turnos/liberar/${turnoId}`);
       setTurnos((prevTurnos) =>
         prevTurnos.map((turno) =>
           turno.id === turnoId
@@ -82,147 +89,220 @@ export const VerTurnos = () => {
       );
     } catch (error) {
       console.error("Error al poner disponible:", error);
+      alert("Error al liberar el turno");
     }
   };
 
   const confirmarPendiente = async (turnoId) => {
     try {
-      await axios.put(
-        `${serverExterno}/api/turnos/confirmar/${turnoId}`
-      );
-
+      await axios.put(`${serverExterno}/api/turnos/confirmar/${turnoId}`);
       setTurnos((prevTurnos) =>
         prevTurnos.map((turno) =>
-          turno.id === turnoId
-            ? { ...turno, estado: "reservado" } // 🛠️ este es el fix
-            : turno
+          turno.id === turnoId ? { ...turno, estado: "reservado" } : turno
         )
       );
     } catch (error) {
       console.error("Error al confirmar turno:", error);
+      alert("Error al confirmar el turno");
     }
   };
 
-
   const eliminarTurno = async (turnoId) => {
-    const confirmar = window.confirm(
-      "¿Estás seguro de que querés eliminar este turno?"
-    );
+    const confirmar = window.confirm("¿Estás seguro de eliminar este turno?");
     if (!confirmar) return;
 
     try {
-      await axios.delete(
-        `${serverExterno}/api/turnos_canchas/${turnoId}`
-      );
-      setTurnos((prevTurnos) =>
-        prevTurnos.filter((turno) => turno.id !== turnoId)
-      );
+      await axios.delete(`${serverExterno}/api/turnos_canchas/${turnoId}`);
+      setTurnos((prevTurnos) => prevTurnos.filter((turno) => turno.id !== turnoId));
     } catch (error) {
       console.error("Error al eliminar turno:", error);
+      alert("Error al eliminar el turno");
     }
   };
 
+  const formatFecha = (fechaStr) => {
+    const options = { weekday: 'long', day: 'numeric', month: 'long' };
+    const fecha = new Date(fechaStr);
+    return fecha.toLocaleDateString('es-ES', options);
+  };
+
   return (
-    <section className="min-h-screen w-full py-6 px-4 bg-gradient-to-b from-white via-green-50 to-green-200 flex flex-col items-center">
-      <header className="flex justify-between items-center mb-6 w-full max-w-4xl px-2">
-        <h1 className="text-2xl font-bold text-green-700 uppercase">Gestión de turnos</h1>
-      </header>
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="min-h-screen w-full py-6 px-4 bg-gradient-to-b from-white via-green-50 to-green-100"
+    >
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <header className="flex items-center justify-between mb-8">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-emerald-700 hover:text-emerald-900 transition-colors"
+          >
+            <FaArrowLeft className="text-lg" />
+            <span className="hidden sm:inline">Volver</span>
+          </button>
+          
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
+            Gestión de Turnos
+          </h1>
+          
+          <div className="w-8"></div> {/* Spacer para alinear */}
+        </header>
 
-      <div className="bg-white rounded-xl p-6 shadow-xl w-full max-w-4xl border-t-2">
-        <h2 className="text-lg font-semibold text-gray-800 mb-6">
-          Turnos por fechas
-        </h2>
-        {Object.keys(turnosAgrupados).length === 0 ? (
-          <p className="text-gray-500 text-center">No hay turnos cargados.</p>
+        {/* Información de la cancha */}
+        <div className="bg-white rounded-xl shadow-md p-4 mb-8 border border-emerald-100">
+          <h2 className="text-lg font-semibold text-emerald-800 mb-2">
+            {cancha?.nombre || "Tu cancha"}
+          </h2>
+          <p className="text-gray-600 text-sm">
+            Administrá los turnos de tu cancha
+          </p>
+        </div>
+
+        {/* Contenido principal */}
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-center">
+            {error}
+          </div>
+        ) : Object.keys(turnosAgrupados).length === 0 ? (
+          <div className="bg-white rounded-xl shadow-md p-8 text-center">
+            <FaCalendarAlt className="mx-auto text-4xl text-gray-400 mb-4" />
+            <h3 className="text-xl font-medium text-gray-700 mb-2">No hay turnos registrados</h3>
+            <p className="text-gray-500">Aún no hay turnos cargados para esta cancha</p>
+          </div>
         ) : (
-          Object.entries(turnosAgrupados).map(([fecha, turnosPorFecha]) => (
-            <div key={fecha} className="mb-8">
-              <div className="flex justify-between items-center mb-4 px-2">
-                <h3 className="text-xl sm:text-2xl font-semibold text-gray-900">{fecha}</h3>
-                <button
-                  onClick={() => toggleFechaVisibility(fecha)}
-                  className="py-2 px-5 rounded-lg shadow-md border border-gray-300 text-sm text-gray-700 font-medium hover:bg-gray-100 transition"
-                >
-                  {fechaVisible[fecha] ? "Ocultar" : "Mostrar"} turnos
-                </button>
-              </div>
+          <div className="space-y-8">
+            {Object.entries(turnosAgrupados).map(([fecha, turnosPorFecha]) => (
+              <motion.div
+                key={fecha}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100"
+              >
+                <div className="flex justify-between items-center p-4 bg-emerald-50 border-b border-emerald-100">
+                  <h3 className="text-lg font-semibold text-emerald-800">
+                    {formatFecha(fecha)}
+                  </h3>
+                  <button
+                    onClick={() => toggleFechaVisibility(fecha)}
+                    className="text-sm font-medium text-emerald-700 hover:text-emerald-900 px-3 py-1 rounded-lg bg-white border border-emerald-200 hover:bg-emerald-100 transition"
+                  >
+                    {fechaVisible[fecha] ? "Ocultar" : "Mostrar"} turnos
+                  </button>
+                </div>
 
-              {fechaVisible[fecha] && (
-                <ul className="space-y-5 px-2">
-                  {turnosPorFecha.map((turno) => (
-                    <li
-                      key={turno.id}
-                      className={`relative min-h-[90px] border rounded-2xl flex flex-col sm:flex-row font-poppins gap-4 shadow-md p-4 ${turno.estado === "disponible"
-                        ? "bg-gray-100"
-                        : turno.estado === "pendiente"
-                          ? "bg-yellow-100"
-                          : "bg-green-200"
-                        }`}
+                <AnimatePresence>
+                  {fechaVisible[fecha] && (
+                    <motion.ul
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="divide-y divide-gray-100"
                     >
-                      <div className="flex flex-row sm:flex-col items-center sm:items-start justify-between sm:justify-center w-full sm:w-24">
-                        <span className="text-3xl font-bold text-gray-800">
-                          {turno.hora.slice(0, 5)} HS
-                        </span>
-                      </div>
+                      {turnosPorFecha.map((turno) => (
+                        <motion.li
+                          key={turno.id}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.2 }}
+                          className={`p-4 ${turno.estado === "disponible" ? "bg-white" : turno.estado === "pendiente" ? "bg-yellow-50" : "bg-green-50"}`}
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            {/* Información del turno */}
+                            <div className="flex items-center gap-4">
+                              <div className="flex items-center justify-center w-16 h-16 rounded-lg bg-white border border-emerald-100">
+                                <FcClock className="text-3xl" />
+                                <span className="sr-only">{turno.hora}</span>
+                              </div>
+                              
+                              <div>
+                                <p className="text-xl font-bold text-gray-800 mb-1">
+                                  {turno.hora} hs
+                                </p>
+                                {isReservado(turno.estado) ? (
+                                  <div className="space-y-1">
+                                    <p className="flex items-center gap-2 text-sm text-gray-700">
+                                      <FaUser className="text-emerald-600" />
+                                      {turno.nombre}
+                                    </p>
+                                    <p className="flex items-center gap-2 text-sm text-gray-700">
+                                      <FaIdCard className="text-emerald-600" />
+                                      DNI: {turno.dni}
+                                    </p>
+                                    {turno.telefono && (
+                                      <p className="flex items-center gap-2 text-sm text-gray-700">
+                                        <FaPhone className="text-emerald-600" />
+                                        Tel: {turno.telefono}
+                                      </p>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <p className="text-emerald-600 font-medium">Disponible</p>
+                                )}
+                              </div>
+                            </div>
 
-                      <div className="flex flex-col justify-center w-full sm:w-3/4">
-                        {isReservado(turno.estado) ? (
-                          <div className="text-sm sm:text-base leading-snug text-gray-800">
-                            <p>Reservado por: <span className="font-semibold">{turno.nombre}</span></p>
-                            <p>DNI: <span className="font-semibold">{turno.dni}</span></p>
-                            <p>Tel: <span className="font-semibold">{turno.telefono}</span></p>
+                            {/* Acciones */}
+                            <div className="flex flex-col sm:flex-row gap-2 justify-end">
+                              {turno.estado === "reservado" && (
+                                <button
+                                  onClick={() => ponerDisponible(turno.id)}
+                                  className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition"
+                                >
+                                  <FaTimes />
+                                  <span>Liberar</span>
+                                </button>
+                              )}
+
+                              {turno.estado === "pendiente" && (
+                                <>
+                                  <button
+                                    onClick={() => confirmarPendiente(turno.id)}
+                                    className="flex items-center gap-2 px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition"
+                                  >
+                                    <FaCheck />
+                                    <span>Confirmar</span>
+                                  </button>
+                                  <button
+                                    onClick={() => ponerDisponible(turno.id)}
+                                    className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition"
+                                  >
+                                    <FaTimes />
+                                    <span>Cancelar</span>
+                                  </button>
+                                </>
+                              )}
+
+                              {turno.estado === "disponible" && (
+                                <button
+                                  onClick={() => eliminarTurno(turno.id)}
+                                  className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition"
+                                  title="Eliminar turno"
+                                >
+                                  <FaTrashAlt />
+                                  <span className="sm:hidden">Eliminar</span>
+                                </button>
+                              )}
+                            </div>
                           </div>
-                        ) : (
-                          <p className="text-gray-600 text-center sm:text-left font-semibold">Disponible</p>
-                        )}
-                      </div>
-
-                      <div className="flex flex-col sm:flex-row gap-3 items-center justify-center sm:w-1/4">
-                        {turno.estado === "reservado" && (
-                          <button
-                            onClick={() => ponerDisponible(turno.id)}
-                            className="w-full sm:w-auto py-2 px-4 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg transition"
-                          >
-                            Liberar
-                          </button>
-                        )}
-
-                        {turno.estado === "pendiente" && (
-                          <div className="flex flex-col sm:flex-row gap-2 w-full">
-                            <button
-                              onClick={() => confirmarPendiente(turno.id)}
-                              className="flex-1 py-2 px-4 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition"
-                            >
-                              Confirmar
-                            </button>
-                            <button
-                              onClick={() => ponerDisponible(turno.id)}
-                              className="flex-1 py-2 px-4 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg transition"
-                            >
-                              Cancelar
-                            </button>
-                          </div>
-                        )}
-
-                        {turno.estado === "disponible" && (
-                          <button
-                            onClick={() => eliminarTurno(turno.id)}
-                            className="py-3 px-3 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm transition"
-                            title="Eliminar turno"
-                          >
-                            <FaTrashAlt className="text-xl" />
-                          </button>
-                        )}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))
+                        </motion.li>
+                      ))}
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </div>
         )}
       </div>
-    </section>
+    </motion.section>
   );
-
 };

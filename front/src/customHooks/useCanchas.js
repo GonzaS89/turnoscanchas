@@ -12,7 +12,7 @@ export const useCanchas = () => {
     useEffect(() => {
         const obtenerDatos = async () => {
             try {
-                const res = await axios.get(`${serverLocal}/api/canchas`);
+                const res = await axios.get(`${serverExterno}/api/canchas`);
                 setDatos(res.data)
             } catch {
                 console.error('Error al obtener canchas');
