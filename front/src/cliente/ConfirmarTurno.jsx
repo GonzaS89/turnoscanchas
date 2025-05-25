@@ -3,8 +3,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
-import { FaCheckCircle, FaClock, FaUser, FaIdCard, FaPhone } from "react-icons/fa";
+import { FaCheckCircle, FaClock, FaUser, FaIdCard, FaPhone, FaExclamationTriangle } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+
 
 const serverExterno = 'https://turnoscanchas-production.up.railway.app';
 
@@ -156,7 +157,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
             <h3 className="font-semibold text-emerald-800 mb-2">Resumen del turno:</h3>
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Cancha:</span>
-              <span className="font-medium">{cancha.nombre}</span>
+              <span className="font-medium capitalize">{cancha.nombre}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Fecha:</span>
@@ -185,7 +186,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
               exit={{ scale: 0.9 }}
               className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md"
             >
-              <h3 className="text-xl font-bold text-emerald-800 mb-4">Confirmar reserva</h3>
+              <h3 className="text-xl font-bold text-emerald-800 mb-4">Confirmar solicitud</h3>
               
               <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-3">
@@ -212,7 +213,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
               
               <div className="bg-emerald-50 rounded-lg p-4 mb-6">
                 <p className="font-semibold text-emerald-800 mb-1">Detalles del turno:</p>
-                <p>{cancha?.nombre} - {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs</p>
+                <p><span className="capitalize">{cancha?.nombre}</span> - {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs</p>
               </div>
               
               <div className="flex flex-col sm:flex-row gap-3">
@@ -236,7 +237,7 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
                       Procesando...
                     </>
                   ) : (
-                    "Confirmar reserva"
+                    "Solicitar reserva"
                   )}
                 </button>
               </div>
@@ -261,19 +262,19 @@ export const ConfirmarTurno = ({ idCancha, idTurno }) => {
               className="bg-white rounded-xl shadow-xl p-8 text-center max-w-sm w-full"
             >
               <div className="mb-6 flex justify-center">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                  <FaCheckCircle className="text-green-500 text-4xl" />
+                <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center">
+                  <FaExclamationTriangle className="text-yellow-500 text-4xl" />
                 </div>
               </div>
               
-              <h3 className="text-xl font-bold text-gray-800 mb-3">¡Reserva exitosa!</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-3">¡Solicitud realizada!</h3>
               <p className="text-gray-600 mb-6">
-                Tu turno en {cancha?.nombre} para el {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs ha sido reservado.
+                Tu turno en <span className="uppercase">{cancha?.nombre}</span> para el {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs ha sido solicitado. <br /> Espera la confirmación del turno.
               </p>
               
               <button
                 onClick={closeModal}
-                className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition font-medium"
+                className="w-full py-3 bg-yellow-500 hover:bg-yellow-700 text-white rounded-lg transition font-medium"
               >
                 Finalizar
               </button>

@@ -34,7 +34,7 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="w-full min-h-screen flex flex-col justify-center gap-6 bg-gradient-to-b from-white via-green-50 to-green-400 p-5"
+      className="w-full min-h-screen flex flex-col justify-center gap-6 p-5"
     >
       {/* Header */}
       <motion.header
@@ -185,7 +185,7 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
         <span className={`text-sm font-extrabold tracking-wider ${
           turno.estado === "disponible" ? "text-white" : "text-gray-100"
         }`}>
-          {turno.estado === "disponible" ? "RESERVAR" : "COMPLETO"}
+          {turno.estado === "disponible" ? "RESERVAR" : "RESERVADO"}
         </span>
       </motion.div>
     </div>
@@ -196,21 +196,6 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
           </motion.div>
         )}
       </div>
-
-      {/* Footer */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.5 }}
-        className="text-center text-sm text-gray-500 mt-4"
-      >
-        <p>¿No encontrás el turno que buscás?</p>
-        <p>
-          <span className="font-medium text-emerald-600">
-            Prueba con otra fecha
-          </span>
-        </p>
-      </motion.div>
     </motion.div>
   );
 };

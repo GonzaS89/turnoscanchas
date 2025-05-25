@@ -10,6 +10,7 @@ import { LoginCancha } from './dueño/LoginCancha'; // <-- Asegurate de tener es
 import { PanelCancha } from './dueño/PanelCancha';
 import { VerTurnos } from './dueño/VerTurnos';
 import { AgregarTurno } from './dueño/AgregarTurno';
+import { MiCuenta } from './dueño/MiCuenta';
 
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
   const [idTurno, setIdTurno] = useState();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-around relative fondo-app">
+    <div className="gap-8 bg-gradient-to-br from-white via-green-50 to-emerald-200 min-h-screen flex flex-col items-center justify-around relative fondo-app">
       <BrowserRouter>
         <Routes>
 
@@ -46,6 +47,7 @@ function App() {
           <Route path="/panelcancha" element={<PanelCancha />} /> 
           <Route path='/verturnos' element={<VerTurnos />}></Route>
           <Route path='/agregarturno' element={<AgregarTurno />}></Route>
+          <Route path='/micuenta' element={<MiCuenta />}></Route>
           {/* Agregar más rutas para dueños según lo que necesites después del login */}
 
         </Routes>
