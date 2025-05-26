@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
-import { FaFutbol, FaClock, FaCheckCircle, FaTimes } from "react-icons/fa";
+import { FaFutbol, FaClock } from "react-icons/fa";
 
 export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
   const { datos: canchas } = useCanchas();
