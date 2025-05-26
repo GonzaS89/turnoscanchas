@@ -28,7 +28,7 @@ export const PantallaInicial = () => {
       <motion.header
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
+        transition={{ delay: 0.1, duration: 0.3, type: "spring", stiffness: 200}}
         className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-xl shadow-green-100/50 border border-green-50 text-center"
       >
         <div className="mb-4 flex justify-center">
@@ -51,7 +51,7 @@ export const PantallaInicial = () => {
         <motion.div
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
+          transition={{ delay: 0.4, duration: 0.3, type: "spring", stiffness: 200}}
         >
           <Link
             to="/canchas"
@@ -71,7 +71,7 @@ export const PantallaInicial = () => {
         <motion.div
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
+          transition={{ delay: 0.6, duration: 0.3, type: "spring", stiffness: 200}}
         >
           <Link
             to="/login-cancha"
@@ -93,7 +93,7 @@ export const PantallaInicial = () => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.5 }}
+        transition={{ delay: 1, duration: 0.1, type: "spring", stiffness: 500}}
         className="mt-4 text-center text-sm text-emerald-600/80 flex flex-col items-center gap-2"
       >
         <p>¿Querés trabajar con nosotros?</p>
