@@ -28,7 +28,33 @@ export const Canchas = () => {
 
       {/* Contenedor de resultados */}
       <div className="w-full max-w-md rounded-3xl shadow-lg p-4 bg-white backdrop-blur-sm border border-gray-100">
-        {filteredCanchas.length === 0 ? (
+        {/* Estado de carga */}
+        {isLoading ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="w-full h-48 flex flex-col justify-center items-center bg-white/70 backdrop-blur-sm rounded-2xl shadow-inner"
+          >
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full mb-3"
+            />
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-sm font-medium text-gray-600"
+            >
+              Cargando canchas...
+            </motion.p>
+          </motion.div>
+        ) : error ? (
+          <div className="bg-red-50 border border-red-200 rounded-lg sm:rounded-xl p-3 sm:p-4 text-sm sm:text-base text-red-700 text-center max-w-md w-full">
+            Hubo un error al cargar las canchas. Inténtalo nuevamente.
+          </div>
+        ) : filteredCanchas.length === 0 ? (
           <div className="text-center py-6 text-gray-500">
             No se encontraron canchas con ese nombre
           </div>
@@ -66,13 +92,6 @@ export const Canchas = () => {
                     <h3 className="text-lg font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors capitalize">
                       {cancha.nombre}
                     </h3>
-                    <p className="text-xs text-gray-500 mt-1 truncate">
-                      {cancha.direccion || "Dirección no disponible"}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-0.5 truncate">
-                      {cancha.localidad || "Localidad no especificada"}
-                    </p>
-
                     {/* Cantidad de turnos libres */}
                     <div className="mt-1.5 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       <span className="mr-1">⏳</span>

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
-import { FaCheckCircle, FaClock, FaUser, FaIdCard, FaPhone, FaExclamationTriangle } from "react-icons/fa";
+import { FaClock, FaUser, FaIdCard, FaPhone, FaExclamationTriangle } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 
@@ -72,7 +72,7 @@ export const ConfirmarTurno = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
       className="min-h-screen w-full bg-gradient-to-b from-white via-green-50 to-green-100 flex flex-col items-center justify-center p-6"
     >
       {cancha && turno && (

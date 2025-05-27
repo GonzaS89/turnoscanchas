@@ -8,7 +8,7 @@ import { FaFutbol, FaClock } from "react-icons/fa";
 export const ReservaDeTurno = () => {
   const location = useLocation();
   const { idCancha : id } = location.state || {}; 
-  const { datos: canchas } = useCanchas();
+  const { datos: canchas, isLoading : loadingCancha } = useCanchas();
   const cancha = canchas.find((item) => item.id === id);
   const { turnos, isLoading, error } = useObtenerTurnosxCancha(cancha?.id);
 
@@ -39,40 +39,82 @@ export const ReservaDeTurno = () => {
       transition={{ duration: 0.5 }}
       className="w-full min-h-screen flex flex-col gap-4 sm:gap-6"
     >
-      {/* Header con imagen de portada y logo */}
-      <div className="w-full relative">
-        <div className="h-40 sm:h-48 md:h-56 w-full bg-gray-200 overflow-hidden">
-          {cancha?.portada ? (
+{/* Header con efecto blur, logo dentro y texto destacado */}
+{/* Banner con loader */}
+<div className="w-full relative">
+  {/* Imagen de portada */}
+  <div className="h-40 sm:h-48 md:h-56 w-full bg-gray-200 overflow-hidden relative">
+    {cancha?.portada ? (
+      <img
+        src={cancha.portada}
+        alt={`Portada de ${cancha.nombre}`}
+        className="w-full h-full object-cover"
+      />
+    ) : (
+      <div className="w-full h-full bg-gradient-to-r from-green-600 to-emerald-800"></div>
+    )}
+
+    {/* Overlay sutil */}
+    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent backdrop-brightness-50 backdrop-blur-sm"></div>
+  </div>
+
+  {/* Loader mientras carga */}
+  {loadingCancha ? (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center backdrop-blur-sm"
+    >
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        className="w-12 h-12 border-4 border-emerald-300 border-t-transparent rounded-full"
+      />
+    </motion.div>
+  ) : (
+    <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-between px-4 sm:px-6">
+      {/* Logo circular */}
+      <div className="flex items-center gap-3 sm:gap-4">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white shadow-lg overflow-hidden flex-shrink-0 z-10">
+          {cancha?.logo ? (
             <img
-              src={cancha.portada}
-              alt={`Portada de ${cancha.nombre}`}
+              src={cancha.logo}
+              alt={`Logo de ${cancha.nombre}`}
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-r from-green-600 to-emerald-800"></div>
+            <div className="w-full h-full bg-emerald-500 flex items-center justify-center">
+              <FaFutbol className="text-white text-xl sm:text-2xl" />
+            </div>
           )}
         </div>
-  
-        <div className="absolute -bottom-12 left-4 flex items-end">
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white bg-white shadow-lg overflow-hidden">
-            {cancha?.logo ? (
-              <img
-                src={cancha.logo}
-                alt={`Logo de ${cancha.nombre}`}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-emerald-500 flex items-center justify-center">
-                <FaFutbol className="text-white text-2xl sm:text-3xl" />
-              </div>
-            )}
-          </div>
-          <h2 className="ml-3 sm:ml-4 mb-1 sm:mb-2 text-lg sm:text-xl font-bold text-gray-700 capitalize">
+        {/* Texto del nombre y ubicación */}
+        <div className="text-white drop-shadow-lg px-4 py-3 sm:px-5 sm:py-4 rounded-xl inline-block max-w-md">
+          <h2 className="text-xl sm:text-2xl font-extrabold capitalize tracking-wide">
             {cancha?.nombre || "Cancha"}
           </h2>
-          
+          <p className="text-sm sm:text-base text-white/90 mt-1 flex items-center gap-2">
+            <span className="text-emerald-300">📍</span>
+            {cancha?.direccion ? `${cancha.direccion} - ` : ""}{cancha?.localidad || "Localidad no disponible"}
+          </p>
+          <p className="text-xs sm:text-sm text-emerald-200 mt-1 flex items-center gap-2">
+            <span className="text-emerald-300">💰</span>
+            Precio por turno: $ {cancha?.tarifa1 } {cancha?.tarifa2 ? `- $${cancha.tarifa2}` : ""}
+          </p>
+       
         </div>
       </div>
+
+      {/* Información adicional opcional */}
+      <div className="hidden sm:flex flex-col items-end text-right text-white/90 text-xs">
+        <span className="inline-block px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full">
+          {cancha?.tipo || "Césped natural"}
+        </span>
+        <span className="mt-1">Capacidad: {cancha?.capacidad || 10} jugadores</span>
+      </div>
+    </div>
+  )}
+</div>
   
       {/* Contenido principal */}
       <div className="mt-14 sm:mt-16 px-4 sm:px-5 pb-4 sm:pb-5 flex-1 flex flex-col">
