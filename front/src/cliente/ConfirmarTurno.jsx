@@ -83,18 +83,18 @@ export const ConfirmarTurno = () => {
 
       // Generamos el mensaje para WhatsApp
       const mensaje = `
-        📞 *Nueva solicitud de turno*
+  📞 *Nueva solicitud de turno*
 
-        Cancha: ${cancha.nombre}
-        Fecha: ${formatearFecha(turno.fecha)}
-        Hora: ${formatearHora(turno.hora)} hs
-        
-        Cliente: ${formData.nombre}
-        Teléfono: ${formData.telefono}
-        DNI: ${formData.dni}
+  👟 *Cancha:* ${cancha.nombre}
+  📅 *Fecha:* ${formatearFecha(turno.fecha)}
+  ⏰ *Hora:* ${formatearHora(turno.hora)} hs
 
-        ¡Hola! Estoy solicitando este turno.
-      `;
+  🧑‍🦱 *Cliente:* ${formData.nombre}
+  📞 *Teléfono:* ${formData.telefono}
+  🪪 *DNI:* ${formData.dni}
+
+  🔗 [Haz clic aquí para aceptar o rechazar el turno](https://pruebaconwp.netlify.app/login)
+`;
 
       // Codificamos el mensaje y creamos el link
       const mensajeCodificado = encodeURIComponent(mensaje);
