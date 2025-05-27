@@ -1,10 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
 import { FaFutbol, FaClock } from "react-icons/fa";
+// Obtener el id de la cancha desde el estado de la ubicación
 
-export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
+export const ReservaDeTurno = () => {
+  const location = useLocation();
+  const { idCancha : id } = location.state || {}; 
   const { datos: canchas } = useCanchas();
   const cancha = canchas.find((item) => item.id === id);
   const { turnos, isLoading, error } = useObtenerTurnosxCancha(cancha?.id);
@@ -67,6 +70,7 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
           <h2 className="ml-3 sm:ml-4 mb-1 sm:mb-2 text-lg sm:text-xl font-bold text-gray-700 capitalize">
             {cancha?.nombre || "Cancha"}
           </h2>
+          
         </div>
       </div>
   
@@ -136,7 +140,7 @@ export const ReservaDeTurno = ({ id, enviarIdTurno }) => {
                   >
                     <Link
                       to={turno.estado === "disponible" ? "/confirmaciondeturno" : "#"}
-                      onClick={() => turno.estado === "disponible" && enviarIdTurno(turno.id)}
+                      state={{ idCancha: cancha.id, idTurno: turno.id }}
                       className={`block w-full p-4 sm:p-5 rounded-xl sm:rounded-2xl relative overflow-hidden ${
                         turno.estado === "disponible"
                           ? "bg-white border-2 border-emerald-300/30 hover:border-emerald-400/50"

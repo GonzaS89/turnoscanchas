@@ -121,10 +121,14 @@ export const VerTurnos = () => {
   };
 
   const formatFecha = (fechaStr) => {
-    const options = { weekday: 'long', day: 'numeric', month: 'long' };
-    const fecha = new Date(fechaStr);
-    return fecha.toLocaleDateString('es-ES', options);
-  };
+  // Asegurarse de que la fecha se interprete correctamente
+  const fecha = new Date(fechaStr);
+  // Ajustar por huso horario local
+  const fechaAjustada = new Date(fecha.getTime() + fecha.getTimezoneOffset() * 60000);
+  
+  const options = { weekday: 'long', day: 'numeric', month: 'long' };
+  return fechaAjustada.toLocaleDateString('es-ES', options);
+};
 
   return (
     <motion.section

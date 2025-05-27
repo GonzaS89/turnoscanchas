@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
 import { FaCheckCircle, FaClock, FaUser, FaIdCard, FaPhone, FaExclamationTriangle } from "react-icons/fa";
@@ -9,7 +9,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const serverExterno = 'https://turnoscanchas-production.up.railway.app';
 
-export const ConfirmarTurno = ({ idCancha, idTurno }) => {
+export const ConfirmarTurno = () => {
+  const location = useLocation();
+  const { idCancha } = location.state || {};
+  const { idTurno } = location.state || {};
   const { datos: canchas } = useCanchas();
   const { turnos } = useObtenerTurnosxCancha(idCancha);
 
