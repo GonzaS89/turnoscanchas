@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const serverLocal = 'http://localhost:3001';
 const serverExterno = 'https://turnoscanchas-production.up.railway.app';
+const serverExterno2 = 'https://turnoscanchas-backend.onrender.com';
 
 export const useCanchas = () => {
   const [datos, setDatos] = useState([]);
@@ -15,7 +16,7 @@ export const useCanchas = () => {
       setError(null); // Reiniciar error en cada nueva carga
 
       try {
-        const res = await axios.get(`https://turnoscanchas-production.up.railway.app/api/canchas`);
+        const res = await axios.get(`${serverExterno2}/api/canchas`);
         setDatos(res.data);
       } catch (err) {
         console.error('Error al obtener canchas:', err);
