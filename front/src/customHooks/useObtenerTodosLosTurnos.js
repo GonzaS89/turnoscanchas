@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const useObtenerTodosLosTurnos = () => {
 
-    const serverExterno2 = 'https://turnoscanchas-backend.onrender.com';
+    const serverExterno2 = 'https://turnoscanchas.onrender.com';
     const serverExterno = 'https://turnoscanchas-production.up.railway.app';
 
     const [turnos, setTurnos] = useState([]);

@@ -5,7 +5,7 @@ import axios from "axios";
 export const useTodosLosTurnos = () => {
 
   const serverExterno = 'https://turnoscanchas-production.up.railway.app';
-  const serverExterno2 = 'https://turnoscanchas-backend.onrender.com';
+  const serverExterno2 = 'https://turnoscanchas.onrender.com';
   const [turnos, setTurnos] = useState([]);
 
   useEffect(() => {
