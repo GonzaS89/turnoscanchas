@@ -16,6 +16,7 @@ export const AgregarTurno = () => {
   const cancha = location.state?.cancha;
 
   const serverExterno = "https://turnoscanchas-production.up.railway.app";
+  const serverLocal = "http://localhost:3001";
 
   const [horarios, setHorarios] = useState([""]);
   const [showModal, setShowModal] = useState(false);
@@ -29,7 +30,7 @@ export const AgregarTurno = () => {
       try {
         setIsLoading(true);
         const { data } = await axios.get(
-          `${serverExterno}/api/turnos_canchas/canchas`,
+          `${serverLocal}/api/turnos_canchas/canchas`,
           {
             params: { id: cancha.id },
           }
@@ -77,7 +78,7 @@ export const AgregarTurno = () => {
       setIsLoading(true);
       await Promise.all(
         horarios.map((hora) =>
-          axios.post(`${serverExterno}/api/turnos_canchas`, {
+          axios.post(`${serverLocal}/api/turnos_canchas`, {
             hora,
             cancha_id: cancha.id,
             estado: "disponible",

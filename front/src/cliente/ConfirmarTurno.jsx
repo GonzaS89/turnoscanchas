@@ -25,8 +25,10 @@ import {
 } from "framer-motion";
 
 const serverExterno = 'https://turnoscanchas-production.up.railway.app';
+const serverLocal = 'http://localhost:3001';
 
 export const ConfirmarTurno = () => {
+  const [pagoRealizado, setPagoRealizado] = useState(false);
   const location = useLocation();
   const { idCancha } = location.state || {};
   const { idTurno } = location.state || {};
@@ -45,7 +47,25 @@ export const ConfirmarTurno = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [turnoConfirmado, setTurnoConfirmado] = useState(false);
-  const [whatsappLink, setWhatsappLink] = useState(""); // Nuevo estado
+  const [whatsappLink, setWhatsappLink] = useState(""); 
+  
+  const crearPreferenciaPago = async () => {
+    try {
+      const response = await axios.post(`${serverLocal}/api/crear-preferencia`, {
+        nombre: formData.nombre,
+        dni: formData.dni,
+        telefono: formData.telefono,
+        cancha,
+        turno,
+      });
+  
+      // Redirigimos al checkout de Mercado Pago
+      window.location.href = response.data.init_point;
+    } catch (error) {
+      console.error("Error al crear preferencia de pago:", error);
+      alert("Hubo un error al procesar el pago");
+    }
+  };// Nuevo estado
 
   const navigate = useNavigate();
 
@@ -75,7 +95,7 @@ export const ConfirmarTurno = () => {
       setIsLoading(true);
 
       // Actualizamos los datos del turno
-      await axios.put(`${serverExterno}/api/turnos/${idTurno}`, {
+      await axios.put(`${serverLocal}/api/turnos/${idTurno}`, {
         nombre: formData.nombre,
         telefono: formData.telefono,
         dni: formData.dni,

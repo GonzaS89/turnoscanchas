@@ -16,7 +16,7 @@ export const useCanchas = () => {
       setError(null); // Reiniciar error en cada nueva carga
 
       try {
-        const res = await axios.get(`${serverExterno2}/api/canchas`);
+        const res = await axios.get(`${serverLocal}/api/canchas`);
         setDatos(res.data);
       } catch (err) {
         console.error('Error al obtener canchas:', err);
