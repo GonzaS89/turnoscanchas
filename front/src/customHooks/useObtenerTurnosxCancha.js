@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const serverLocal = 'http://localhost:3001';
-const serverExterno = 'https://turnoscanchas-production.up.railway.app'
+const serverExterno = 'https://turnoscanchas-production.up.railway.app';
+const serverExterno2 = 'https://turnoscanchas.onrender.com/';
 
 
 export const useObtenerTurnosxCancha = (id) => {
@@ -12,7 +13,7 @@ export const useObtenerTurnosxCancha = (id) => {
     console.log("ID recibido:", id);
     const obtenerDatos = async () => {
       try {
-        const res = await axios.get(`${serverExterno}/api/turnos_canchas/canchas?id=${id}`);
+        const res = await axios.get(`${serverExterno2}/api/turnos_canchas/canchas?id=${id}`);
         setTurnos(res.data);
       } catch (error) {
         console.error("Error al obtener turnos:", error);

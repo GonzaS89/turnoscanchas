@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export const useObtenerTodosLosTurnos = () => {
-
+    
+    const serverExterno2 = 'https://turnoscanchas.onrender.com';
     const [turnos, setTurnos] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -10,7 +11,7 @@ export const useObtenerTodosLosTurnos = () => {
     useEffect(() => {
         const obtenerTurnos = async () => {
             try {
-                const res = await axios.get(`https://turnoscanchas-production.up.railway.app/api/turnos_canchas`);
+                const res = await axios.get(`${serverExterno2}/api/turnos_canchas`);
                 setTurnos(res.data);
             } catch (err) {
                 console.error("Error al obtener turnos:", err);
