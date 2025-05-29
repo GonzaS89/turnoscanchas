@@ -1,79 +1,46 @@
-import {
-  useState
-} from "react";
+import { useState } from "react";
 import axios from "axios";
-import {
-  useNavigate,
-  useLocation
-} from "react-router-dom";
-import {
-  useCanchas
-} from "../customHooks/useCanchas";
-import {
-  useObtenerTurnosxCancha
-} from "../customHooks/useObtenerTurnosxCancha";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useCanchas } from "../customHooks/useCanchas";
+import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
 import {
   FaClock,
   FaUser,
   FaIdCard,
   FaPhone,
-  FaWhatsapp
+  FaWhatsapp,
 } from "react-icons/fa";
-import {
-  motion,
-  AnimatePresence
-} from "framer-motion";
+import { IoCopyOutline } from "react-icons/io5";
 
-const serverExterno = 'https://turnoscanchas-production.up.railway.app';
-const serverLocal = 'http://localhost:3001';
+import { motion, AnimatePresence } from "framer-motion";
+
+const serverLocal = "http://localhost:3001";
 
 export const ConfirmarTurno = () => {
-  const [pagoRealizado, setPagoRealizado] = useState(false);
   const location = useLocation();
   const { idCancha } = location.state || {};
   const { idTurno } = location.state || {};
-
   const { datos: canchas } = useCanchas();
   const { turnos } = useObtenerTurnosxCancha(idCancha);
-  const cancha = canchas.find((cancha) => cancha.id === idCancha);
-  const turno = turnos?.find((turno) => turno.id === idTurno);
+  const cancha = canchas.find((c) => c.id === idCancha);
+  const turno = turnos?.find((t) => t.id === idTurno);
 
   const [formData, setFormData] = useState({
     nombre: "",
     telefono: "",
     dni: "",
+    metodoPago: "presencial", // Campo nuevo
   });
 
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [turnoConfirmado, setTurnoConfirmado] = useState(false);
-  const [whatsappLink, setWhatsappLink] = useState(""); 
-  
-  const crearPreferenciaPago = async () => {
-    try {
-      const response = await axios.post(`${serverLocal}/api/crear-preferencia`, {
-        nombre: formData.nombre,
-        dni: formData.dni,
-        telefono: formData.telefono,
-        cancha,
-        turno,
-      });
-  
-      // Redirigimos al checkout de Mercado Pago
-      window.location.href = response.data.init_point;
-    } catch (error) {
-      console.error("Error al crear preferencia de pago:", error);
-      alert("Hubo un error al procesar el pago");
-    }
-  };// Nuevo estado
+  const [whatsappLink, setWhatsappLink] = useState("");
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -82,9 +49,9 @@ export const ConfirmarTurno = () => {
 
   const formatearFecha = (fechaStr) => {
     const fecha = new Date(fechaStr);
-    return fecha.toLocaleDateString('es-AR', {
-      day: 'numeric',
-      month: 'long'
+    return fecha.toLocaleDateString("es-AR", {
+      day: "numeric",
+      month: "long",
     });
   };
 
@@ -99,31 +66,34 @@ export const ConfirmarTurno = () => {
         nombre: formData.nombre,
         telefono: formData.telefono,
         dni: formData.dni,
+        metodoPago: formData.metodoPago,
       });
 
-      // Generamos el mensaje para WhatsApp
+      // Generamos mensaje para WhatsApp
       const mensaje = `
   📞 *Nueva solicitud de turno*
-
   👟 *Cancha:* ${cancha.nombre}
   📅 *Fecha:* ${formatearFecha(turno.fecha)}
   ⏰ *Hora:* ${formatearHora(turno.hora)} hs
-
   🧑‍🦱 *Cliente:* ${formData.nombre}
   📞 *Teléfono:* ${formData.telefono}
   🪪 *DNI:* ${formData.dni}
-
-  🔗 [Haz clic aquí para aceptar o rechazar el turno](https://pruebaconwp.netlify.app/login)
+  💳 *Método de pago:* ${formData.metodoPago === "presencial"
+          ? "Pago presencial"
+          : "Pago por transferencia"
+        }
+  🔗 [Haz clic aquí para aceptar o rechazar el turno](https://pruebaconwp.netlify.app/login) 
 `;
 
-      // Codificamos el mensaje y creamos el link
       const mensajeCodificado = encodeURIComponent(mensaje);
-      const link = `https://wa.me/ ${cancha.telefono}?text=${mensajeCodificado}`;
+      const link = `https://wa.me/${cancha.telefono}?text=${mensajeCodificado}`;
       setWhatsappLink(link);
-
-      setTurnoConfirmado(true); // Mostrar modal final
+      setTurnoConfirmado(true);
     } catch (err) {
-      console.error("Error al reservar turno:", err.response?.data || err.message);
+      console.error(
+        "Error al reservar turno:",
+        err.response?.data || err.message
+      );
       alert("Hubo un error al procesar tu solicitud");
     } finally {
       setIsLoading(false);
@@ -136,10 +106,26 @@ export const ConfirmarTurno = () => {
     setFormData({
       nombre: "",
       telefono: "",
-      dni: ""
+      dni: "",
+      metodoPago: "presencial",
     });
     setTurnoConfirmado(false);
     setWhatsappLink("");
+  };
+
+  const [mensajeCopiado, setMensajeCopiado] = useState("");
+
+  const copiarAlPortapapeles = (texto) => {
+    navigator.clipboard.writeText(texto).then(
+      () => {
+        setMensajeCopiado("✅ Copiado al portapapeles");
+        setTimeout(() => setMensajeCopiado(""), 2000);
+      },
+      () => {
+        setMensajeCopiado("❌ Error al copiar");
+        setTimeout(() => setMensajeCopiado(""), 2000);
+      }
+    );
   };
 
   return (
@@ -161,13 +147,11 @@ export const ConfirmarTurno = () => {
             <h2 className="text-2xl font-bold text-center text-emerald-800 mb-4">
               Confirmá tu turno
             </h2>
-
             <div className="flex items-center justify-center mb-6">
               <div className="p-3 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full shadow-md">
                 <FaClock className="text-white text-2xl" />
               </div>
             </div>
-
             <div className="space-y-4 mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
@@ -183,7 +167,6 @@ export const ConfirmarTurno = () => {
                   className="flex-1 p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
-
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
                   <FaIdCard className="text-emerald-600" />
@@ -198,7 +181,6 @@ export const ConfirmarTurno = () => {
                   className="flex-1 p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
-
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
                   <FaPhone className="text-emerald-600" />
@@ -214,7 +196,6 @@ export const ConfirmarTurno = () => {
                 />
               </div>
             </div>
-
             <motion.button
               whileTap={{ scale: 0.95 }}
               disabled={!formData.nombre || !formData.dni || !formData.telefono}
@@ -230,7 +211,9 @@ export const ConfirmarTurno = () => {
 
           {/* Resumen del turno */}
           <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
-            <h3 className="font-semibold text-emerald-800 mb-2">Resumen del turno:</h3>
+            <h3 className="font-semibold text-emerald-800 mb-2">
+              Resumen del turno:
+            </h3>
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Cancha:</span>
               <span className="font-medium capitalize">{cancha.nombre}</span>
@@ -241,7 +224,9 @@ export const ConfirmarTurno = () => {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Hora:</span>
-              <span className="font-medium">{formatearHora(turno.hora)} hs</span>
+              <span className="font-medium">
+                {formatearHora(turno.hora)} hs
+              </span>
             </div>
           </div>
         </motion.div>
@@ -262,8 +247,27 @@ export const ConfirmarTurno = () => {
               exit={{ scale: 0.9 }}
               className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md"
             >
-              <h3 className="text-xl font-bold text-emerald-800 mb-4">Confirmar solicitud</h3>
+              <h3 className="text-xl font-bold text-emerald-800 mb-4">
+                Confirmar solicitud
+              </h3>
 
+              {/* Campo de método de pago */}
+              <div className="mb-6">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Método de pago de seña:
+                </label>
+                <select
+                  name="metodoPago"
+                  value={formData.metodoPago}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                >
+                  <option value="presencial">Pago presencial</option>
+                  <option value="transferencia">Pago por transferencia</option>
+                </select>
+              </div>
+
+              {/* Datos del cliente */}
               <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
@@ -271,14 +275,12 @@ export const ConfirmarTurno = () => {
                   </div>
                   <span className="font-medium">{formData.nombre}</span>
                 </div>
-
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                     <FaIdCard className="text-emerald-600 text-sm" />
                   </div>
                   <span className="font-medium">DNI: {formData.dni}</span>
                 </div>
-
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                     <FaPhone className="text-emerald-600 text-sm" />
@@ -287,9 +289,21 @@ export const ConfirmarTurno = () => {
                 </div>
               </div>
 
+              {/* Detalles del turno + Datos bancarios si aplica */}
               <div className="bg-emerald-50 rounded-lg p-4 mb-6">
                 <p className="font-semibold text-emerald-800 mb-1">Detalles del turno:</p>
                 <p><span className="capitalize">{cancha?.nombre}</span> - {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs</p>
+
+                {/* Mostrar alias y CVU si es transferencia */}
+                {formData.metodoPago === "transferencia" && (
+                  <>
+                    <div className="mt-3 pt-3 border-t border-emerald-200">
+                      <h4 className="text-sm font-medium text-gray-700 mb-1">Datos bancarios:</h4>
+                      <p className="text-sm"><strong>Alias:</strong> {cancha.alias || "No disponible"}</p>
+                      <p className="text-sm"><strong>CVU / CBU:</strong> {cancha.cvu || "No disponible"}</p>
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
@@ -306,9 +320,23 @@ export const ConfirmarTurno = () => {
                 >
                   {isLoading ? (
                     <>
-                      <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin h-4 w-4 text-white"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Procesando...
                     </>
@@ -322,7 +350,6 @@ export const ConfirmarTurno = () => {
         )}
       </AnimatePresence>
 
-      {/* Modal de Éxito */}
       {/* Modal de Éxito */}
       <AnimatePresence>
         {turnoConfirmado && (
@@ -345,8 +372,21 @@ export const ConfirmarTurno = () => {
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-3">¡Solicitud realizada!</h3>
               <p className="text-gray-600 mb-6">
-                Contactá con el propietario de la cancha para confirmar la reserva, seña o cualquier consulta adicional.
+                {formData.metodoPago === 'transferencia' ? 'Contactá con el propietario de la cancha para enviarle el comprobante por la seña.' : 'Tu solicitud ha sido enviada exitosamente. El propietario de la cancha esperá que abones para confirmar el turno.'}
               </p>
+
+              {/* Mostrar alias y CVU si fue pago por transferencia */}
+              {formData.metodoPago === "transferencia" && (
+                <div className="mb-6 text-left bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500">
+                  <h4 className="text-sm font-semibold text-blue-800 mb-2">Datos bancarios:</h4>
+                  <p className="text-sm inline-flex items-center gap-1"><strong>Alias:</strong> {cancha.alias || "No disponible"}
+                    <IoCopyOutline className="text-lg" /> 
+                  </p>
+                  <p className="text-sm inline-flex items-center gap-1"><strong>CVU / CBU:</strong> {cancha.cvu || "No disponible"}
+                    <IoCopyOutline className="text-lg" />
+                  </p>
+                </div>
+              )}
 
               {/* Botón de WhatsApp */}
               <a
@@ -358,13 +398,6 @@ export const ConfirmarTurno = () => {
               >
                 <FaWhatsapp /> Enviar al propietario
               </a>
-
-              {/* <button
-                onClick={closeModal}
-                className="w-full py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition"
-              >
-                Finalizar
-              </button> */}
             </motion.div>
           </motion.div>
         )}
