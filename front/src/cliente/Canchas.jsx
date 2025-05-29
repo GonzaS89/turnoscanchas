@@ -87,7 +87,14 @@ export const Canchas = () => {
             No se encontraron canchas con ese nombre
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 overflow-scroll h-[calc(100vh-250px)]">
+            {/* Barra de búsqueda */}
+            <input type="text" 
+              placeholder="Buscar cancha por nombre..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors mb-4"
+            />
             {filteredCanchas.map((cancha, index) => (
               <motion.div
                 key={cancha.id}
@@ -99,7 +106,7 @@ export const Canchas = () => {
                 className="transform-gpu"
               >
                 <Link
-                  to="/reservadeturno"
+                  to={`/${cancha.seccion}`}
                   state={{ idCancha: cancha.id }}
                   className="flex items-center gap-4 rounded-2xl p-4 shadow-sm hover:shadow-md bg-white hover:bg-green-50 border border-gray-100 hover:border-green-200 transition-all duration-200 group"
                   aria-label={`Reservar en cancha ${cancha.nombre}`}

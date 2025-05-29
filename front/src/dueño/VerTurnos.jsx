@@ -10,7 +10,9 @@ import {
   FaCalendarAlt,
   FaUser,
   FaIdCard,
-  FaPhone
+  FaPhone,
+  FaClock,
+  FaRegThumbsUp
 } from "react-icons/fa";
 import { FcClock } from "react-icons/fc";
 
@@ -158,10 +160,8 @@ export const VerTurnos = () => {
 
         {/* Información de la cancha */}
         <div className="bg-white rounded-xl shadow-md p-4 mb-8 border border-emerald-100">
-          <h2 className="text-lg font-semibold text-emerald-800 mb-2">
-            {cancha?.nombre || "Tu cancha"}
-          </h2>
-          <p className="text-gray-600 text-sm">
+  
+          <p className="text-gray-600 text-sm text-center font-semibold">
             Administrá los turnos de tu cancha
           </p>
         </div>
@@ -210,7 +210,7 @@ export const VerTurnos = () => {
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="divide-y divide-gray-100"
+                      className="divide-y divide-gray-100 flex flex-col gap-2 sm:gap-4 p-4"
                     >
                       {turnosPorFecha.map((turno) => (
                         <motion.li
@@ -248,6 +248,18 @@ export const VerTurnos = () => {
                                         Tel: {turno.telefono}
                                       </p>
                                     )}
+                                    <div clas>{turno.estado === 'pendiente' ? (
+                                      
+                                      <span className="text-yellow-600 font-medium text-xs inline-flex items-center gap-1">
+                                        <FaClock />
+                                        Pendiente de confirmación
+                                        </span>
+                                    ) : (
+                                      <span className="text-green-600 font-medium text-xs inline-flex items-center gap-1">
+                                        <FaRegThumbsUp />
+                                        Reservado
+                                        </span>
+                                    )}</div>
                                   </div>
                                 ) : (
                                   <p className="text-emerald-600 font-medium">Disponible</p>

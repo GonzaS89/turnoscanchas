@@ -28,7 +28,7 @@ function App() {
           {/* Vista para jugadores */}
           <Route path="/canchas" element={<Canchas idCancha={setIdCancha} />} />
           <Route
-            path="/reservadeturno"
+            path="/:seccioncancha"
             element={
               <ReservaDeTurno
                 id={idCancha}
@@ -43,7 +43,7 @@ function App() {
           />
 
           {/* Vista para dueños */}
-          <Route path="/login-cancha" element={<LoginCancha />} />
+          <Route path="/login" element={<LoginCancha />} />
           <Route path="/panelcancha" element={<PanelCancha />} /> 
           <Route path='/verturnos' element={<VerTurnos />}></Route>
           <Route path='/agregarturno' element={<AgregarTurno />}></Route>

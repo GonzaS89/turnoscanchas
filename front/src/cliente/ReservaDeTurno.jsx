@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
@@ -7,9 +7,10 @@ import { FaFutbol, FaClock } from "react-icons/fa";
 
 export const ReservaDeTurno = () => {
   const location = useLocation();
+  const { seccioncancha : seccion } = useParams();
   const { idCancha : id } = location.state || {}; 
   const { datos: canchas, isLoading : loadingCancha } = useCanchas();
-  const cancha = canchas.find((item) => item.id === id);
+  const cancha = canchas.find((item) => item.seccion === seccion);
   const { turnos, isLoading, error } = useObtenerTurnosxCancha(cancha?.id);
 
   const fechaHoy = new Date().toLocaleDateString("sv-SE"); // "YYYY-MM-DD"

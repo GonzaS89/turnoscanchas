@@ -345,8 +345,7 @@ export const ConfirmarTurno = () => {
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-3">¡Solicitud realizada!</h3>
               <p className="text-gray-600 mb-6">
-                Tu turno en <span className="uppercase">{cancha?.nombre}</span> para el{" "}
-                {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs ha sido solicitado.
+                Contactá con el propietario de la cancha para confirmar la reserva, seña o cualquier consulta adicional.
               </p>
 
               {/* Botón de WhatsApp */}
@@ -355,16 +354,17 @@ export const ConfirmarTurno = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition font-medium mb-4"
+                onClick={closeModal}
               >
                 <FaWhatsapp /> Enviar al propietario
               </a>
 
-              <button
+              {/* <button
                 onClick={closeModal}
                 className="w-full py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition"
               >
                 Finalizar
-              </button>
+              </button> */}
             </motion.div>
           </motion.div>
         )}

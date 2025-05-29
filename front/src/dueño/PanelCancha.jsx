@@ -44,9 +44,7 @@ export const PanelCancha = () => {
         className="text-center mb-8 sm:mb-12 flex flex-col items-center gap-4"
       >
         <div className="w-20 h-20 rounded-full bg-gradient-to-r from-green-400 to-emerald-600 flex items-center justify-center shadow-lg">
-          <span className="text-2xl font-bold text-white">
-            {cancha?.propietario_nombre?.charAt(0) || "P"}
-          </span>
+          <img src={cancha.logo} alt="" className="rounded-full"/>
         </div>
         
         <div>
@@ -57,7 +55,7 @@ export const PanelCancha = () => {
             Panel de Gestión
           </h1>
           <p className="text-sm text-gray-500 mt-2">
-            Cancha: <span className="font-medium text-gray-700">{cancha?.nombre || "Tu cancha"}</span>
+            Cancha: <span className="font-medium text-gray-700 uppercase">{cancha?.nombre || "Tu cancha"}</span>
           </p>
         </div>
       </motion.header>

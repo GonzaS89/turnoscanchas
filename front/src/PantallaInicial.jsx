@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FaFutbol,
-  FaUserTie,
+  FaUser,
   FaArrowRight,
   FaWhatsapp,
   FaInstagram,
@@ -20,15 +20,38 @@ export const PantallaInicial = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="w-full min-h-screen flex flex-col justify-center items-center gap-8 bg-gradient-to-br from-white via-green-50 to-emerald-200 p-6 sm:p-8 relative"
-      
+      className="w-full min-h-screen flex flex-col justify-center items-center gap-8 bg-gradient-to-br from-white via-green-50 to-emerald-200 p-6 sm:p-8 relative overflow-hidden"
     >
-      
+      <motion.button
+        initial={{ x: 150 }}
+        animate={{ x: 0 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{
+          delay: .5,
+          duration: 0.3,
+          type: "tween",
+          damping: 20,
+          stiffness: 100,
+        }}
+        className="inline-flex items-center gap-4 absolute top-4 right-4 text-gray-100 hover:text-gray-700 transition-colors border-2 py-2 px-6 rounded-lg hover:brightness-90 text-sm font-medium bg-emerald-600 hover:bg-green-100 shadow-sm"
+        aria-label="Ir a Canchas"
+      >
+        <Link to="/login" className="flex items-center gap-2">
+          <FaUser />
+          Login
+        </Link>
+      </motion.button>
       {/* Header con animación */}
       <motion.header
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1, duration: 0.3, type: "spring", stiffness: 200}}
+        transition={{
+          delay: 0.1,
+          duration: 0.3,
+          type: "spring",
+          stiffness: 200,
+        }}
         className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-xl shadow-green-100/50 border border-green-50 text-center"
       >
         <div className="mb-4 flex justify-center">
@@ -51,7 +74,12 @@ export const PantallaInicial = () => {
         <motion.div
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.3, type: "spring", stiffness: 200}}
+          transition={{
+            delay: 0.4,
+            duration: 0.3,
+            type: "spring",
+            stiffness: 200,
+          }}
         >
           <Link
             to="/canchas"
@@ -71,10 +99,15 @@ export const PantallaInicial = () => {
         <motion.div
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.3, type: "spring", stiffness: 200}}
+          transition={{
+            delay: 0.6,
+            duration: 0.3,
+            type: "spring",
+            stiffness: 200,
+          }}
         >
-          <Link
-            to="/login-cancha"
+          {/* <Link
+            to="/login"
             className="group relative w-full flex items-center justify-between bg-gradient-to-r from-emerald-600 to-green-700 hover:from-emerald-700 hover:to-green-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-emerald-200/30 transition-all duration-300 active:scale-[0.98] overflow-hidden"
           >
             <span className="absolute inset-0 bg-gradient-to-r from-green-700 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
@@ -85,7 +118,7 @@ export const PantallaInicial = () => {
             <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">
               <FaArrowRight />
             </span>
-          </Link>
+          </Link> */}
         </motion.div>
       </div>
 
@@ -93,7 +126,7 @@ export const PantallaInicial = () => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.1, type: "spring", stiffness: 500}}
+        transition={{ delay: 1, duration: 0.1, type: "spring", stiffness: 500 }}
         className="mt-4 text-center text-sm text-emerald-600/80 flex flex-col items-center gap-2"
       >
         <p>¿Querés trabajar con nosotros?</p>
@@ -146,20 +179,20 @@ export const PantallaInicial = () => {
                 </div>
 
                 <p className="text-gray-600 mb-6">
-                  Únete a la plataforma líder de reservas de canchas deportivas
-                  y hacé crecer tu negocio.
+                  Si sos dueño de una cancha de fútbol y querés aumentar tus
+                  reservas, ¡este es el momento! Con TurnoGol, podés gestionar
+                  tus turnos de forma fácil y rápida.
                 </p>
 
                 <div className="mb-8">
                   <h3 className="text-lg font-semibold text-emerald-700 mb-3">
-                    Beneficios exclusivos:
+                    Beneficios:
                   </h3>
                   <ul className="space-y-3">
                     {[
                       "Gestión automatizada de reservas 24/7",
-                      "Aumento de visibilidad y clientes",
-                      "Sistema de pagos integrado",
-                      "Panel de control para administrar tu cancha",
+                      "Aumento de visibilidad",
+                      "Panel de control intuitivo y fácil de usar",
                     ].map((benefit, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <FaCheck className="text-emerald-500 mt-1 flex-shrink-0" />
@@ -198,7 +231,7 @@ export const PantallaInicial = () => {
                         className="flex items-center gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-4 py-3 rounded-lg transition-colors"
                       >
                         <FaWhatsapp className="text-xl" />
-                        <span>WhatsApp Business</span>
+                        <span>WhatsApp</span>
                       </a>
                       <a
                         href="https://instagram.com/turnogol"
