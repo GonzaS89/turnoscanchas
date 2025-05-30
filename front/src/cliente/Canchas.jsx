@@ -5,6 +5,8 @@ import { FaArrowRight } from "react-icons/fa";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTodosLosTurnos } from "../customHooks/useObtenerTodosLosTurnos";
 import { format } from "date-fns";
+import { FaMapMarkerAlt } from "react-icons/fa";
+
 
 export const Canchas = () => {
   const { datos: canchas, isLoading, error } = useCanchas();
@@ -47,56 +49,51 @@ export const Canchas = () => {
     );
 
   return (
-    <section className="w-full min-h-screen flex flex-col items-center justify-around p-5">
+    <section className="w-full min-h-screen flex flex-col items-center justify-around py-4 px-2 sm:p-5">
       {/* Header */}
-      <header className="mb-6 text-center w-full max-w-md px-4">
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 bg-clip-text text-transparent animate-gradient-x">
+      <header className="mb-4 sm:mb-6 text-center w-full max-w-md px-2">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 bg-clip-text text-transparent animate-gradient-x">
           Elegí tu Cancha
         </h1>
-
-        <p className="text-gray-600 mt-2 text-sm sm:text-base">
+        <p className="text-gray-600 mt-1 text-xs sm:text-sm">
           Seleccioná una cancha para reservar tu turno
         </p>
       </header>
 
       {/* Contenedor de resultados */}
-      <div className="w-full max-w-md rounded-3xl shadow-lg p-4 bg-white backdrop-blur-sm border border-gray-100">
+      <div className="w-full max-w-md rounded-2xl sm:rounded-3xl shadow-lg py-3 sm:p-4 bg-white backdrop-blur-sm border border-gray-100">
         {/* Estado de carga */}
         {isLoading ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="w-full h-48 flex flex-col justify-center items-center bg-white/70 backdrop-blur-sm rounded-2xl shadow-inner"
+            className="w-full h-40 sm:h-48 flex flex-col justify-center items-center bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-inner"
           >
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full mb-3"
+              className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-emerald-500 border-t-transparent rounded-full mb-2 sm:mb-3"
             />
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="text-sm font-medium text-gray-600"
+              className="text-xs sm:text-sm font-medium text-gray-600"
             >
               Cargando canchas...
             </motion.p>
           </motion.div>
         ) : error ? (
-          <div className="bg-red-50 border border-red-200 rounded-lg sm:rounded-xl p-3 sm:p-4 text-sm sm:text-base text-red-700 text-center max-w-md w-full">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-xs sm:text-sm text-red-700 text-center">
             Hubo un error al cargar las canchas. Inténtalo nuevamente.
           </div>
         ) : filteredCanchas.length === 0 ? (
-          <div className="text-center py-6 text-gray-500">
+          <div className="text-center py-4 text-gray-500 text-sm">
             No se encontraron canchas con ese nombre
           </div>
         ) : (
-          <div className="flex flex-col gap-4 overflow-y-auto h-[calc(100vh-250px)] px-2">
-            {/* Barra de búsqueda */}
-
-            {/* Lista de canchas */}
-
+          <div className="flex flex-col gap-3 overflow-y-auto h-[80vh] sm:h-[calc(100vh-50px)] px-1 sm:px-2">
             {filteredCanchas.length > 0 ? (
               [...filteredCanchas]
                 .sort((a, b) => turnosLibres(b.id) - turnosLibres(a.id))
@@ -113,14 +110,14 @@ export const Canchas = () => {
                     <Link
                       to={`/${cancha.seccion}`}
                       state={{ idCancha: cancha.id }}
-                      className={`flex items-center gap-4 rounded-2xl p-4 shadow-md hover:shadow-lg ${
+                      className={`flex items-center gap-3 sm:gap-4 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-md hover:shadow-lg ${
                         turnosLibres(cancha.id) === 0 ? "brightness-75" : ""
                       } border border-gray-200 hover:border-green-300 transition-all duration-300 group`}
                       aria-label={`Reservar en cancha ${cancha.nombre}`}
                       role="button"
                     >
                       {/* Imagen redonda */}
-                      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-emerald-200 shadow-inner flex-shrink-0 ring-1 ring-emerald-100 group-hover:ring-emerald-300 transition-all duration-300">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-emerald-200 shadow-inner flex-shrink-0 ring-1 ring-emerald-100 group-hover:ring-emerald-300 transition-all duration-300">
                         <img
                           src={cancha.logo}
                           alt={`Logo de ${cancha.nombre}`}
@@ -132,43 +129,24 @@ export const Canchas = () => {
                       {/* Información */}
                       <div className="flex-1 min-w-0">
                         {/* Nombre de la cancha */}
-                        <h3 className="text-lg font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors capitalize truncate py-2">
+                        <h3 className="text-md sm:text-lg font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors capitalize truncate py-1">
                           {cancha.nombre}
                         </h3>
 
                         {/* Dirección y localidad */}
-                        <div className="mt-1 flex flex-col text-sm text-gray-600">
+                        <div className="mt-1 flex flex-col text-xs sm:text-sm text-gray-600">
                           <span className="truncate flex items-center">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4 mr-1.5 text-gray-400"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                              />
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                              />
-                            </svg>
+                           <FaMapMarkerAlt className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 mr-1" />
                             {cancha.direccion}
                           </span>
-                          <span className="text-xs text-gray-500 mt-0.5 ml-5.5">
+                          <span className="text-xs text-gray-500 mt-0.5 ml-4 sm:ml-5.5">
                             {cancha.localidad}
                           </span>
                         </div>
 
                         {/* Estado de disponibilidad */}
                         <div
-                          className={`mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          className={`mt-1.5 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                             turnosLibres(cancha.id) > 0
                               ? "bg-green-100 text-green-800"
                               : "bg-red-100 text-red-800"
@@ -192,15 +170,15 @@ export const Canchas = () => {
                       </div>
 
                       {/* Flecha de acción */}
-                      <FaArrowRight className="w-4 h-4 text-emerald-600 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transform transition-all duration-200" />
+                      <FaArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-600 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transform transition-all duration-200" />
                     </Link>
                   </motion.div>
                 ))
             ) : (
-              <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+              <div className="flex flex-col items-center justify-center py-8 px-3 text-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-12 w-12 text-gray-400 mb-3"
+                  className="h-10 w-10 text-gray-400 mb-2"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -212,10 +190,10 @@ export const Canchas = () => {
                     d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <h3 className="text-lg font-medium text-gray-700">
+                <h3 className="text-sm sm:text-base font-medium text-gray-700">
                   No se encontraron canchas
                 </h3>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 mt-0.5">
                   Intente ajustar los términos de búsqueda.
                 </p>
               </div>
