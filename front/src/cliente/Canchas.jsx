@@ -61,13 +61,13 @@ export const Canchas = () => {
       </header>
 
       {/* Contenedor de resultados */}
-      <div className="w-full max-w-md rounded-2xl sm:rounded-3xl shadow-lg py-3 sm:p-4 bg-white backdrop-blur-sm border border-gray-100">
+      <div className="w-full lg:max-w-5xl xl:max-w-7xl rounded-2xl sm:rounded-3xl shadow-lg py-3 sm:p-4 bg-white backdrop-blur-sm border border-gray-100">
         {/* Estado de carga */}
         {isLoading ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.2, delay: 0.2, ease: "easeInOut" }}
             className="w-full h-40 sm:h-48 flex flex-col justify-center items-center bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-inner"
           >
             <motion.div
@@ -93,7 +93,7 @@ export const Canchas = () => {
             No se encontraron canchas con ese nombre
           </div>
         ) : (
-          <div className="flex flex-col gap-3 overflow-y-auto h-[80vh] sm:h-[calc(100vh-50px)] px-1 sm:px-2">
+          <div className="sm:flex flex-col md:grid grid-cols-2 gap-3 overflow-y-auto h-[80vh] sm:h-[calc(100vh-50px)] px-4 sm:px-2">
             {filteredCanchas.length > 0 ? (
               [...filteredCanchas]
                 .sort((a, b) => turnosLibres(b.id) - turnosLibres(a.id))
