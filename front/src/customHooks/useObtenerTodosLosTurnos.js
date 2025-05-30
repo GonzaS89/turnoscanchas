@@ -12,7 +12,7 @@ export const useObtenerTodosLosTurnos = () => {
     useEffect(() => {
         const obtenerTurnos = async () => {
             try {
-                const res = await axios.get(`https://turnoscanchas.onrender.com/api/turnos_canchas`);
+                const res = await axios.get(`http://31.97.24.184:3001/api/turnos_canchas`);
                 setTurnos(res.data);
             } catch (err) {
                 console.error("Error al obtener turnos:", err);

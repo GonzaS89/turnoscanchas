@@ -27,16 +27,13 @@ export const VerTurnos = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const serverExterno = 'https://turnoscanchas-production.up.railway.app';
-  const serverLocal = 'http://localhost:3001';
-
   const isReservado = (estado) => (estado === "reservado" || estado === "pendiente");
 
   useEffect(() => {
     const fetchTurnos = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`https://turnoscanchas.onrender.com/api/turnos_canchas/canchas?id=${cancha.id}`);
+        const res = await axios.get(`http://31.97.24.184:3001/api/turnos_canchas/canchas?id=${cancha.id}`);
         const turnosOrdenados = res.data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
         setTurnos(turnosOrdenados);
       } catch (err) {
@@ -82,7 +79,7 @@ export const VerTurnos = () => {
 
   const ponerDisponible = async (turnoId) => {
     try {
-      await axios.put(`https://turnoscanchas.onrender.com/api/turnos/liberar/${turnoId}`);
+      await axios.put(`http://31.97.24.184:3001/api/turnos/liberar/${turnoId}`);
       setTurnos((prevTurnos) =>
         prevTurnos.map((turno) =>
           turno.id === turnoId
@@ -98,7 +95,7 @@ export const VerTurnos = () => {
 
   const confirmarPendiente = async (turnoId) => {
     try {
-      await axios.put(`https://turnoscanchas.onrender.com/api/turnos/confirmar/${turnoId}`);
+      await axios.put(`http://31.97.24.184:3001/api/turnos/confirmar/${turnoId}`);
       setTurnos((prevTurnos) =>
         prevTurnos.map((turno) =>
           turno.id === turnoId ? { ...turno, estado: "reservado" } : turno
@@ -115,7 +112,7 @@ export const VerTurnos = () => {
     if (!confirmar) return;
 
     try {
-      await axios.delete(`https://turnoscanchas.onrender.com/api/turnos_canchas/${turnoId}`);
+      await axios.delete(`http://31.97.24.184:3001/api/turnos_canchas/${turnoId}`);
       setTurnos((prevTurnos) => prevTurnos.filter((turno) => turno.id !== turnoId));
     } catch (error) {
       console.error("Error al eliminar turno:", error);
