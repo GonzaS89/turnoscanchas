@@ -28,18 +28,23 @@ export const PantallaInicial = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         transition={{
-          delay: .5,
+          delay: 0.5,
           duration: 0.3,
           type: "tween",
           damping: 20,
           stiffness: 100,
         }}
-        className="inline-flex items-center gap-4 absolute top-4 right-4 text-gray-100 hover:text-gray-700 transition-colors border-2 py-2 px-6 rounded-lg hover:brightness-90 text-sm font-medium bg-emerald-600 hover:bg-green-100 shadow-sm"
-        aria-label="Ir a Canchas"
+        className="inline-flex items-center gap-3 absolute top-4 right-4 
+    text-white font-medium text-sm sm:text-base py-2 px-5 sm:px-6 rounded-xl 
+    bg-emerald-600 hover:bg-emerald-700 shadow-md hover:shadow-lg 
+    border-2 border-emerald-700 
+    transition-all duration-300 ease-in-out
+    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+        aria-label="Ir a Login"
       >
         <Link to="/login" className="flex items-center gap-2">
-          <FaUser />
-          Login
+          <FaUser className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+          <span>Login</span>
         </Link>
       </motion.button>
       {/* Header con animación */}
@@ -52,19 +57,27 @@ export const PantallaInicial = () => {
           type: "spring",
           stiffness: 200,
         }}
-        className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-xl shadow-green-100/50 border border-green-50 text-center"
+        className="bg-white/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 max-w-md w-full 
+    shadow-xl shadow-emerald-500/10 border border-green-100 text-center 
+    relative overflow-hidden group"
       >
+        {/* Fondo decorativo animado */}
+        <div className="absolute inset-0 bg-gradient-to-r from-green-400/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+        {/* Icono */}
         <div className="mb-4 flex justify-center">
-          <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full shadow-lg">
+          <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full shadow-lg transform transition-transform duration-300 group-hover:scale-110">
             <FaFutbol className="text-white text-3xl" />
           </div>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent drop-shadow-sm mb-3">
+        {/* Título */}
+        <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-green-600 via-emerald-600 to-teal-700 bg-clip-text text-transparent drop-shadow-sm mb-3 tracking-tight">
           Bienvenido a TurnoGol
         </h1>
 
-        <p className="text-emerald-700 text-base sm:text-lg font-medium">
+        {/* Subtítulo */}
+        <p className="text-emerald-700 text-base sm:text-lg font-medium leading-relaxed">
           Tu plataforma para reservar canchas de fútbol
         </p>
       </motion.header>

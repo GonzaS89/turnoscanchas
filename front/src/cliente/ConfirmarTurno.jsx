@@ -11,7 +11,6 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 import { IoCopyOutline } from "react-icons/io5";
-
 import { motion, AnimatePresence } from "framer-motion";
 
 const serverLocal = "http://localhost:3001";
@@ -24,19 +23,18 @@ export const ConfirmarTurno = () => {
   const { turnos } = useObtenerTurnosxCancha(idCancha);
   const cancha = canchas.find((c) => c.id === idCancha);
   const turno = turnos?.find((t) => t.id === idTurno);
-
   const [formData, setFormData] = useState({
     nombre: "",
     telefono: "",
     dni: "",
-    metodoPago: "presencial", // Campo nuevo
+    metodoPago: "presencial",
   });
-
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [turnoConfirmado, setTurnoConfirmado] = useState(false);
   const [whatsappLink, setWhatsappLink] = useState("");
-
+  const [infoCopiadaAlias, setInfoCopiadaAlias] = useState(false);
+  const [infoCopiadaCVU, setInfoCopiadaCVU] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -60,7 +58,6 @@ export const ConfirmarTurno = () => {
   const reservarTurno = async () => {
     try {
       setIsLoading(true);
-
       // Actualizamos los datos del turno
       await axios.put(`${serverLocal}/api/turnos/${idTurno}`, {
         nombre: formData.nombre,
@@ -78,13 +75,13 @@ export const ConfirmarTurno = () => {
   🧑‍🦱 *Cliente:* ${formData.nombre}
   📞 *Teléfono:* ${formData.telefono}
   🪪 *DNI:* ${formData.dni}
-  💳 *Método de pago:* ${formData.metodoPago === "presencial"
-          ? "Pago presencial"
-          : "Pago por transferencia"
-        }
+  💳 *Método de pago:* ${
+    formData.metodoPago === "presencial"
+      ? "Pago presencial"
+      : "Pago por transferencia"
+  }
   🔗 [Haz clic aquí para aceptar o rechazar el turno](https://pruebaconwp.netlify.app/login) 
 `;
-
       const mensajeCodificado = encodeURIComponent(mensaje);
       const link = `https://wa.me/${cancha.telefono}?text=${mensajeCodificado}`;
       setWhatsappLink(link);
@@ -111,21 +108,22 @@ export const ConfirmarTurno = () => {
     });
     setTurnoConfirmado(false);
     setWhatsappLink("");
+    setInfoCopiadaAlias(false);
+    setInfoCopiadaCVU(false);
   };
 
-  const [mensajeCopiado, setMensajeCopiado] = useState("");
+  const copiarAlPortapapeles = (texto, tipo) => {
+    if (!texto || texto === "No disponible") return;
 
-  const copiarAlPortapapeles = (texto) => {
-    navigator.clipboard.writeText(texto).then(
-      () => {
-        setMensajeCopiado("✅ Copiado al portapapeles");
-        setTimeout(() => setMensajeCopiado(""), 2000);
-      },
-      () => {
-        setMensajeCopiado("❌ Error al copiar");
-        setTimeout(() => setMensajeCopiado(""), 2000);
+    navigator.clipboard.writeText(texto).then(() => {
+      if (tipo === "alias") {
+        setInfoCopiadaAlias(true);
+        setTimeout(() => setInfoCopiadaAlias(false), 2000);
+      } else if (tipo === "cvu") {
+        setInfoCopiadaCVU(true);
+        setTimeout(() => setInfoCopiadaCVU(false), 2000);
       }
-    );
+    });
   };
 
   return (
@@ -200,15 +198,15 @@ export const ConfirmarTurno = () => {
               whileTap={{ scale: 0.95 }}
               disabled={!formData.nombre || !formData.dni || !formData.telefono}
               onClick={() => setShowModal(true)}
-              className={`w-full py-3 rounded-lg font-bold text-white ${formData.nombre && formData.dni && formData.telefono
-                ? "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-md"
-                : "bg-gray-300 cursor-not-allowed"
-                } transition-all`}
+              className={`w-full py-3 rounded-lg font-bold text-white ${
+                formData.nombre && formData.dni && formData.telefono
+                  ? "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-md"
+                  : "bg-gray-300 cursor-not-allowed"
+              } transition-all`}
             >
               Continuar
             </motion.button>
           </div>
-
           {/* Resumen del turno */}
           <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
             <h3 className="font-semibold text-emerald-800 mb-2">
@@ -231,7 +229,6 @@ export const ConfirmarTurno = () => {
           </div>
         </motion.div>
       )}
-
       {/* Modal de Confirmación */}
       <AnimatePresence>
         {showModal && (
@@ -250,7 +247,6 @@ export const ConfirmarTurno = () => {
               <h3 className="text-xl font-bold text-emerald-800 mb-4">
                 Confirmar solicitud
               </h3>
-
               {/* Campo de método de pago */}
               <div className="mb-6">
                 <label className="block text-gray-700 font-medium mb-2">
@@ -266,7 +262,6 @@ export const ConfirmarTurno = () => {
                   <option value="transferencia">Pago por transferencia</option>
                 </select>
               </div>
-
               {/* Datos del cliente */}
               <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-3">
@@ -288,24 +283,37 @@ export const ConfirmarTurno = () => {
                   <span className="font-medium">Tel: {formData.telefono}</span>
                 </div>
               </div>
-
               {/* Detalles del turno + Datos bancarios si aplica */}
               <div className="bg-emerald-50 rounded-lg p-4 mb-6">
                 <p className="font-semibold text-emerald-800 mb-1">Detalles del turno:</p>
                 <p><span className="capitalize">{cancha?.nombre}</span> - {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs</p>
-
                 {/* Mostrar alias y CVU si es transferencia */}
-                {formData.metodoPago === "transferencia" && (
+                {/* {formData.metodoPago === "transferencia" && (
                   <>
                     <div className="mt-3 pt-3 border-t border-emerald-200">
-                      <h4 className="text-sm font-medium text-gray-700 mb-1">Datos bancarios:</h4>
-                      <p className="text-sm"><strong>Alias:</strong> {cancha.alias || "No disponible"}</p>
-                      <p className="text-sm"><strong>CVU / CBU:</strong> {cancha.cvu || "No disponible"}</p>
+                      <h4 className="text-sm font-medium text-gray-700 mb-1">Datos para transferir:</h4>
+                      <button 
+                        className="text-sm inline-flex items-center gap-1 w-full text-left"
+                        onClick={() => copiarAlPortapapeles(cancha.alias, "alias")}
+                        type="button"
+                      >
+                        <strong>Alias:</strong> {cancha.alias || "No disponible"}
+                        {infoCopiadaAlias && <span className="text-green-500 ml-1">Copiado!</span>}
+                        <IoCopyOutline className="text-lg text-gray-500 group-hover:text-emerald-600" />
+                      </button>
+                      <button 
+                        className="text-sm inline-flex items-center gap-1 w-full text-left mt-1"
+                        onClick={() => copiarAlPortapapeles(cancha.cvu, "cvu")}
+                        type="button"
+                      >
+                        <strong>CVU / CBU:</strong> {cancha.cvu || "No disponible"}
+                        {infoCopiadaCVU && <span className="text-green-500 ml-1">Copiado!</span>}
+                        <IoCopyOutline className="text-lg text-gray-500 group-hover:text-emerald-600" />
+                      </button>
                     </div>
                   </>
-                )}
+                )} */}
               </div>
-
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => setShowModal(false)}
@@ -349,7 +357,6 @@ export const ConfirmarTurno = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
       {/* Modal de Éxito */}
       <AnimatePresence>
         {turnoConfirmado && (
@@ -372,22 +379,37 @@ export const ConfirmarTurno = () => {
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-3">¡Solicitud realizada!</h3>
               <p className="text-gray-600 mb-6">
-                {formData.metodoPago === 'transferencia' ? 'Contactá con el propietario de la cancha para enviarle el comprobante por la seña.' : 'Tu solicitud ha sido enviada exitosamente. El propietario de la cancha esperá que abones para confirmar el turno.'}
+                {formData.metodoPago === 'transferencia' ? 'Contactá con el propietario de la cancha para enviarle el comprobante por la seña. Aquí te dejamos los datos para transferir:' : 'Tu solicitud ha sido enviada exitosamente. El propietario de la cancha esperá que abones para confirmar el turno.'}
               </p>
-
               {/* Mostrar alias y CVU si fue pago por transferencia */}
               {formData.metodoPago === "transferencia" && (
                 <div className="mb-6 text-left bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500">
                   <h4 className="text-sm font-semibold text-blue-800 mb-2">Datos bancarios:</h4>
-                  <p className="text-sm inline-flex items-center gap-1"><strong>Alias:</strong> {cancha.alias || "No disponible"}
-                    <IoCopyOutline className="text-lg" /> 
-                  </p>
-                  <p className="text-sm inline-flex items-center gap-1"><strong>CVU / CBU:</strong> {cancha.cvu || "No disponible"}
-                    <IoCopyOutline className="text-lg" />
-                  </p>
+                  <button 
+                    className="text-sm inline-flex items-center gap-1 w-full text-left"
+                    onClick={() => copiarAlPortapapeles(cancha.alias, "alias")}
+                    type="button"
+                  >
+                    <strong>Alias:</strong> {cancha.alias || "No disponible"}
+                    
+                    <IoCopyOutline className="text-lg text-gray-500 group-hover:text-emerald-600" />
+                    {infoCopiadaAlias && <span className="text-green-500 ml-1">Copiado!</span>}
+                  </button>
+                  <button 
+                    className="text-sm inline-flex items-center gap-1 w-full text-left mt-1"
+                    onClick={() => copiarAlPortapapeles(cancha.cvu, "cvu")}
+                    type="button"
+                  >
+                    <strong>CVU / CBU:</strong> {cancha.cvu || "No disponible"}
+               
+                    <IoCopyOutline className="text-lg text-gray-500 group-hover:text-emerald-600" />
+                         {infoCopiadaCVU && <span className="text-green-500 ml-1">Copiado!</span>}
+                    
+                  </button>
+                  <p className="text-sm"><strong>A nombre de: </strong>{cancha.wallet_nombre}</p>
+                  <p className="text-sm"><strong>Banco: </strong>{cancha.wallet_banco}</p>
                 </div>
               )}
-
               {/* Botón de WhatsApp */}
               <a
                 href={whatsappLink}
