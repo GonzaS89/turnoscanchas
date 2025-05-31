@@ -7,6 +7,10 @@ dotenv.config()
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const API_URL = process.env.NODE_ENV === "production"
+  ? "https://31.97.24.184/api"
+  : "http://localhost:3001/api";
+
 
 app.use(cors());
 app.use(express.json())

@@ -25,10 +25,7 @@ export const VerTurnos = () => {
   const [turnosAgrupados, setTurnosAgrupados] = useState({});
   const [fechaVisible, setFechaVisible] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const serverExterno = 'https://turnoscanchas-production.up.railway.app';
-  const serverLocal = 'http://localhost:3001';
+  const [error, setError] = useState(null);;
 
   const isReservado = (estado) => (estado === "reservado" || estado === "pendiente");
 
@@ -36,7 +33,7 @@ export const VerTurnos = () => {
     const fetchTurnos = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`https://turnoscanchas.onrender.com/api/turnos_canchas/canchas?id=${cancha.id}`);
+        const res = await axios.get(`http://31.97.24.184/api/turnos_canchas/canchas?id=${cancha.id}`);
         const turnosOrdenados = res.data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
         setTurnos(turnosOrdenados);
       } catch (err) {
