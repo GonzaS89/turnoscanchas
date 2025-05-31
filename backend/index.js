@@ -1,14 +1,22 @@
 import express from "express";
-import cors from "cors";
 import db from "./db.js";
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config()
 
-const app = express();
-const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+const app = express();
+app.use(cors({
+  origin: ['http://localhost:5173']
+}));
+const PORT = process.env.PORT || 3001;
+const API_URL = process.env.NODE_ENV === "production"
+  ? "https://31.97.24.184/api"
+  : "http://localhost:3001/api";
+
+
+
 app.use(express.json())
 
 app.get('/api/canchas', async (req, res) => {
@@ -177,6 +185,6 @@ app.delete("/api/turnos_canchas/:id", async (req, res) => {
 
 
 
-app.listen(PORT, () => {
-  console.log(`Backend corriendo en http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Backend corriendo en http://0.0.0.0:${PORT}`);
 });

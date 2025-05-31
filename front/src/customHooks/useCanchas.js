@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const serverLocal = 'http://localhost:3001';
-const serverExterno = 'https://turnoscanchas-production.up.railway.app';
-const serverExterno2 = 'https://turnoscanchas.onrender.com';
-
 export const useCanchas = () => {
   const [datos, setDatos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
