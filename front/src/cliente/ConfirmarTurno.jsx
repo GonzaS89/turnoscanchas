@@ -59,7 +59,7 @@ export const ConfirmarTurno = () => {
     try {
       setIsLoading(true);
       // Actualizamos los datos del turno
-      await axios.put(`https://turnoscanchas.onrender.com/api/turnos/${idTurno}`, {
+      await axios.put(`https://turnogol.site/api/turnos/${idTurno}`, {
         nombre: formData.nombre,
         telefono: formData.telefono,
         dni: formData.dni,

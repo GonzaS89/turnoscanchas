@@ -7,7 +7,7 @@ export const useTodosLosTurnos = () => {
   const [turnos, setTurnos] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://31.97.24.184/api/turnos`)
+    axios.get(`https://turnogol.site/api/turnos`)
       .then((res) => setTurnos(res.data))
       .catch((err) => console.error("Error al obtener turnos", err));
   }, []);

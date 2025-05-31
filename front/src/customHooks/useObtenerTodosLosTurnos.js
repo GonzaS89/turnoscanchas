@@ -10,7 +10,7 @@ export const useObtenerTodosLosTurnos = () => {
     useEffect(() => {
         const obtenerTurnos = async () => {
             try {
-                const res = await axios.get(`http://31.97.24.184/api/turnos_canchas`);
+                const res = await axios.get(`https://turnogol.site/api/turnos_canchas`);
                 setTurnos(res.data);
             } catch (err) {
                 console.error("Error al obtener turnos:", err);
