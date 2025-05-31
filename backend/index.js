@@ -11,6 +11,10 @@ app.use(cors({
   origin: ['http://localhost:5173']
 }));
 const PORT = process.env.PORT || 3001;
+const API_URL = process.env.NODE_ENV === "production"
+  ? "https://31.97.24.184/api"
+  : "http://localhost:3001/api";
+
 
 
 app.use(express.json())

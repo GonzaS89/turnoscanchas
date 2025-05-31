@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-
 export const useCanchas = () => {
   const [datos, setDatos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -13,7 +12,7 @@ export const useCanchas = () => {
       setError(null); // Reiniciar error en cada nueva carga
 
       try {
-        const res = await axios.get(`http://31.97.24.184/api/canchas`);
+        const res = await axios.get(`http://31.97.24.184:8443/api/canchas`);
         setDatos(res.data);
       } catch (err) {
         console.error('Error al obtener canchas:', err);
