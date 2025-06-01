@@ -262,6 +262,10 @@ export const VerTurnos = () => {
                                   <p className="text-emerald-600 font-medium">Disponible</p>
                                 )}
                               </div>
+                              <div className={"flex flex-col"}>
+                                <button>{cancha.tarifa1}</button>
+                                <button>{cancha?.tarifa2}</button>
+                              </div>
                             </div>
 
                             {/* Acciones */}

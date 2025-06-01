@@ -7,9 +7,7 @@ dotenv.config()
 
 
 const app = express();
-app.use(cors({
-  origin: ['http://localhost:5173']
-}));
+app.use(cors());
 const PORT = process.env.PORT || 3001;
 const API_URL = process.env.NODE_ENV === "production"
   ? "https://31.97.24.184/api"

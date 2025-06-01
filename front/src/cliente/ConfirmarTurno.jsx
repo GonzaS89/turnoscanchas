@@ -36,6 +36,7 @@ export const ConfirmarTurno = () => {
   const [infoCopiadaAlias, setInfoCopiadaAlias] = useState(false);
   const [infoCopiadaCVU, setInfoCopiadaCVU] = useState(false);
   const navigate = useNavigate();
+  const adelanto = Math.floor(cancha?.adelanto || 0);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -226,6 +227,13 @@ export const ConfirmarTurno = () => {
                 {formatearHora(turno.hora)} hs
               </span>
             </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600">Seña:</span>
+              <span className="font-medium">
+                $ {adelanto.toLocaleString("es-AR")}
+              </span>
+            </div>
+            
           </div>
         </motion.div>
       )}
@@ -379,7 +387,7 @@ export const ConfirmarTurno = () => {
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-3">¡Solicitud realizada!</h3>
               <p className="text-gray-600 mb-6">
-                {formData.metodoPago === 'transferencia' ? 'Contactá con el propietario de la cancha para enviarle el comprobante por la seña. Aquí te dejamos los datos para transferir:' : 'Tu solicitud ha sido enviada exitosamente. El propietario de la cancha esperá que abones para confirmar el turno.'}
+                {formData.metodoPago === 'transferencia' ? 'Contactá con el propietario de la cancha para enviarle el comprobante por la seña. Aquí te dejamos los datos para transferir:' : `Tu solicitud ha sido enviada exitosamente. El propietario de la cancha esperá que abones los $ ${adelanto} para confirmar el turno.`}
               </p>
               {/* Mostrar alias y CVU si fue pago por transferencia */}
               {formData.metodoPago === "transferencia" && (

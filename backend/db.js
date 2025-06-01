@@ -3,8 +3,18 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const dbHost = process.env.DB_HOST;
+const dbPort = process.env.DB_PORT;
+const dbUser = process.env.DB_USER;
+const dbPassword = process.env.DB_PASSWORD;
+const dbName = process.env.DB_NAME;
+
 const db = await mysql.createConnection({
-  uri: process.env.DATABASE_URL,
+  host: dbHost,
+  port: dbPort,
+  user: dbUser,
+  password: dbPassword,
+  database: dbName,
   timezone: '-03:00' // Offset fijo para Argentina (UTC-3)
   
 });
