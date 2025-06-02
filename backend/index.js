@@ -1,5 +1,4 @@
 import express from "express";
-import cors from "cors";
 import db from "./db.js";
 import dotenv from 'dotenv';
 
@@ -12,7 +11,9 @@ const API_URL = process.env.NODE_ENV === "production"
   : "http://localhost:3001/api";
 
 
-app.use(cors());
+const cors = require('cors');
+app.use(cors({ origin: '*' }));
+
 app.use(express.json())
 
 app.get('/api/canchas', async (req, res) => {
