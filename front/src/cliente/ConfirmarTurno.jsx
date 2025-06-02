@@ -9,12 +9,10 @@ import {
   FaIdCard,
   FaPhone,
   FaWhatsapp,
-  FaMoneyBillWave 
+  FaMoneyBillWave
 } from "react-icons/fa";
 import { IoCopyOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
-
-const serverLocal = "http://localhost:3001";
 
 export const ConfirmarTurno = () => {
   const location = useLocation();
@@ -76,11 +74,10 @@ export const ConfirmarTurno = () => {
   🧑‍🦱 *Cliente:* ${formData.nombre}
   📞 *Teléfono:* ${formData.telefono}
   🪪 *DNI:* ${formData.dni}
-  💳 *Método de pago:* ${
-    formData.metodoPago === "presencial"
-      ? "Pago presencial"
-      : "Pago por transferencia"
-  }
+  💳 *Método de pago:* ${formData.metodoPago === "presencial"
+          ? "Pago presencial"
+          : "Pago por transferencia"
+        }
   🔗 [Haz clic aquí para aceptar o rechazar el turno](https://pruebaconwp.netlify.app/login) 
 `;
       const mensajeCodificado = encodeURIComponent(mensaje);
@@ -199,11 +196,10 @@ export const ConfirmarTurno = () => {
               whileTap={{ scale: 0.95 }}
               disabled={!formData.nombre || !formData.dni || !formData.telefono}
               onClick={() => setShowModal(true)}
-              className={`w-full py-3 rounded-lg font-bold text-white ${
-                formData.nombre && formData.dni && formData.telefono
+              className={`w-full py-3 rounded-lg font-bold text-white ${formData.nombre && formData.dni && formData.telefono
                   ? "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-md"
                   : "bg-gray-300 cursor-not-allowed"
-              } transition-all`}
+                } transition-all`}
             >
               Continuar
             </motion.button>
@@ -230,13 +226,13 @@ export const ConfirmarTurno = () => {
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Precio:</span>
               <span className="font-medium">
-               $ {turno?.precio || 20000}
+                $ {cancha?.tarifa2 ?  turno?.precio  : cancha?.tarifa1}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Seña:</span>
               <span className="font-medium">
-               $ {Math.trunc(cancha?.adelanto)}
+                $ {Math.trunc(cancha?.adelanto)}
               </span>
             </div>
           </div>
@@ -404,41 +400,48 @@ export const ConfirmarTurno = () => {
               {formData.metodoPago === "transferencia" && (
                 <div className="mb-6 text-left bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500">
                   <h4 className="text-sm font-semibold text-blue-800 mb-2">Datos bancarios:</h4>
-                  <button 
+                  <button
                     className="text-sm inline-flex items-center gap-1 w-full text-left"
                     onClick={() => copiarAlPortapapeles(cancha.alias, "alias")}
                     type="button"
                   >
                     <strong>Alias:</strong> {cancha.alias || "No disponible"}
-                    
+
                     <IoCopyOutline className="text-lg text-gray-500 group-hover:text-emerald-600" />
                     {infoCopiadaAlias && <span className="text-green-500 ml-1">Copiado!</span>}
                   </button>
-                  <button 
+                  <button
                     className="text-sm inline-flex items-center gap-1 w-full text-left mt-1"
                     onClick={() => copiarAlPortapapeles(cancha.cvu, "cvu")}
                     type="button"
                   >
                     <strong>CVU / CBU:</strong> {cancha.cvu || "No disponible"}
-               
+
                     <IoCopyOutline className="text-lg text-gray-500 group-hover:text-emerald-600" />
-                         {infoCopiadaCVU && <span className="text-green-500 ml-1">Copiado!</span>}
-                    
+                    {infoCopiadaCVU && <span className="text-green-500 ml-1">Copiado!</span>}
+
                   </button>
                   <p className="text-sm"><strong>A nombre de: </strong>{cancha.wallet_nombre}</p>
                   <p className="text-sm"><strong>Banco: </strong>{cancha.wallet_banco}</p>
                 </div>
               )}
-              {/* Botón de WhatsApp */}
-              <a
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition font-medium mb-4"
-                onClick={closeModal}
-              >
-                <FaWhatsapp /> Enviar al propietario
-              </a>
+              {formData.metodoPago === "presencial" ? (
+                <button onClick={closeModal} className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition font-medium mb-4">
+                  Finalizar
+                </button>) : (
+
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition font-medium mb-4"
+                  onClick={closeModal}
+                >
+                  <FaWhatsapp /> Enviar al propietario
+                </a>
+              )}
+
+
             </motion.div>
           </motion.div>
         )}

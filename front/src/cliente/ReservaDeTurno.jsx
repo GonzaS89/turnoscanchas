@@ -44,7 +44,7 @@ export const ReservaDeTurno = () => {
 {/* Banner con loader */}
 <div className="w-full relative">
   {/* Imagen de portada */}
-  <div className="sm:h-48 md:h-44  w-full bg-gray-200 overflow-hidden relative">
+  <div className="h-44  w-full bg-gray-200 overflow-hidden relative">
     {cancha?.portada ? (
       <img
         src={cancha.portada}
@@ -118,7 +118,7 @@ export const ReservaDeTurno = () => {
 </div>
   
       {/* Contenido principal */}
-      <div className="mt-14 sm:mt-16 md:mt-2 px-4 sm:px-5 pb-4 sm:pb-5 flex-1 flex flex-col">
+      <div className="mt-8 sm:mt-16 md:mt-2 px-4 sm:px-5 pb-4 sm:pb-5 flex-1 flex flex-col">
         <motion.header
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
