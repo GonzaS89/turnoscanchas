@@ -140,7 +140,7 @@ app.put("/api/turnos/liberar/:id", async (req, res) => {
 /* CODIGO PARA CREAR TURNOS */
 
 app.post("/api/turnos_canchas", async (req, res) => {
-  const { hora, cancha_id, estado } = req.body;
+  const { hora, cancha_id, estado, precio } = req.body;
 
   try {
     const [resultado] = await db.execute(
