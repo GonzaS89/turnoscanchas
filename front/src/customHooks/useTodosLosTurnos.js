@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 export const useTodosLosTurnos = () => {
-  const serverExterno2 = 'https://turnoscanchas.onrender.com';
-  const serverLocal = 'http://localhost:3001';
+
   const [turnos, setTurnos] = useState([]);
 
   useEffect(() => {
