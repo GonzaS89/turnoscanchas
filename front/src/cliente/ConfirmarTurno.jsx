@@ -9,6 +9,7 @@ import {
   FaIdCard,
   FaPhone,
   FaWhatsapp,
+  FaMoneyBillWave 
 } from "react-icons/fa";
 import { IoCopyOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
@@ -208,7 +209,7 @@ export const ConfirmarTurno = () => {
             </motion.button>
           </div>
           {/* Resumen del turno */}
-          <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100 w-1/3 md:py-16 md:flex flex-col justify-center gap-4 shadow-lg">
+          <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100 md:w-1/3 md:py-16 md:flex flex-col justify-center gap-4 shadow-lg">
             <h3 className="font-semibold text-emerald-800 mb-2 md:text-xl">
               Resumen del turno:
             </h3>
@@ -293,6 +294,12 @@ export const ConfirmarTurno = () => {
                     <FaPhone className="text-emerald-600 text-sm" />
                   </div>
                   <span className="font-medium">Tel: {formData.telefono}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <FaMoneyBillWave className="text-emerald-600 text-sm" />
+                  </div>
+                  <span className="font-medium">Precio: $ {turno.precio}</span>
                 </div>
               </div>
               {/* Detalles del turno + Datos bancarios si aplica */}
