@@ -8,10 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 const cors = require('cors');
-app.use(cors({
-  origin: ['http://localhost:5173'], // agrega aquí todos los orígenes permitidos
-  credentials: true // si necesitas enviar cookies o autenticación
-}));
+app.use(cors({ origin: '*' }));
 
 app.use(express.json())
 
