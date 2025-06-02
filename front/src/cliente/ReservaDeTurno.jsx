@@ -44,7 +44,7 @@ export const ReservaDeTurno = () => {
 {/* Banner con loader */}
 <div className="w-full relative">
   {/* Imagen de portada */}
-  <div className="h-40 sm:h-48 md:h-56 w-full bg-gray-200 overflow-hidden relative">
+  <div className="sm:h-48 md:h-44  w-full bg-gray-200 overflow-hidden relative">
     {cancha?.portada ? (
       <img
         src={cancha.portada}
@@ -118,7 +118,7 @@ export const ReservaDeTurno = () => {
 </div>
   
       {/* Contenido principal */}
-      <div className="mt-14 sm:mt-16 px-4 sm:px-5 pb-4 sm:pb-5 flex-1 flex flex-col">
+      <div className="mt-14 sm:mt-16 md:mt-2 px-4 sm:px-5 pb-4 sm:pb-5 flex-1 flex flex-col">
         <motion.header
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -159,7 +159,7 @@ export const ReservaDeTurno = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
-              className="w-full max-w-md space-y-2 sm:space-y-3"
+              className="w-full md:max-w-3xl"
             >
               <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-3 sm:p-4 mb-1 sm:mb-2">
                 <p className="text-center text-xs sm:text-sm font-medium text-emerald-700">
@@ -167,7 +167,7 @@ export const ReservaDeTurno = () => {
                 </p>
               </div>
   
-              <div className="space-y-2 sm:space-y-3">
+              <div className="md:grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {turnosDeHoy?.map((turno) => (
                   <motion.div
                     key={turno.id}

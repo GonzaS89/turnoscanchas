@@ -3,8 +3,6 @@ import axios from 'axios';
 
 export const useObtenerTodosLosTurnos = () => {
     
-    const serverExterno2 = 'https://turnoscanchas.onrender.com';
-    const serverLocal = 'http://localhost:3001';
     const [turnos, setTurnos] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);

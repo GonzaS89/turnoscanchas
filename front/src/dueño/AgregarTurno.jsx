@@ -15,9 +15,6 @@ export const AgregarTurno = () => {
   const location = useLocation();
   const cancha = location.state?.cancha;
 
-  const serverExterno = "https://turnoscanchas-production.up.railway.app";
-  const serverLocal = "http://localhost:3001";
-
   const [horarios, setHorarios] = useState([""]);
   const [showModal, setShowModal] = useState(false);
   const [confIngresos, setConfIngresos] = useState(false);
@@ -72,6 +69,11 @@ export const AgregarTurno = () => {
     setHorarios(nuevosHorarios);
   };
 
+  const precioDeTurno = (horaIngresada,cambiotarifa) => {
+    const hora = parseInt(horaIngresada.split(":")[0], 10);
+    return hora <= cambiotarifa ? cancha?.tarifa1 : cancha?.tarifa2;
+  }
+
   // Enviar turnos
   const handleSubmit = async () => {
     try {
@@ -82,6 +84,7 @@ export const AgregarTurno = () => {
             hora,
             cancha_id: cancha.id,
             estado: "disponible",
+            precio: precioDeTurno(hora,cancha?.cambio_de_tarifa),
           })
         )
       );

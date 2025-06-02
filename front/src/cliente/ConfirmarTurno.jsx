@@ -138,10 +138,10 @@ export const ConfirmarTurno = () => {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="w-full max-w-md"
+          className="w-full md:flex justify-center items-center gap-4"
         >
           {/* Tarjeta de información */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-6 border border-emerald-100">
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-6 md:mb-0 border border-emerald-100 md:w-1/2">
             <h2 className="text-2xl font-bold text-center text-emerald-800 mb-4">
               Confirmá tu turno
             </h2>
@@ -208,8 +208,8 @@ export const ConfirmarTurno = () => {
             </motion.button>
           </div>
           {/* Resumen del turno */}
-          <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
-            <h3 className="font-semibold text-emerald-800 mb-2">
+          <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100 w-1/3 md:py-16 md:flex flex-col justify-center gap-4 shadow-lg">
+            <h3 className="font-semibold text-emerald-800 mb-2 md:text-xl">
               Resumen del turno:
             </h3>
             <div className="flex items-center justify-between">
@@ -224,6 +224,18 @@ export const ConfirmarTurno = () => {
               <span className="text-gray-600">Hora:</span>
               <span className="font-medium">
                 {formatearHora(turno.hora)} hs
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600">Precio:</span>
+              <span className="font-medium">
+               $ {turno?.precio || 20000}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600">Seña:</span>
+              <span className="font-medium">
+               $ {Math.trunc(cancha?.adelanto)}
               </span>
             </div>
           </div>

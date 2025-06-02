@@ -1,11 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const serverLocal = 'http://localhost:3001';
-const serverExterno = 'https://turnoscanchas-production.up.railway.app';
-const serverExterno2 = 'https://turnoscanchas.onrender.com/';
-
-
 export const useObtenerTurnosxCancha = (id) => {
   const [turnos, setTurnos] = useState();
 

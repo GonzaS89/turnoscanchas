@@ -27,9 +27,6 @@ export const VerTurnos = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const serverExterno = 'https://turnoscanchas-production.up.railway.app';
-  const serverLocal = 'http://localhost:3001';
-
   const isReservado = (estado) => (estado === "reservado" || estado === "pendiente");
 
   useEffect(() => {
