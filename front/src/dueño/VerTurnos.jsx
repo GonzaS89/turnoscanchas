@@ -36,7 +36,7 @@ export const VerTurnos = () => {
     const fetchTurnos = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`https://turnoscanchas.onrender.com/api/turnos_canchas/canchas?id=${cancha.id}`);
+        const res = await axios.get(`https://turnogol.site/api/turnos_canchas/canchas?id=${cancha.id}`);
         const turnosOrdenados = res.data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
         setTurnos(turnosOrdenados);
       } catch (err) {
@@ -82,7 +82,7 @@ export const VerTurnos = () => {
 
   const ponerDisponible = async (turnoId) => {
     try {
-      await axios.put(`https://turnoscanchas.onrender.com/api/turnos/liberar/${turnoId}`);
+      await axios.put(`https://turnogol.site/api/turnos/liberar/${turnoId}`);
       setTurnos((prevTurnos) =>
         prevTurnos.map((turno) =>
           turno.id === turnoId
@@ -98,7 +98,7 @@ export const VerTurnos = () => {
 
   const confirmarPendiente = async (turnoId) => {
     try {
-      await axios.put(`https://turnoscanchas.onrender.com/api/turnos/confirmar/${turnoId}`);
+      await axios.put(`https://turnosgol.site/api/turnos/confirmar/${turnoId}`);
       setTurnos((prevTurnos) =>
         prevTurnos.map((turno) =>
           turno.id === turnoId ? { ...turno, estado: "reservado" } : turno
@@ -115,7 +115,7 @@ export const VerTurnos = () => {
     if (!confirmar) return;
 
     try {
-      await axios.delete(`https://turnogot.site/api/turnos_canchas/${turnoId}`);
+      await axios.delete(`https://turnogol.site/api/turnos_canchas/${turnoId}`);
       setTurnos((prevTurnos) => prevTurnos.filter((turno) => turno.id !== turnoId));
     } catch (error) {
       console.error("Error al eliminar turno:", error);
