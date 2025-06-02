@@ -115,7 +115,7 @@ export const VerTurnos = () => {
     if (!confirmar) return;
 
     try {
-      await axios.delete(`https://turnoscanchas.onrender.com/api/turnos_canchas/${turnoId}`);
+      await axios.delete(`https://turnogot.site/api/turnos_canchas/${turnoId}`);
       setTurnos((prevTurnos) => prevTurnos.filter((turno) => turno.id !== turnoId));
     } catch (error) {
       console.error("Error al eliminar turno:", error);

@@ -8,7 +8,7 @@ export const useTodosLosTurnos = () => {
   const [turnos, setTurnos] = useState([]);
 
   useEffect(() => {
-    axios.get(`https://turnoscanchas.onrender.com/api/turnos`)
+    axios.get(`https://turnogot.site/api/turnos`)
       .then((res) => setTurnos(res.data))
       .catch((err) => console.error("Error al obtener turnos", err));
   }, []);

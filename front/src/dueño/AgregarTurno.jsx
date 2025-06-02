@@ -30,7 +30,7 @@ export const AgregarTurno = () => {
       try {
         setIsLoading(true);
         const { data } = await axios.get(
-          `https://turnoscanchas.onrender.com/api/turnos_canchas/canchas`,
+          `https://turnogot.site/api/turnos_canchas/canchas`,
           {
             params: { id: cancha.id },
           }
@@ -78,7 +78,7 @@ export const AgregarTurno = () => {
       setIsLoading(true);
       await Promise.all(
         horarios.map((hora) =>
-          axios.post(`https://turnoscanchas.onrender.com/api/turnos_canchas`, {
+          axios.post(`https://turnogot.site/api/turnos_canchas`, {
             hora,
             cancha_id: cancha.id,
             estado: "disponible",
