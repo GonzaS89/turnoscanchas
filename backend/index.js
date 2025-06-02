@@ -8,7 +8,11 @@ dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+const cors = require('cors');
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://pruebaconwp.netlify.app'], // agrega aquí todos los orígenes permitidos
+  credentials: true // si necesitas enviar cookies o autenticación
+}));
 app.use(express.json())
 
 app.get('/api/canchas', async (req, res) => {
