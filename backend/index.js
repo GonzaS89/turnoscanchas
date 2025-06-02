@@ -144,7 +144,7 @@ app.post("/api/turnos_canchas", async (req, res) => {
 
   try {
     const [resultado] = await db.execute(
-      "INSERT INTO turnos_canchas (hora, cancha_id, estado, precio) VALUES (?, ?, ?)",
+      "INSERT INTO turnos_canchas (hora, cancha_id, estado, precio) VALUES (?, ?, ?, ?)",
       [hora, cancha_id, estado, precio]
     );
 
