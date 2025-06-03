@@ -339,12 +339,12 @@ export default function ConfirmarTurno() {
 
             {/* Botones de acción */}
             <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => setShowModal(false)}
-                className="flex-1 py-2 px-4 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition font-medium"
-              >
-                Volver
-              </button>
+            <button
+  onClick={() => setShowModal(false)}
+  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition"
+>
+  Volver
+</button>
               <button
                 onClick={reservarTurno}
                 disabled={isLoading}
