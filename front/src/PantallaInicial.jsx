@@ -17,7 +17,7 @@ export default function PantallaInicial () {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <motion.section
+    <section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
@@ -33,7 +33,7 @@ export default function PantallaInicial () {
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm backdrop-brightness-50"></div>
 
       {/* Contenido centrado */}
-      <motion.div
+      <div
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.6 }}
@@ -84,12 +84,12 @@ export default function PantallaInicial () {
             <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform duration-300" />
           </button>
         </div>
-      </motion.div>
+      </div>
 
       {/* Modal para dueños de canchas */}
       <AnimatePresence>
         {showModal && (
-          <motion.div
+          <div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -97,7 +97,7 @@ export default function PantallaInicial () {
             className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={() => setShowModal(false)}
           >
-            <motion.div
+            <div
               initial={{ scale: 0.9, y: 50 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 50 }}
@@ -173,10 +173,10 @@ export default function PantallaInicial () {
                   </div>
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
       </AnimatePresence>
-    </motion.section>
+    </section>
   );
 };

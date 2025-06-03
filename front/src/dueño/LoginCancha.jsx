@@ -40,14 +40,14 @@ export default function LoginCancha () {
   };
 
   return (
-    <motion.section 
+    <section 
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ duration: 0.5 }}
     className="w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-emerald-900 to-green-900 p-6 sm:p-8"
   >
     {/* Tarjeta de login */}
-    <motion.form
+    <form
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.2, duration: 0.5 }}
@@ -154,7 +154,7 @@ export default function LoginCancha () {
           Recupérala aquí
         </button>
       </div>  */}
-    </motion.form>
-  </motion.section>
+    </form>
+  </section>
   );
 };
