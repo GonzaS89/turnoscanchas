@@ -95,7 +95,7 @@ export const VerTurnos = () => {
 
   const confirmarPendiente = async (turnoId) => {
     try {
-      await axios.put(`https://turnosgol.site/api/turnos/confirmar/${turnoId}`);
+      await axios.put(`https://turnogol.site/api/turnos/confirmar/${turnoId}`);
       setTurnos((prevTurnos) =>
         prevTurnos.map((turno) =>
           turno.id === turnoId ? { ...turno, estado: "reservado" } : turno
@@ -226,7 +226,7 @@ export const VerTurnos = () => {
                               </div>
                               
                               <div>
-                                <p className="text-xl font-bold text-gray-800 mb-1">
+                                <p className="text-xl font-bold text-gray-800 mb-1 flex flex-col">
                                   {turno.hora} hs
                                 </p>
                                 {isReservado(turno.estado) ? (

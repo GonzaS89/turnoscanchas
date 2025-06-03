@@ -21,6 +21,9 @@ export const AgregarTurno = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [horariosExistentes, setHorariosExistentes] = useState([]);
 
+  const serverLocal = 'http://localhost:3001';
+  const serverExterno = 'https://turnogol.site';
+
   // Obtener horarios existentes
   useEffect(() => {
     const obtenerHorarios = async () => {

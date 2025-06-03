@@ -6,6 +6,8 @@ export const useCanchas = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const serverLocal = 'http://localhost:3001';
+
   useEffect(() => {
     const obtenerDatos = async () => {
       setIsLoading(true);

@@ -14,7 +14,7 @@ export const PanelCancha = () => {
 
   const handleLogout = () => {
     // Lógica para cerrar sesión
-    navigate("/login-cancha");
+    navigate("/", { replace: true });
   };
 
   return (
@@ -28,11 +28,11 @@ export const PanelCancha = () => {
       <div className="w-full max-w-4xl flex justify-end mb-4">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 text-sm text-gray-600 hover:text-red-600 transition-colors"
+          className="flex items-center gap-2 text-sm text-gray-50 hover:text-red-600 transition-colors bg-red-500 hover:bg-slate-900 px-2 py-2 rounded-lg shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
           aria-label="Cerrar sesión"
         >
+          <span className="sm:inline">Cerrar sesión</span>
           <FaSignOutAlt />
-          <span className="hidden sm:inline">Cerrar sesión</span>
         </button>
       </div>
 

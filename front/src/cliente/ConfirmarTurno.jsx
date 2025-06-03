@@ -11,6 +11,7 @@ import {
   FaWhatsapp,
   FaMoneyBillWave
 } from "react-icons/fa";
+import { FaMoneyBill1Wave } from "react-icons/fa6";
 import { IoCopyOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -226,13 +227,7 @@ export const ConfirmarTurno = () => {
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Precio:</span>
               <span className="font-medium">
-                $ {cancha?.tarifa2 ?  turno?.precio  : cancha?.tarifa1}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Seña:</span>
-              <span className="font-medium">
-                $ {Math.trunc(cancha?.adelanto)}
+                $ {cancha?.tarifa2 ?  Math.trunc(turno?.precio)  : Math.trunc(cancha?.tarifa1)}
               </span>
             </div>
           </div>
@@ -257,27 +252,13 @@ export const ConfirmarTurno = () => {
                 Confirmar solicitud
               </h3>
               {/* Campo de método de pago */}
-              <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-2">
-                  Método de pago de seña:
-                </label>
-                <select
-                  name="metodoPago"
-                  value={formData.metodoPago}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
-                >
-                  <option value="presencial">Pago presencial</option>
-                  <option value="transferencia">Pago por transferencia</option>
-                </select>
-              </div>
               {/* Datos del cliente */}
-              <div className="space-y-3 mb-6">
+              <div className="space-y-3 mb-6 text-gray-700">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                     <FaUser className="text-emerald-600 text-sm" />
                   </div>
-                  <span className="font-medium">{formData.nombre}</span>
+                  <span className="font-medium">Nombre: {formData.nombre}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
@@ -293,9 +274,15 @@ export const ConfirmarTurno = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <FaMoneyBill1Wave className="text-emerald-600 text-sm" />
+                  </div>
+                  <span className="font-medium">Precio: $ {Math.trunc(turno.precio)}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                     <FaMoneyBillWave className="text-emerald-600 text-sm" />
                   </div>
-                  <span className="font-medium">Precio: $ {turno.precio}</span>
+                  <span className="font-medium">Seña: $ {Math.trunc(cancha.adelanto)}</span>
                 </div>
               </div>
               {/* Detalles del turno + Datos bancarios si aplica */}
@@ -328,6 +315,20 @@ export const ConfirmarTurno = () => {
                     </div>
                   </>
                 )} */}
+              </div>
+               <div className="mb-6">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Método de pago de seña:
+                </label>
+                <select
+                  name="metodoPago"
+                  value={formData.metodoPago}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                >
+                  <option value="presencial">Efectivo</option>
+                  <option value="transferencia">Transferencia</option>
+                </select>
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <button

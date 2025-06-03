@@ -81,17 +81,17 @@ export const MiCuenta = () => {
       <div className="max-w-4xl mx-auto bg-white shadow-md overflow-hidden">
         {/* Encabezado */}
         <div className="bg-emerald-600 p-6 text-white flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <IoSettingsSharp className="text-3xl" />
+           <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-emerald-700 hover:text-emerald-900 transition-colors"
+          >
+            <FaArrowLeft className="text-lg text-white" />
+            <span className="hidden sm:inline">Volver</span>
+          </button>
+          <div className="flex items-center  justify-center gap-4 w-full">
             <h1 className="text-2xl font-bold">Mi Cuenta</h1>
           </div>
-          <button
-            onClick={handleOpenModal}
-            className="flex items-center gap-2 bg-white text-emerald-600 px-4 py-2 rounded-lg hover:bg-emerald-50 transition-colors"
-          >
-            <FaEdit />
-            <span>Editar Credenciales</span>
-          </button>
+         
         </div>
 
         {/* Información de la cancha */}
@@ -102,7 +102,7 @@ export const MiCuenta = () => {
             </h2>
             <div>
               <p className="text-sm text-gray-500">Nombre de la cancha</p>
-              <p className="text-gray-800 font-medium">
+              <p className="text-gray-800 font-medium uppercase">
                 {cancha?.nombre || "No especificado"}
               </p>
             </div>
@@ -110,6 +110,18 @@ export const MiCuenta = () => {
               <p className="text-sm text-gray-500">Dirección</p>
               <p className="text-gray-800 font-medium">
                 {cancha?.direccion || "No especificada"}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Barrio</p>
+              <p className="text-gray-800 font-medium capitalize">
+                {cancha?.barrio || "No especificada"}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Localidad</p>
+              <p className="text-gray-800 font-medium">
+                {cancha?.localidad || "No especificada"}
               </p>
             </div>
             <div>
