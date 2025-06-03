@@ -106,13 +106,13 @@ export default function AgregarTurno () {
   };
 
   return (
-    <motion.section
+    <section
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ duration: 0.3 }}
     className="min-h-screen w-full py-8 px-4 bg-gradient-to-b from-gray-900 via-emerald-900 to-green-900 flex justify-center items-center"
   >
-    <motion.div
+    <div
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.2, duration: 0.5 }}
@@ -172,7 +172,7 @@ export default function AgregarTurno () {
       {/* Formulario */}
       <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
         {horarios.map((hora, index) => (
-          <motion.div
+          <div
             key={index}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
@@ -196,7 +196,7 @@ export default function AgregarTurno () {
                 <FaTimes />
               </button>
             )}
-          </motion.div>
+          </div>
         ))}
   
         <button
@@ -222,18 +222,18 @@ export default function AgregarTurno () {
           </button>
         </div>
       </form>
-    </motion.div>
+    </div>
   
     {/* Modal de Confirmación */}
     <AnimatePresence>
       {confIngresos && (
-        <motion.div
+        <div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         >
-          <motion.div
+          <div
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.9 }}
@@ -294,21 +294,21 @@ export default function AgregarTurno () {
                 )}
               </button>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
     </AnimatePresence>
   
     {/* Modal de Éxito */}
     <AnimatePresence>
       {showModal && (
-        <motion.div
+        <div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         >
-          <motion.div
+          <div
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.9 }}
@@ -322,17 +322,17 @@ export default function AgregarTurno () {
               Los turnos se han registrado correctamente.
             </p>
             <div className="h-1 bg-emerald-900/50 rounded-full w-full mb-4 overflow-hidden">
-              <motion.div
+              <div
                 initial={{ width: 0 }}
                 animate={{ width: "100%" }}
                 transition={{ duration: 1.5 }}
                 className="h-full bg-emerald-500"
               />
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
     </AnimatePresence>
-  </motion.section>
+  </section>
   );
 };
