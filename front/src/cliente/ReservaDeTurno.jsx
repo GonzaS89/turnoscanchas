@@ -1,5 +1,4 @@
 import { Link, useLocation, useParams } from "react-router-dom";
-import { motion } from "framer-motion";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
 import { FaFutbol, FaClock } from "react-icons/fa";
