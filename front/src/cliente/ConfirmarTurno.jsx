@@ -15,7 +15,7 @@ import { FaMoneyBill1Wave } from "react-icons/fa6";
 import { IoCopyOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 
-export const ConfirmarTurno = () => {
+export default function ConfirmarTurno () {
   const location = useLocation();
   const { idCancha } = location.state || {};
   const { idTurno } = location.state || {};

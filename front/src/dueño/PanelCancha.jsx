@@ -6,7 +6,7 @@ import { FcCalendar, FcPlus } from "react-icons/fc";
 import { IoSettingsSharp } from "react-icons/io5";
 import { FaSignOutAlt } from "react-icons/fa";
 
-export const PanelCancha = () => {
+export default function PanelCancha () {
   const location = useLocation();
   const navigate = useNavigate();
   const cancha = location.state?.cancha;

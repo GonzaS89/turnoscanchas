@@ -5,7 +5,7 @@ import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useCanchas } from "../customHooks/useCanchas";
 import { ArrowRight } from "lucide-react";
 
-export const LoginCancha = () => {
+export default function LoginCancha () {
   const [usuario, setUsuario] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [verContrasena, setVerContrasena] = useState(false);

@@ -10,7 +10,7 @@ import {
   FaClock,
 } from "react-icons/fa";
 
-export const AgregarTurno = () => {
+export default function AgregarTurno () {
   const navigate = useNavigate();
   const location = useLocation();
   const cancha = location.state?.cancha;

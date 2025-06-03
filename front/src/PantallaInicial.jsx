@@ -13,7 +13,7 @@ import {
 } from "react-icons/fa";
 import imgHero from "./assets/hero-cancha.jpeg"; // Asegúrate de tener esta imagen
 
-export const PantallaInicial = () => {
+export default function PantallaInicial () {
   const [showModal, setShowModal] = useState(false);
 
   return (

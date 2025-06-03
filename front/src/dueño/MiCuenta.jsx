@@ -4,7 +4,7 @@ import { FaArrowLeft, FaEdit, FaEye, FaEyeSlash, FaTimes } from "react-icons/fa"
 import { IoSettingsSharp } from "react-icons/io5";
 import { useState } from "react";
 
-export const MiCuenta = () => {
+export default function MiCuenta () {
   const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({

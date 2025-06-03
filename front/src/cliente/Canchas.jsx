@@ -7,7 +7,7 @@ import { useObtenerTodosLosTurnos } from "../customHooks/useObtenerTodosLosTurno
 import { format } from "date-fns";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
-export const Canchas = () => {
+export default function Canchas () {
   const { datos: canchas, isLoading, error } = useCanchas();
   const {
     turnos,

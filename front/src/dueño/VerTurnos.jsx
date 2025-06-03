@@ -16,7 +16,7 @@ import {
 } from "react-icons/fa";
 import { FcClock } from "react-icons/fc";
 
-export const VerTurnos = () => {
+export default function VerTurnos () {
   const navigate = useNavigate();
   const location = useLocation();
   const cancha = location.state?.cancha;

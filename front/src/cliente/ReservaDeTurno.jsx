@@ -5,7 +5,7 @@ import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha"
 import { FaFutbol, FaClock } from "react-icons/fa";
 // Obtener el id de la cancha desde el estado de la ubicación
 
-export const ReservaDeTurno = () => {
+export default function ReservaDeTurno () {
   const location = useLocation();
   const { seccioncancha : seccion } = useParams();
   const { idCancha : id } = location.state || {}; 
