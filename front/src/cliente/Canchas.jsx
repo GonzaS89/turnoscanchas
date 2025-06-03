@@ -50,7 +50,7 @@ export default function Canchas() {
     );
 
   return (
-    <motion.section
+    <section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -86,18 +86,18 @@ export default function Canchas() {
       <div className="w-full lg:max-w-5xl xl:max-w-7xl rounded-2xl shadow-lg backdrop-blur-sm border border-emerald-800/30 overflow-hidden">
         {/* Estado de carga */}
         {isLoading || isLoadingTurnos ? (
-          <motion.div
+          <div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="w-full h-40 flex flex-col justify-center items-center bg-black/20 backdrop-blur-sm rounded-xl shadow-inner"
           >
-            <motion.div
+            <div
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-emerald-400 border-t-transparent rounded-full mb-3"
             />
             <p className="text-xs sm:text-sm text-gray-400">Cargando canchas...</p>
-          </motion.div>
+          </div>
         ) : error ? (
           <div className="bg-red-500/20 border border-red-500/50 rounded-xl p-4 text-red-200 text-center">
             {error}
@@ -109,7 +109,7 @@ export default function Canchas() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 p-2 sm:p-4">
             {filteredCanchas.map((cancha, index) => (
-              <motion.div
+              <div
                 key={cancha.id}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -178,11 +178,11 @@ export default function Canchas() {
                     <FaArrowRight className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-emerald-400 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transform transition-all duration-200" />
                   </div>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
         )}
       </div>
-    </motion.section>
+    </section>
   );
 }
