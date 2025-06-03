@@ -43,7 +43,7 @@ export const PantallaInicial = () => {
         <div className="flex justify-end">
           <Link
             to="/login"
-            className="flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white py-2 px-5 rounded-lg text-sm mt-4 shadow-md transition-colors w-44"
+            className="flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white py-2 px-5 rounded-lg text-sm mt-4 shadow-md transition-colors"
           >
             <FaUser /> Iniciar sesión
           </Link>
