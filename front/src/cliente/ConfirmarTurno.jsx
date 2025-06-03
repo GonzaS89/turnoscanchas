@@ -126,14 +126,14 @@ export default function ConfirmarTurno () {
   };
 
   return (
-    <motion.div
+    <div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
       className="min-h-screen w-full bg-gradient-to-b from-white via-green-50 to-green-100 flex flex-col items-center justify-center p-6"
     >
       {cancha && turno && (
-        <motion.div
+        <div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
@@ -193,7 +193,7 @@ export default function ConfirmarTurno () {
                 />
               </div>
             </div>
-            <motion.button
+            <button
               whileTap={{ scale: 0.95 }}
               disabled={!formData.nombre || !formData.dni || !formData.telefono}
               onClick={() => setShowModal(true)}
@@ -203,7 +203,7 @@ export default function ConfirmarTurno () {
                 } transition-all`}
             >
               Continuar
-            </motion.button>
+            </button>
           </div>
           {/* Resumen del turno */}
           <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100 md:w-1/3 md:py-16 md:flex flex-col justify-center gap-4 shadow-lg">
@@ -231,18 +231,18 @@ export default function ConfirmarTurno () {
               </span>
             </div>
           </div>
-        </motion.div>
+        </div>
       )}
       {/* Modal de Confirmación */}
       <AnimatePresence>
         {showModal && (
-          <motion.div
+          <div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
           >
-            <motion.div
+            <div
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
@@ -369,20 +369,20 @@ export default function ConfirmarTurno () {
                   )}
                 </button>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
       </AnimatePresence>
       {/* Modal de Éxito */}
       <AnimatePresence>
         {turnoConfirmado && (
-          <motion.div
+          <div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
           >
-            <motion.div
+            <div
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
@@ -443,10 +443,10 @@ export default function ConfirmarTurno () {
               )}
 
 
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 };

@@ -63,25 +63,25 @@ export default function Canchas () {
       <div className="w-full lg:max-w-5xl xl:max-w-7xl rounded-2xl sm:rounded-3xl shadow-lg py-3 sm:p-4 backdrop-blur-sm border border-gray-100">
         {/* Estado de carga */}
         {isLoading ? (
-          <motion.div
+          <div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="w-full h-40 sm:h-48 flex flex-col justify-center items-center bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-inner"
           >
-            <motion.div
+            <div
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-emerald-500 border-t-transparent rounded-full mb-2 sm:mb-3"
             />
-            <motion.p
+            <p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
               className="text-xs sm:text-sm md:text-base font-medium text-gray-600"
             >
               Cargando canchas...
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
         ) : error ? (
           <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-xs sm:text-sm text-red-700 text-center">
             Hubo un error al cargar las canchas. Inténtalo nuevamente.
@@ -93,7 +93,7 @@ export default function Canchas () {
         ) : (
           <div className="sm:flex sm:flex-col md:grid md:grid-cols-2 lg:grid-cols-3 overflow-y-auto max-h-[80vh] sm:max-h-[calc(100vh-100px)] px-2 sm:px-3">
             {filteredCanchas.map((cancha, index) => (
-              <motion.div
+              <div
                 key={cancha.id}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -165,7 +165,7 @@ export default function Canchas () {
                   {/* Flecha de acción - responsive */}
                   <FaArrowRight className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-emerald-600 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transform transition-all duration-200" />
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
         )}

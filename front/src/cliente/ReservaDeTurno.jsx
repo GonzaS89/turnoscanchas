@@ -34,7 +34,7 @@ export default function ReservaDeTurno () {
   const formatearHora = (horaStr) => horaStr.slice(0, 5);
 
   return (
-    <motion.div
+    <div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -61,17 +61,17 @@ export default function ReservaDeTurno () {
 
   {/* Loader mientras carga */}
   {loadingCancha ? (
-    <motion.div
+    <div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center backdrop-blur-sm"
     >
-      <motion.div
+      <div
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
         className="w-12 h-12 border-4 border-emerald-300 border-t-transparent rounded-full"
       />
-    </motion.div>
+    </div>
   ) : (
     <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-between px-4 sm:px-6">
       {/* Logo circular */}
@@ -119,7 +119,7 @@ export default function ReservaDeTurno () {
   
       {/* Contenido principal */}
       <div className="mt-8 sm:mt-16 md:mt-2 px-4 sm:px-5 pb-4 sm:pb-5 flex-1 flex flex-col">
-        <motion.header
+        <header
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
@@ -128,7 +128,7 @@ export default function ReservaDeTurno () {
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
             Elegí tu Turno
           </h1>
-        </motion.header>
+        </header>
   
         <div className="flex-1 flex flex-col items-center">
           {isLoading ? (
@@ -140,7 +140,7 @@ export default function ReservaDeTurno () {
               Error al cargar los turnos. Intente nuevamente.
             </div>
           ) : turnosDeHoy?.length === 0 ? (
-            <motion.div
+            <div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
@@ -153,9 +153,9 @@ export default function ReservaDeTurno () {
               <p className="text-sm sm:text-base text-gray-500">
                 No hay turnos disponibles para hoy en esta cancha.
               </p>
-            </motion.div>
+            </div>
           ) : (
-            <motion.div
+            <div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
@@ -169,7 +169,7 @@ export default function ReservaDeTurno () {
   
               <div className="md:grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {turnosDeHoy?.map((turno) => (
-                  <motion.div
+                  <div
                     key={turno.id}
                     whileHover={{ y: -4 }}
                     whileTap={{ scale: 0.96 }}
@@ -191,7 +191,7 @@ export default function ReservaDeTurno () {
                       } transition-all duration-300 shadow-sm hover:shadow-md`}
                     >
                       {turno.estado === "disponible" && (
-                        <motion.div
+                        <div
                           initial={{ opacity: 0, x: -100 }}
                           whileHover={{ opacity: 0.4, x: 100 }}
                           transition={{ duration: 0.8 }}
@@ -201,7 +201,7 @@ export default function ReservaDeTurno () {
   
                       <div className="flex items-center justify-between relative z-10">
                         <div className="flex items-center space-x-3 sm:space-x-4">
-                          <motion.div
+                          <div
                             animate={{
                               scale: [1, 1.05, 1],
                               transition: { repeat: Infinity, duration: 2 }
@@ -224,7 +224,7 @@ export default function ReservaDeTurno () {
                               <circle cx="12" cy="12" r="10" />
                               <polyline points="12 6 12 12 16 14" />
                             </svg>
-                          </motion.div>
+                          </div>
   
                           <div>
                             <span className={`text-xl sm:text-2xl font-bold ${
@@ -240,7 +240,7 @@ export default function ReservaDeTurno () {
                           </div>
                         </div>
   
-                        <motion.div
+                        <div
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           className={`px-3 py-2 sm:px-5 sm:py-3 rounded-lg sm:rounded-xl ${
@@ -254,16 +254,16 @@ export default function ReservaDeTurno () {
                           }`}>
                             {turno.estado === "disponible" ? "RESERVAR" : "RESERVADO"}
                           </span>
-                        </motion.div>
+                        </div>
                       </div>
                     </Link>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
