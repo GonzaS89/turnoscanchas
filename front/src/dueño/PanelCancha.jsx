@@ -22,133 +22,135 @@ export const PanelCancha = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-gradient-to-b from-white via-green-50 to-green-100 px-4 py-8 sm:py-12 flex flex-col items-center"
+      className="min-h-screen w-full bg-gradient-to-br from-gray-900 via-emerald-900 to-green-900 flex flex-col items-center justify-start px-4 py-8 sm:py-12"
     >
-      {/* Header con botón de cerrar sesión */}
-      <div className="w-full max-w-4xl flex justify-end mb-4">
+      {/* Header - Bienvenida */}
+      <div className="w-full max-w-4xl flex justify-end mb-6 px-4">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 text-sm text-gray-50 hover:text-red-600 transition-colors bg-red-500 hover:bg-slate-900 px-2 py-2 rounded-lg shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+          className="flex items-center gap-2 text-sm bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl shadow-md hover:shadow-lg transition-all focus:outline-none"
           aria-label="Cerrar sesión"
         >
-          <span className="sm:inline">Cerrar sesión</span>
+          Cerrar sesión
           <FaSignOutAlt />
         </button>
       </div>
 
-      {/* Título y bienvenida */}
       <motion.header
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
         className="text-center mb-8 sm:mb-12 flex flex-col items-center gap-4"
       >
+        {/* Logo */}
         <div className="w-20 h-20 rounded-full bg-gradient-to-r from-green-400 to-emerald-600 flex items-center justify-center shadow-lg">
-          <img src={cancha.logo} alt="" className="rounded-full"/>
+          <img
+            src={cancha?.logo || "/default-logo.png"}
+            alt="Logo de la cancha"
+            className="rounded-full object-cover w-full h-full"
+          />
         </div>
-        
+
+        {/* Mensaje de bienvenida */}
         <div>
-          <p className="text-xl text-emerald-700 font-medium mb-1">
+          <p className="text-xl text-emerald-300 font-medium mb-1">
             Hola, {cancha?.propietario_nombre || "Propietario"} 👋
           </p>
-          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-300 to-emerald-100 bg-clip-text text-transparent">
             Panel de Gestión
           </h1>
-          <p className="text-sm text-gray-500 mt-2">
-            Cancha: <span className="font-medium text-gray-700 uppercase">{cancha?.nombre || "Tu cancha"}</span>
+          <p className="text-sm text-gray-400 mt-2">
+            Cancha:{" "}
+            <span className="font-medium text-gray-200 uppercase">
+              {cancha?.nombre || "Tu cancha"}
+            </span>
           </p>
         </div>
       </motion.header>
 
-      {/* Tarjetas de acción */}
-      <div className="w-full max-w-md grid gap-5 sm:gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          <Link 
-            to="/verturnos" 
-            state={{ cancha }}
-            className="group block"
-          >
-            <div className="flex items-center justify-between p-5 sm:p-6 rounded-xl bg-white hover:bg-emerald-50 border border-emerald-100 shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-emerald-100 rounded-lg group-hover:bg-emerald-200 transition-colors">
-                  <FcCalendar className="text-3xl" />
-                </div>
-                <span className="text-lg font-semibold text-gray-800 group-hover:text-emerald-700 transition-colors">
-                  Ver Turnos
-                </span>
-              </div>
-              <div className="text-emerald-500 group-hover:text-emerald-700 transition-colors">
-                →
-              </div>
-            </div>
-          </Link>
-        </motion.div>
+      {/* Tarjetas de Acción */}
+      <div className="w-full max-w-4xl px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.4, duration: 0.5 }}
+  >
+    <Link to="/verturnos" state={{ cancha }} className="group block">
+      <div className="flex h-full justify-between p-5 sm:p-6 rounded-xl bg-white/10 backdrop-blur-md border border-emerald-700/30 hover:bg-white/20 transition-all duration-300 shadow-md hover:shadow-emerald-500/20">
+        <div className="flex justify-between items-center gap-4">
+          <div className="bg-emerald-500/20 rounded-lg group-hover:bg-emerald-500/30 transition-colors">
+            <FcCalendar className="text-3xl" />
+          </div>
+          <span className="text-lg font-semibold text-white group-hover:text-emerald-200 transition-colors">
+            Ver Turnos
+          </span>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-        >
-          <Link 
-            to="/agregarturno" 
-            state={{ cancha }}
-            className="group block"
-          >
-            <div className="flex items-center justify-between p-5 sm:p-6 rounded-xl bg-white hover:bg-blue-50 border border-blue-100 shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
-                  <FcPlus className="text-3xl" />
-                </div>
-                <span className="text-lg font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">
-                  Agregar Turnos
-                </span>
-              </div>
-              <div className="text-blue-500 group-hover:text-blue-700 transition-colors">
-                →
-              </div>
-            </div>
-          </Link>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
-        >
-          <Link 
-            to="/micuenta" 
-            state={{ cancha }}
-            className="group block"
-          >
-            <div className="flex items-center justify-between p-5 sm:p-6 rounded-xl bg-white hover:bg-gray-50 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-gray-100 rounded-lg group-hover:bg-gray-200 transition-colors">
-                  <IoSettingsSharp className="text-3xl text-gray-600" />
-                </div>
-                <span className="text-lg font-semibold text-gray-800 group-hover:text-gray-700 transition-colors">
-                  Mi Cuenta
-                </span>
-              </div>
-              <div className="text-gray-500 group-hover:text-gray-700 transition-colors">
-                →
-              </div>
-            </div>
-          </Link>
-        </motion.div>
+        </div>
+        <div className="text-emerald-300 group-hover:text-emerald-100 transition-colors text-right text-lg lg:hidden">
+          →
+        </div>
       </div>
+    </Link>
+  </motion.div>
+
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.6, duration: 0.5 }}
+  >
+    <Link to="/agregarturno" state={{ cancha }} className="group block">
+      <div className="flex h-full justify-between p-5 sm:p-6 rounded-xl bg-white/10 backdrop-blur-md border border-blue-700/30 hover:bg-white/20 transition-all duration-300 shadow-md hover:shadow-blue-500/20">
+        <div className="flex justify-betwee items-center gap-4">
+          <div className="bg-blue-500/20 rounded-lg group-hover:bg-blue-500/30 transition-colors">
+            <FcPlus className="text-3xl" />
+          </div>
+          <span className="text-lg font-semibold text-white group-hover:text-blue-200 transition-colors">
+            Agregar Turnos
+          </span>
+        </div>
+        <div className="text-blue-300 group-hover:text-blue-100 transition-colors text-right lg:hidden">
+          →
+        </div>
+      </div>
+    </Link>
+  </motion.div>
+
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.8, duration: 0.5 }}
+  >
+    <Link to="/micuenta" state={{ cancha }} className="group block">
+      <div className="flex h-full justify-between p-5 sm:p-6 rounded-xl bg-white/10 backdrop-blur-md border border-gray-700/30 hover:bg-white/20 transition-all duration-300 shadow-md hover:shadow-gray-500/20">
+        <div className="flex justify-between items-center gap-4">
+          <div className="bg-gray-500/20 rounded-lg group-hover:bg-gray-500/30 transition-colors">
+            <IoSettingsSharp className="text-3xl text-gray-300" />
+          </div>
+          <span className="text-lg font-semibold text-white group-hover:text-gray-200 transition-colors">
+            Mi Cuenta
+          </span>
+        </div>
+        <div className="text-gray-300 group-hover:text-gray-100 transition-colors text-right lg:hidden">
+          →
+        </div>
+      </div>
+    </Link>
+  </motion.div>
+</div>
 
       {/* Información adicional */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.5 }}
-        className="mt-10 text-center text-sm text-gray-500 max-w-md"
+        className="mt-12 text-center text-sm text-gray-400 max-w-md px-4"
       >
-        <p>¿Necesitas ayuda? <span className="text-emerald-600 font-medium">Contacta a nuestro soporte</span></p>
+        <p>
+          ¿Necesitas ayuda?{" "}
+          <span className="text-emerald-400 font-medium hover:text-emerald-200 cursor-pointer transition-colors">
+            Contacta a nuestro soporte
+          </span>
+        </p>
       </motion.div>
     </motion.section>
   );

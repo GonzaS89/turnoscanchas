@@ -21,7 +21,7 @@ function App() {
     <div className="gap-8 bg-gradient-to-br from-white via-green-50 to-emerald-200 min-h-screen flex flex-col items-center justify-around relative fondo-app">
       <BrowserRouter>
         <Routes>
-
+ 
           {/* Pantalla inicial */}
           <Route path="/" element={<PantallaInicial />} />
 
