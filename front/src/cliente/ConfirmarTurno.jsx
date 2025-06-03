@@ -1,44 +1,41 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useCanchas } from "../customHooks/useCanchas";
+import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
 import {
   FaClock,
   FaUser,
   FaIdCard,
   FaPhone,
   FaWhatsapp,
-  FaMoneyBillWave,
-  FaMoneyBill1Wave,
-  IoCopyOutline,
-} from "react-icons/io5";
+  FaMoneyBillWave
+} from "react-icons/fa";
+import { FaMoneyBill1Wave } from "react-icons/fa6";
+import { IoCopyOutline } from "react-icons/io5";
+import { motion, AnimatePresence } from "framer-motion";
 
-export default function ConfirmarTurno() {
+export default function ConfirmarTurno () {
   const location = useLocation();
-  const navigate = useNavigate();
-
   const { idCancha } = location.state || {};
   const { idTurno } = location.state || {};
-
+  const { datos: canchas } = useCanchas();
+  const { turnos } = useObtenerTurnosxCancha(idCancha);
+  const cancha = canchas.find((c) => c.id === idCancha);
+  const turno = turnos?.find((t) => t.id === idTurno);
   const [formData, setFormData] = useState({
     nombre: "",
     telefono: "",
     dni: "",
     metodoPago: "presencial",
   });
-
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [turnoConfirmado, setTurnoConfirmado] = useState(false);
   const [whatsappLink, setWhatsappLink] = useState("");
   const [infoCopiadaAlias, setInfoCopiadaAlias] = useState(false);
   const [infoCopiadaCVU, setInfoCopiadaCVU] = useState(false);
-
-  // Datos de cancha y turno desde hooks personalizados
-  const { datos: canchas } = useCanchas();
-  const { turnos } = useObtenerTurnosxCancha(idCancha);
-
-  const cancha = canchas.find((c) => c.id === idCancha);
-  const turno = turnos?.find((t) => t.id === idTurno);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,7 +47,7 @@ export default function ConfirmarTurno() {
 
   const formatearFecha = (fechaStr) => {
     const fecha = new Date(fechaStr);
-    return fecha.toLocaleDateString("es-ES", {
+    return fecha.toLocaleDateString("es-AR", {
       day: "numeric",
       month: "long",
     });
@@ -61,35 +58,38 @@ export default function ConfirmarTurno() {
   const reservarTurno = async () => {
     try {
       setIsLoading(true);
-      await axios.put(`https://turnogol.site/api/turnos/${idTurno}`,  {
+      // Actualizamos los datos del turno
+      await axios.put(`https://turnogol.site/api/turnos/${idTurno}`, {
         nombre: formData.nombre,
         telefono: formData.telefono,
         dni: formData.dni,
         metodoPago: formData.metodoPago,
       });
 
+      // Generamos mensaje para WhatsApp
       const mensaje = `
-📞 *Nueva solicitud de turno*
-👟 *Cancha:* ${cancha.nombre}
-📅 *Fecha:* ${formatearFecha(turno.fecha)}
-⏰ *Hora:* ${formatearHora(turno.hora)} hs
-🧑‍🦱 *Cliente:* ${formData.nombre}
-📞 *Teléfono:* ${formData.telefono}
-🪪 *DNI:* ${formData.dni}
-💳 *Método de pago:* ${
-        formData.metodoPago === "presencial"
+  📞 *Nueva solicitud de turno*
+  👟 *Cancha:* ${cancha.nombre}
+  📅 *Fecha:* ${formatearFecha(turno.fecha)}
+  ⏰ *Hora:* ${formatearHora(turno.hora)} hs
+  🧑‍🦱 *Cliente:* ${formData.nombre}
+  📞 *Teléfono:* ${formData.telefono}
+  🪪 *DNI:* ${formData.dni}
+  💳 *Método de pago:* ${formData.metodoPago === "presencial"
           ? "Pago presencial"
           : "Pago por transferencia"
-      }
-🔗 [Haz clic aquí para aceptar o rechazar el turno](https://pruebaconwp.netlify.app/login) 
-`.trim();
-
+        }
+  🔗 [Haz clic aquí para aceptar o rechazar el turno](https://pruebaconwp.netlify.app/login) 
+`;
       const mensajeCodificado = encodeURIComponent(mensaje);
       const link = `https://wa.me/${cancha.telefono}?text=${mensajeCodificado}`;
       setWhatsappLink(link);
       setTurnoConfirmado(true);
     } catch (err) {
-      console.error("Error al reservar turno:", err.message);
+      console.error(
+        "Error al reservar turno:",
+        err.response?.data || err.message
+      );
       alert("Hubo un error al procesar tu solicitud");
     } finally {
       setIsLoading(false);
@@ -126,26 +126,33 @@ export default function ConfirmarTurno() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-gray-900 via-emerald-900 to-green-900 flex flex-col items-center justify-center p-6 text-white">
-      {/* Contenedor principal */}
+    <div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
+      className="min-h-screen w-full bg-gradient-to-b from-white via-green-50 to-green-100 flex flex-col items-center justify-center p-6"
+    >
       {cancha && turno && (
-        <div className="w-full max-w-4xl md:flex justify-center gap-6">
+        <div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="w-full md:flex justify-center items-center gap-4"
+        >
           {/* Tarjeta de información */}
-          <div className="md:w-1/2 bg-white/10 backdrop-blur-md rounded-xl shadow-lg p-6 mb-6 border border-gray-700">
-            <h2 className="text-2xl font-bold text-center text-white mb-4">
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-6 md:mb-0 border border-emerald-100 md:w-1/2">
+            <h2 className="text-2xl font-bold text-center text-emerald-800 mb-4">
               Confirmá tu turno
             </h2>
-
             <div className="flex items-center justify-center mb-6">
               <div className="p-3 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full shadow-md">
                 <FaClock className="text-white text-2xl" />
               </div>
             </div>
-
             <div className="space-y-4 mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-100/20 rounded-lg flex items-center justify-center">
-                  <FaUser className="text-emerald-300" />
+                <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                  <FaUser className="text-emerald-600" />
                 </div>
                 <input
                   type="text"
@@ -154,13 +161,12 @@ export default function ConfirmarTurno() {
                   value={formData.nombre}
                   onChange={handleChange}
                   required
-                  className="flex-1 p-3 bg-white/5 border border-gray-600 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="flex-1 p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
-
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-100/20 rounded-lg flex items-center justify-center">
-                  <FaIdCard className="text-emerald-300" />
+                <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                  <FaIdCard className="text-emerald-600" />
                 </div>
                 <input
                   type="number"
@@ -169,13 +175,12 @@ export default function ConfirmarTurno() {
                   value={formData.dni}
                   onChange={handleChange}
                   required
-                  className="flex-1 p-3 bg-white/5 border border-gray-600 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="flex-1 p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
-
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-100/20 rounded-lg flex items-center justify-center">
-                  <FaPhone className="text-emerald-300" />
+                <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                  <FaPhone className="text-emerald-600" />
                 </div>
                 <input
                   type="tel"
@@ -184,243 +189,264 @@ export default function ConfirmarTurno() {
                   value={formData.telefono}
                   onChange={handleChange}
                   required
-                  className="flex-1 p-3 bg-white/5 border border-gray-600 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="flex-1 p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
             </div>
-
             <button
+              whileTap={{ scale: 0.95 }}
               disabled={!formData.nombre || !formData.dni || !formData.telefono}
               onClick={() => setShowModal(true)}
-              className={`w-full py-3 rounded-lg font-bold transition-all ${
-                formData.nombre && formData.dni && formData.telefono
-                  ? "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white shadow-md"
-                  : "bg-gray-700 text-gray-400 cursor-not-allowed"
-              }`}
+              className={`w-full py-3 rounded-lg font-bold text-white ${formData.nombre && formData.dni && formData.telefono
+                  ? "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-md"
+                  : "bg-gray-300 cursor-not-allowed"
+                } transition-all`}
             >
               Continuar
             </button>
           </div>
-
           {/* Resumen del turno */}
-          <div className="md:w-1/3 bg-white/10 backdrop-blur-md rounded-xl p-4 border border-emerald-800/30 shadow-lg">
-            <h3 className="font-semibold text-emerald-200 mb-3">Resumen del turno:</h3>
-            <div className="space-y-2 text-sm">
-              <p className="flex justify-between">
-                <span className="text-gray-400">Cancha:</span>
-                <span className="capitalize">{cancha.nombre}</span>
-              </p>
-              <p className="flex justify-between">
-                <span className="text-gray-400">Fecha:</span>
-                <span>{formatearFecha(turno.fecha)}</span>
-              </p>
-              <p className="flex justify-between">
-                <span className="text-gray-400">Hora:</span>
-                <span>{formatearHora(turno.hora)} hs</span>
-              </p>
-              <p className="flex justify-between">
-                <span className="text-gray-400">Precio:</span>
-                <span>$ {Math.trunc(cancha.tarifa1 || turno.precio)}</span>
-              </p>
+          <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100 md:w-1/3 md:py-16 md:flex flex-col justify-center gap-4 shadow-lg">
+            <h3 className="font-semibold text-emerald-800 mb-2 md:text-xl">
+              Resumen del turno:
+            </h3>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600">Cancha:</span>
+              <span className="font-medium capitalize">{cancha.nombre}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600">Fecha:</span>
+              <span className="font-medium">{formatearFecha(turno.fecha)}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600">Hora:</span>
+              <span className="font-medium">
+                {formatearHora(turno.hora)} hs
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600">Precio:</span>
+              <span className="font-medium">
+                $ {cancha?.tarifa2 ?  Math.trunc(turno?.precio)  : Math.trunc(cancha?.tarifa1)}
+              </span>
             </div>
           </div>
         </div>
       )}
-
-      {/* Modal de confirmación */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-          <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-xl p-6 w-full max-w-md border border-gray-700">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-white">Confirmar solicitud</h3>
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-gray-300 hover:text-white"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
+      {/* Modal de Confirmación */}
+      <AnimatePresence>
+        {showModal && (
+          <div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+          >
+            <div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md"
+            >
+              <h3 className="text-xl font-bold text-emerald-800 mb-4">
+                Confirmar solicitud
+              </h3>
+              {/* Campo de método de pago */}
+              {/* Datos del cliente */}
+              <div className="space-y-3 mb-6 text-gray-700">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <FaUser className="text-emerald-600 text-sm" />
+                  </div>
+                  <span className="font-medium">Nombre: {formData.nombre}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <FaIdCard className="text-emerald-600 text-sm" />
+                  </div>
+                  <span className="font-medium">DNI: {formData.dni}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <FaPhone className="text-emerald-600 text-sm" />
+                  </div>
+                  <span className="font-medium">Tel: {formData.telefono}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <FaMoneyBill1Wave className="text-emerald-600 text-sm" />
+                  </div>
+                  <span className="font-medium">Precio: $ {Math.trunc(turno.precio)}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <FaMoneyBillWave className="text-emerald-600 text-sm" />
+                  </div>
+                  <span className="font-medium">Seña: $ {Math.trunc(cancha.adelanto)}</span>
+                </div>
+              </div>
+              {/* Detalles del turno + Datos bancarios si aplica */}
+              <div className="bg-emerald-50 rounded-lg p-4 mb-6">
+                <p className="font-semibold text-emerald-800 mb-1">Detalles del turno:</p>
+                <p><span className="capitalize">{cancha?.nombre}</span> - {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs</p>
+                {/* Mostrar alias y CVU si es transferencia */}
+                {/* {formData.metodoPago === "transferencia" && (
+                  <>
+                    <div className="mt-3 pt-3 border-t border-emerald-200">
+                      <h4 className="text-sm font-medium text-gray-700 mb-1">Datos para transferir:</h4>
+                      <button 
+                        className="text-sm inline-flex items-center gap-1 w-full text-left"
+                        onClick={() => copiarAlPortapapeles(cancha.alias, "alias")}
+                        type="button"
+                      >
+                        <strong>Alias:</strong> {cancha.alias || "No disponible"}
+                        {infoCopiadaAlias && <span className="text-green-500 ml-1">Copiado!</span>}
+                        <IoCopyOutline className="text-lg text-gray-500 group-hover:text-emerald-600" />
+                      </button>
+                      <button 
+                        className="text-sm inline-flex items-center gap-1 w-full text-left mt-1"
+                        onClick={() => copiarAlPortapapeles(cancha.cvu, "cvu")}
+                        type="button"
+                      >
+                        <strong>CVU / CBU:</strong> {cancha.cvu || "No disponible"}
+                        {infoCopiadaCVU && <span className="text-green-500 ml-1">Copiado!</span>}
+                        <IoCopyOutline className="text-lg text-gray-500 group-hover:text-emerald-600" />
+                      </button>
+                    </div>
+                  </>
+                )} */}
+              </div>
+               <div className="mb-6">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Método de pago de seña:
+                </label>
+                <select
+                  name="metodoPago"
+                  value={formData.metodoPago}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
+                  <option value="presencial">Efectivo</option>
+                  <option value="transferencia">Transferencia</option>
+                </select>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+                >
+                  Volver
+                </button>
+                <button
+                  onClick={reservarTurno}
+                  disabled={isLoading}
+                  className="flex-1 py-2 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition flex items-center justify-center gap-2"
+                >
+                  {isLoading ? (
+                    <>
+                      <svg
+                        className="animate-spin h-4 w-4 text-white"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Procesando...
+                    </>
+                  ) : (
+                    "Solicitar reserva"
+                  )}
+                </button>
+              </div>
             </div>
-
-            {/* Datos del cliente */}
-            <div className="space-y-3 mb-6 text-gray-200">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-emerald-500/20 rounded-full flex items-center justify-center">
-                  <FaUser className="text-emerald-300" />
+          </div>
+        )}
+      </AnimatePresence>
+      {/* Modal de Éxito */}
+      <AnimatePresence>
+        {turnoConfirmado && (
+          <div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+          >
+            <div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className="bg-white rounded-xl shadow-xl p-8 text-center max-w-sm w-full"
+            >
+              <div className="mb-6 flex justify-center">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                  <FaWhatsapp className="text-green-500 text-4xl" />
                 </div>
-                <span>Nombre: {formData.nombre}</span>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-emerald-500/20 rounded-full flex items-center justify-center">
-                  <FaIdCard className="text-emerald-300" />
-                </div>
-                <span>DNI: {formData.dni}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-emerald-500/20 rounded-full flex items-center justify-center">
-                  <FaPhone className="text-emerald-300" />
-                </div>
-                <span>Tel: {formData.telefono}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-emerald-500/20 rounded-full flex items-center justify-center">
-                  <FaMoneyBill1Wave className="text-emerald-300" />
-                </div>
-                <span>Precio: $ {Math.trunc(turno.precio)}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-emerald-500/20 rounded-full flex items-center justify-center">
-                  <FaMoneyBillWave className="text-emerald-300" />
-                </div>
-                <span>Seña: $ {Math.trunc(cancha.adelanto)}</span>
-              </div>
-            </div>
-
-            {/* Detalles bancarios si aplica */}
-            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 mb-6 border border-emerald-800/30">
-              <p className="font-medium text-gray-200 mb-2">
-                Método de pago:{" "}
-                <span className="capitalize">{formData.metodoPago.replace("presencial", "Efectivo").replace("transferencia", "Transferencia")}</span>
+              <h3 className="text-xl font-bold text-gray-800 mb-3">¡Solicitud realizada!</h3>
+              <p className="text-gray-600 mb-6">
+                {formData.metodoPago === 'transferencia' ? 'Contactá con el propietario de la cancha para enviarle el comprobante por la seña. Aquí te dejamos los datos para transferir:' : 'Tu solicitud ha sido enviada exitosamente. El propietario de la cancha esperá que abones para confirmar el turno.'}
               </p>
-
+              {/* Mostrar alias y CVU si fue pago por transferencia */}
               {formData.metodoPago === "transferencia" && (
-                <div className="mt-3 pt-3 border-t border-emerald-700/30 space-y-2">
+                <div className="mb-6 text-left bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500">
+                  <h4 className="text-sm font-semibold text-blue-800 mb-2">Datos bancarios:</h4>
                   <button
-                    type="button"
+                    className="text-sm inline-flex items-center gap-1 w-full text-left"
                     onClick={() => copiarAlPortapapeles(cancha.alias, "alias")}
-                    className="text-left flex items-center justify-between w-full text-sm text-gray-300 hover:text-emerald-300 transition-colors"
-                  >
-                    <strong>Alias:</strong>{" "}
-                    <span className="flex items-center gap-1">
-                      {cancha.alias || "No disponible"}
-                      <IoCopyOutline className="ml-2 text-gray-400 hover:text-emerald-300" />
-                      {infoCopiadaAlias && (
-                        <span className="text-green-400 ml-1 text-xs">Copiado!</span>
-                      )}
-                    </span>
-                  </button>
-
-                  <button
                     type="button"
-                    onClick={() => copiarAlPortapapeles(cancha.cvu, "cvu")}
-                    className="text-left flex items-center justify-between w-full text-sm text-gray-300 hover:text-emerald-300 transition-colors mt-1"
                   >
-                    <strong>CVU / CBU:</strong>{" "}
-                    <span className="flex items-center gap-1">
-                      {cancha.cvu || "No disponible"}
-                      <IoCopyOutline className="ml-2 text-gray-400 hover:text-emerald-300" />
-                      {infoCopiadaCVU && (
-                        <span className="text-green-400 ml-1 text-xs">Copiado!</span>
-                      )}
-                    </span>
-                  </button>
+                    <strong>Alias:</strong> {cancha.alias || "No disponible"}
 
-                  <p className="text-sm mt-2 text-gray-400">
-                    <strong>A nombre de:</strong> {cancha.wallet_nombre}
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    <strong>Banco:</strong> {cancha.wallet_banco}
-                  </p>
+                    <IoCopyOutline className="text-lg text-gray-500 group-hover:text-emerald-600" />
+                    {infoCopiadaAlias && <span className="text-green-500 ml-1">Copiado!</span>}
+                  </button>
+                  <button
+                    className="text-sm inline-flex items-center gap-1 w-full text-left mt-1"
+                    onClick={() => copiarAlPortapapeles(cancha.cvu, "cvu")}
+                    type="button"
+                  >
+                    <strong>CVU / CBU:</strong> {cancha.cvu || "No disponible"}
+
+                    <IoCopyOutline className="text-lg text-gray-500 group-hover:text-emerald-600" />
+                    {infoCopiadaCVU && <span className="text-green-500 ml-1">Copiado!</span>}
+
+                  </button>
+                  <p className="text-sm"><strong>A nombre de: </strong>{cancha.wallet_nombre}</p>
+                  <p className="text-sm"><strong>Banco: </strong>{cancha.wallet_banco}</p>
                 </div>
               )}
-            </div>
+              {formData.metodoPago === "presencial" ? (
+                <button onClick={closeModal} className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition font-medium mb-4">
+                  Finalizar
+                </button>) : (
 
-            {/* Botones de acción */}
-            <div className="flex flex-col sm:flex-row gap-3">
-            <button
-  onClick={() => setShowModal(false)}
-  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition"
->
-  Volver
-</button>
-              <button
-                onClick={reservarTurno}
-                disabled={isLoading}
-                className="flex-1 py-2 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition font-medium flex items-center justify-center gap-2"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                    Procesando...
-                  </>
-                ) : (
-                  "Solicitar reserva"
-                )}
-              </button>
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition font-medium mb-4"
+                  onClick={closeModal}
+                >
+                  <FaWhatsapp /> Enviar al propietario
+                </a>
+              )}
+
+
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Modal de éxito */}
-      {turnoConfirmado && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-          <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-xl p-6 w-full max-w-sm text-center border border-green-800/30">
-            <div className="mb-6 flex justify-center">
-              <div className="w-20 h-20 bg-green-100/20 rounded-full flex items-center justify-center">
-                <FaWhatsapp className="text-green-400 text-4xl" />
-              </div>
-            </div>
-
-            <h3 className="text-xl font-bold text-white mb-3">¡Solicitud realizada!</h3>
-
-            <p className="text-gray-300 mb-6">
-              {formData.metodoPago === "transferencia"
-                ? "Envía el comprobante al propietario."
-                : "El propietario te contactará para confirmar el pago."}
-            </p>
-
-            {formData.metodoPago === "transferencia" && (
-              <div className="mb-6 text-left bg-white/5 p-3 rounded-lg border-l-2 border-blue-400">
-                <h4 className="text-sm font-medium text-emerald-300 mb-1">Datos bancarios:</h4>
-                <p className="text-sm text-gray-300">
-                  <strong>Alias:</strong> {cancha.alias || "No disponible"}
-                </p>
-                <p className="text-sm text-gray-300">
-                  <strong>CVU:</strong> {cancha.cvu || "No disponible"}
-                </p>
-                <p className="text-sm text-gray-300">
-                  <strong>A nombre de:</strong> {cancha.wallet_nombre}
-                </p>
-                <p className="text-sm text-gray-300">
-                  <strong>Banco:</strong> {cancha.wallet_banco}
-                </p>
-              </div>
-            )}
-
-            {formData.metodoPago === "presencial" ? (
-              <button
-                onClick={closeModal}
-                className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition font-medium"
-              >
-                Finalizar
-              </button>
-            ) : (
-              <a
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={closeModal}
-                className="flex items-center justify-center gap-2 w-full py-3 bg-green-600 hover:bg-green-500 text-white rounded-lg transition font-medium"
-              >
-                <FaWhatsapp /> Enviar al propietario
-              </a>
-            )}
-          </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
-}
+};
