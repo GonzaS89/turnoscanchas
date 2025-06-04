@@ -66,10 +66,10 @@ export default function MiCuenta() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-screen lg:w-full flex items-center"
+      className="min-h-screen w-screen lg:w-full"
     >
       {/* Contenedor principal */}
-      <div className="w-screen xl:max-w-4xl lg:mx-auto bg-white shadow-lg overflow-hidden border border-gray-200">
+      <div className="h-full w-screen xl:max-w-4xl lg:mx-auto bg-white shadow-lg overflow-hidden border border-gray-200">
         {/* Encabezado */}
         <div className="bg-emerald-600 p-6 text-white flex justify-between items-center">
           <button
@@ -86,7 +86,7 @@ export default function MiCuenta() {
         </div>
 
         {/* Información de la cancha */}
-        <div className="p-6 flex gap-6">
+        <div className="p-6 flex flex-col lg:flex-row gap-6">
           {/* Información Básica */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-800 border-b pb-2 border-gray-200">
