@@ -22,7 +22,7 @@ export default function PantallaInicial () {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="w-full relative flex items-center justify-center h-screen"
+      className="w-full relative flex h-screen"
       style={{
         backgroundImage: `url(${imgHero})`,
         backgroundSize: "cover",
@@ -38,12 +38,13 @@ export default function PantallaInicial () {
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.6 }}
-        className="z-10 max-w-xl mx-auto text-center px-6 py-12 space-y-8 flex flex-col justify-start h-screen"
+        className="z-10 max-w-xl mx-auto text-center px-6 py-12 space-y-8 flex flex-col justify-between items-center"
       >
-        <div className="flex flex-col gap-8 items-center">
+        <img src={logo} alt="" className="w-[140px] lg:w-[180px]"/>
+        <div className="flex flex-col gap-8 items-center h-3/4">
           {/* Icono + Título */}
-          <img src={logo} alt="" className="w-[120px] lg:w-[180px]"/>
-          <h1 className="text-3xl lg:text-5xl xl:text-7xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 bg-clip-text text-transparent tex">
+          
+          <h1 className="text-4xl lg:text-5xl xl:text-7xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 bg-clip-text text-transparent tex">
             Bienvenido a TurnoGol
           </h1>
 
@@ -67,7 +68,7 @@ export default function PantallaInicial () {
 
 
         {/* Info trabajo */}
-        <div className="mt-6 xl:text-lg text-center text-gray-50 absolute bottom-10 left-1/2 transform -translate-x-1/2 gap-4 flex flex-col items-center">
+        <div className="mt-6 xl:text-lg text-center text-gray-50 gap-4 flex flex-col items-center">
           <p>¿Querés trabajar con nosotros?</p>
           <button
             onClick={() => setShowModal(true)}
