@@ -27,7 +27,7 @@ export default function ConfirmarTurno() {
     nombre: "",
     telefono: "",
     dni: "",
-    metodoPago: "presencial",
+    metodoPago: "efectivo",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -77,7 +77,7 @@ export default function ConfirmarTurno() {
   🪪 *DNI:* ${formData.dni}
  💰 *Precio:* $${Math.trunc(turno.precio)}
  💰 *Seña:* $${Math.trunc(cancha.adelanto)} 
-  💳 *Método de pago:* ${formData.metodoPago} === "efectivo"
+  💳 *Método de pago:* ${formData.metodoPago === "efectivo"
           ? "Efectivo"
           : "Transferencia"
         }
@@ -91,7 +91,7 @@ export default function ConfirmarTurno() {
 `
 
         }  
-  🔗 [${formData.metodoPago === 'presencial' ? 'Coordiná un horario con el propietario para abonar la seña,' : 'Recorda que debes enviarle a éste número el comprobante por el pago de la seña, '} para que el turno sea confirmado.] 
+  🔗 [${formData.metodoPago === 'efectivo' ? 'Coordiná un horario con el propietario para abonar la seña,' : 'Recorda que debes enviarle a éste número el comprobante por el pago de la seña, '} para que el turno sea confirmado.] 
 `;
       const mensajeCodificado = encodeURIComponent(mensaje);
       const link = `https://wa.me/${cancha.telefono}?text=${mensajeCodificado}`;
