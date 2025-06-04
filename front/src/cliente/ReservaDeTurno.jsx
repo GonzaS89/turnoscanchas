@@ -244,7 +244,7 @@ export default function ReservaDeTurno() {
                                 ? "Disponible ahora"
                                 : "Turno ocupado"}
                             </p>
-                            <p className="text-sm md:text-lg lg:text-2xl text-gray-700">$ {Math.trunc(turno.precio)}</p>
+                            <p className={`text-xs lg:text-base xl:text-2xl ${turno.estado === 'disponible' ? 'text-emerald-600' : 'text-gray-500'} font-medium`}> $ {Math.trunc(turno.precio)}</p>
                           </div>
                         </div>
 
