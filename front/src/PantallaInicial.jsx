@@ -10,7 +10,9 @@ import {
   FaTimes,
   FaCheck,
 } from "react-icons/fa";
-import imgHero from "./assets/hero-cancha.jpeg"; // Asegúrate de tener esta imagen
+import imgHero from "./assets/hero-cancha.jpeg";
+import logo from "./assets/logo.png"; // Asegúrate de tener esta imagen
+// Asegúrate de tener esta imagen
 
 export default function PantallaInicial () {
   const [showModal, setShowModal] = useState(false);
@@ -36,12 +38,12 @@ export default function PantallaInicial () {
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.6 }}
-        className="z-10 max-w-xl mx-auto text-center px-6 py-12 space-y-8 flex flex-col justify-start h-[80%]"
+        className="z-10 max-w-xl mx-auto text-center px-6 py-12 space-y-8 flex flex-col justify-start h-screen"
       >
         <div className="flex flex-col gap-8 items-center">
           {/* Icono + Título */}
-          <FaFutbol className="inline-block mr-3 text-green-500 text-6xl xl:text-7xl" />
-          <h1 className="text-4xl lg:text-5xl xl:text-7xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 bg-clip-text text-transparent tex">
+          <img src={logo} alt="" className="w-[120px] lg:w-[180px]"/>
+          <h1 className="text-3xl lg:text-5xl xl:text-7xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 bg-clip-text text-transparent tex">
             Bienvenido a TurnoGol
           </h1>
 
