@@ -103,7 +103,7 @@ export default function ConfirmarTurno () {
       nombre: "",
       telefono: "",
       dni: "",
-      metodoPago: "presencial",
+      metodoPago: "efectivo",
     });
     setTurnoConfirmado(false);
     setWhatsappLink("");
@@ -272,7 +272,7 @@ export default function ConfirmarTurno () {
                   onChange={handleChange}
                   className="w-full p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 >
-                  <option value="presencial">Efectivo</option>
+                  <option value="efectivo">Efectivo</option>
                   <option value="transferencia">Transferencia</option>
                 </select>
               </div>
