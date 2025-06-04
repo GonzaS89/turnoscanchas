@@ -155,7 +155,7 @@ export default function PantallaInicial () {
                       <FaWhatsapp className="text-xl" />
                       <span>WhatsApp</span>
                     </a>
-                    <a
+                    {/* <a
                       href="https://instagram.com/turnogol"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -163,7 +163,7 @@ export default function PantallaInicial () {
                     >
                       <FaInstagram className="text-xl" />
                       <span>@turnogol</span>
-                    </a>
+                    </a> */}
                   </div>
                 </div>
               </div>
