@@ -233,31 +233,31 @@ export default function ConfirmarTurno() {
                   <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                     <FaUser className="text-emerald-600 text-sm" />
                   </div>
-                  <span className="font-medium">Nombre: <span className="">{formData.nombre}</span></span>
+                  <span className="font-medium">Nombre: <span className="text-gray-500">{formData.nombre}</span></span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                     <FaIdCard className="text-emerald-600 text-sm" />
                   </div>
-                  <span className="font-medium">DNI: <span className="">{formData.dni}</span></span>
+                  <span className="font-medium">DNI: <span className="text-gray-500">{formData.dni}</span></span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                     <FaPhone className="text-emerald-600 text-sm" />
                   </div>
-                  <span className="font-medium">Tel: <span className="">{formData.telefono}</span></span>
+                  <span className="font-medium">Tel: <span className="text-gray-500">{formData.telefono}</span></span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                     <FaMoneyBill1Wave className="text-emerald-600 text-sm" />
                   </div>
-                  <span className="font-medium">Precio: <span className="">${Math.trunc(turno.precio)}</span></span>
+                  <span className="font-medium">Precio: <span className="text-gray-500">${Math.trunc(turno.precio)}</span></span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                     <FaMoneyBillWave className="text-emerald-600 text-sm" />
                   </div>
-                  <span className="font-medium">Seña: <span className="font-thin">${Math.trunc(cancha.adelanto)}</span></span>
+                  <span className="font-medium">Seña: <span className="text-gray-500">${Math.trunc(cancha.adelanto)}</span></span>
                 </div>
               </div>
               {/* Detalles del turno + Datos bancarios si aplica */}
