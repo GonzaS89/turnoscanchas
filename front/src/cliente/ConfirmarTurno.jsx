@@ -15,7 +15,7 @@ import { FaMoneyBill1Wave } from "react-icons/fa6";
 import { IoCopyOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function ConfirmarTurno () {
+export default function ConfirmarTurno() {
   const location = useLocation();
   const { idCancha } = location.state || {};
   const { idTurno } = location.state || {};
@@ -75,10 +75,22 @@ export default function ConfirmarTurno () {
   🧑‍🦱 *Cliente:* ${formData.nombre}
   📞 *Teléfono:* ${formData.telefono}
   🪪 *DNI:* ${formData.dni}
-  💳 *Método de pago:* ${formData.metodoPago === "efectivo"
+ 💰 *Precio:* $${Math.trunc(turno.precio)}
+ 💰 *Seña:* $${Math.trunc(cancha.adelanto)} 
+  💳 *Método de pago:* ${formData.metodoPago} === "efectivo"
           ? "Efectivo"
           : "Transferencia"
         }
+
+      ${formData.metodoPago === 'transferencia' &&
+        ` *Datos bancarios para la transferencia:*
+  🏦 *Alias:* ${cancha.alias || "No disponible"}
+  🏦 *CVU / CBU:* ${cancha.cvu || "No disponible"}
+  🏦 *A nombre de:* ${cancha.wallet_nombre || "No disponible"}
+  🏦 *Banco:* ${cancha.wallet_banco || "No disponible"}
+`
+
+        }  
   🔗 [${formData.metodoPago === 'presencial' ? 'Coordiná un horario con el propietario para abonar la seña,' : 'Recorda que debes enviarle a éste número el comprobante por el pago de la seña, '} para que el turno sea confirmado.] 
 `;
       const mensajeCodificado = encodeURIComponent(mensaje);
@@ -145,7 +157,7 @@ export default function ConfirmarTurno () {
               Ingresá tus datos
             </h2>
             <div className="flex items-center justify-center mb-6">
-             
+
             </div>
             <div className="space-y-4 mb-6">
               <div className="flex items-center gap-3">
@@ -196,8 +208,8 @@ export default function ConfirmarTurno () {
               disabled={!formData.nombre || !formData.dni || !formData.telefono}
               onClick={() => setShowModal(true)}
               className={`w-full py-3 rounded-lg font-bold text-white ${formData.nombre && formData.dni && formData.telefono
-                  ? "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-md"
-                  : "bg-gray-300 cursor-not-allowed"
+                ? "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-md"
+                : "bg-gray-300 cursor-not-allowed"
                 } transition-all`}
             >
               Continuar
@@ -262,7 +274,7 @@ export default function ConfirmarTurno () {
                 <p className="font-semibold md:text-sm text-emerald-800 mb-1">Detalles del turno:</p>
                 <p className="md:text-sm"><span className="capitalize md:text-sm">{cancha?.nombre}</span> - {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs</p>
               </div>
-               <div className="mb-6 px-6">
+              <div className="mb-6 px-6">
                 <label className="block text-gray-700 font-medium mb-2 md:text-sm">
                   Método de pago de seña:
                 </label>
@@ -373,16 +385,16 @@ export default function ConfirmarTurno () {
                 </div>
               )}
 
-                <a
-                  href={whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition font-medium mb-4"
-                  onClick={closeModal}
-                >
-                  <FaWhatsapp /> Notificar al propietario
-                </a>
-              
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition font-medium mb-4"
+                onClick={closeModal}
+              >
+                <FaWhatsapp /> Notificar al propietario
+              </a>
+
             </div>
           </div>
         )}
