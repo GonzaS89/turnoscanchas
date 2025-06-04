@@ -10,8 +10,8 @@ import {
   FaTimes,
   FaCheck,
 } from "react-icons/fa";
-import imgHero from "./assets/hero-cancha.jpeg";
-import logo from "./assets/logo.png"; // Asegúrate de tener esta imagen
+import imgHero from "/hero-cancha.jpeg";
+import logo from "/logo.png"; // Asegúrate de tener esta imagen
 // Asegúrate de tener esta imagen
 
 export default function PantallaInicial () {
