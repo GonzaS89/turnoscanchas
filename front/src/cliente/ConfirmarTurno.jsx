@@ -79,7 +79,7 @@ export default function ConfirmarTurno () {
           ? "Pago presencial"
           : "Pago por transferencia"
         }
-  🔗 [Recordá que debes enviarle a éste número el comprobante por el pago de la seña, para que turno sea confirmado.] 
+  🔗 [${formData.metodoPago === 'presencial' ? 'Coordiná un horario con el propietario para abonar la seña,' : 'Recorda que debes enviarle a éste número el comprobante por el pago de la seña, '} para que el turno sea confirmado.] 
 `;
       const mensajeCodificado = encodeURIComponent(mensaje);
       const link = `https://wa.me/${cancha.telefono}?text=${mensajeCodificado}`;
