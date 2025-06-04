@@ -81,15 +81,6 @@ export default function ConfirmarTurno() {
           ? "Efectivo"
           : "Transferencia"
         }
-
-      ${formData.metodoPago === 'transferencia' &&
-        ` *Datos bancarios para la transferencia:*
-  🏦 *Alias:* ${cancha.alias || "No disponible"}
-  🏦 *CVU / CBU:* ${cancha.cvu || "No disponible"}
-  🏦 *A nombre de:* ${cancha.wallet_nombre || "No disponible"}
-  🏦 *Banco:* ${cancha.wallet_banco || "No disponible"}
-`
-
         }  
   🔗 [${formData.metodoPago === 'efectivo' ? 'Coordiná un horario con el propietario para abonar la seña,' : 'Recorda que debes enviarle a éste número el comprobante por el pago de la seña, '} para que el turno sea confirmado.] 
 `;
