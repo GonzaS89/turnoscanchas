@@ -8,6 +8,10 @@ module.exports = {
       fontFamily: {
         principal : ["Luckiest Guy", "cursive"],
         poppins : ["Poppins", "sans-serif"]
+      },
+      screens: {
+        'xxs': '400px',
+        
       }
     },
   },

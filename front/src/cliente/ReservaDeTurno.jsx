@@ -44,7 +44,7 @@ export default function ReservaDeTurno() {
       {/* Banner con loader */}
       <div className="relative">
         {/* Imagen de portada */}
-        <div className="h-44 lg:h-60 w-full bg-gray-200 overflow-hidden relative">
+        <div className="h-44 xl:h-60 w-full bg-gray-200 overflow-hidden relative">
           {cancha?.portada ? (
             <img
               src={cancha.portada}
@@ -76,7 +76,7 @@ export default function ReservaDeTurno() {
           <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-between px-4 sm:px-6 xl:w-[1200px] xl:mx-auto">
             {/* Logo circular */}
             <div className="flex items-center gap-3 sm:gap-4">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-32 lg:h-32 rounded-full border-2 border-white shadow-lg overflow-hidden flex-shrink-0 z-10">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-28 lg:h-28 xl:w-32 xl:h-32 rounded-full border-2 border-white shadow-lg overflow-hidden flex-shrink-0 z-10">
                 {cancha?.logo ? (
                   <img
                     src={cancha.logo}
@@ -91,15 +91,15 @@ export default function ReservaDeTurno() {
               </div>
               {/* Texto del nombre y ubicación */}
               <div className="text-white drop-shadow-lg px-4 py-3 sm:px-5 sm:py-4 rounded-xl inline-block max-w-md">
-                <h2 className="text-xl sm:text-2xl lg:text-4xl font-extrabold capitalize tracking-wide">
+                <h2 className="text-xl lg:text-3xl xl:text-4xl font-extrabold capitalize tracking-wide">
                   {cancha?.nombre || "Cancha"}
                 </h2>
-                <p className="text-sm sm:text-base lg:text-xl text-white/90 mt-1 flex items-center gap-2">
+                <p className="text-sm sm:text-base xl:text-xl text-white/90 mt-1 flex items-center gap-2">
                   <span className="text-emerald-300">📍</span>
                   {cancha?.direccion ? `${cancha.direccion} - ` : ""}
                   {cancha?.localidad || "Localidad no disponible"}
                 </p>
-                <p className="text-xs sm:text-sm lg:text-lg text-emerald-200 mt-1 flex items-center gap-2">
+                <p className="text-xs sm:text-sm xl:text-lg text-emerald-200 mt-1 flex items-center gap-2">
                   <span className="text-emerald-300">💰</span>
                   Precios por turno: $ {Math.trunc(cancha?.tarifa1)} - ${" "}
                   {Math.trunc(cancha.tarifa2)}
@@ -118,7 +118,7 @@ export default function ReservaDeTurno() {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="mb-3 sm:mb-4 text-center"
         >
-          <h1 className="text-2xl sm:text-2xl md:text-3xl xl:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-emerald-600 animate-gradient-x tracking-tight">
+          <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-emerald-600 animate-gradient-x tracking-tight">
             Elegí tu Turno
           </h1>
         </header>
@@ -155,12 +155,12 @@ export default function ReservaDeTurno() {
               className="w-full md:max-w-3xl xl:max-w-7xl"
             >
               <div className="rounded-lg sm:rounded-xl p-3 sm:p-4 xl:py-6 mb-1 sm:mb-2">
-                <p className="text-center text-sm sm:text-sm xl:text-2xl font-medium text-emerald-700">
+                <p className="text-center text-sm sm:text-sm md:text-xl xl:text-2xl font-medium text-emerald-700">
                   Turnos disponibles para hoy
                 </p>
               </div>
 
-              <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 place-items-center">
+              <div className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4 place-items-center">
                 {turnosDeHoy?.map((turno) => (
                   <div
                     key={turno.id}
@@ -225,7 +225,7 @@ export default function ReservaDeTurno() {
 
                           <div>
                             <span
-                              className={`text-xl sm:text-2xl lg:text-4xl font-bold ${
+                              className={`text-xl md:text-2xl xl:text-4xl font-bold ${
                                 turno.estado === "disponible"
                                   ? "text-gray-900"
                                   : "text-gray-600"
@@ -234,7 +234,7 @@ export default function ReservaDeTurno() {
                               {formatearHora(turno.hora)}
                             </span>
                             <p
-                              className={`text-xs lg:text-lg ${
+                              className={`text-xs md:text-sm xl:text-lg ${
                                 turno.estado === "disponible"
                                   ? "text-emerald-600"
                                   : "text-gray-500"
@@ -244,6 +244,7 @@ export default function ReservaDeTurno() {
                                 ? "Disponible ahora"
                                 : "Turno ocupado"}
                             </p>
+                            <p className="text-sm md:text-lg lg:text-2xl text-gray-700">$ {Math.trunc(turno.precio)}</p>
                           </div>
                         </div>
 

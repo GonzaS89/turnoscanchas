@@ -173,7 +173,7 @@ export default function LoginCancha() {
         </button>
 
         {/* Enlace opcional */}
-        <div className="text-center text-sm text-gray-500 mt-4">
+        {/* <div className="text-center text-sm text-gray-500 mt-4">
           ¿Olvidaste tu contraseña?{" "}
           <button
             type="button"
@@ -182,7 +182,7 @@ export default function LoginCancha() {
           >
             Recupérala aquí
           </button>
-        </div>
+        </div> */}
       </form>
     </section>
   );

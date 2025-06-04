@@ -116,22 +116,22 @@ export default function AgregarTurno() {
             <FaArrowLeft />
             <span className="hidden sm:inline">Volver</span>
           </button>
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600 text-center flex-1">
+          <h2 className="text-xl sm:text-2xl xl:text-3xl font-bold text-green-600 text-center flex-1">
             Agregar Turnos
           </h2>
           <div className="w-6"></div> {/* Spacer */}
         </div>
 
         {/* Info Cancha */}
-        <div className="rounded-lg p-4 mb-6 bg-emerald-100 border border-emerald-200">
-          <p className="text-center text-emerald-800 font-medium lg:text-lg">
+        <div className="rounded-lg p-4 mb-6 bg-emerald-50 border border-emerald-200">
+          <p className="text-center text-emerald-800 font-medium xl:text-lg">
             Cancha: <span className="uppercase">{cancha?.nombre}</span>
           </p>
         </div>
 
         {/* Horarios existentes */}
         <div className="mb-8">
-          <h3 className="text-lg lg:text-2xl font-semibold text-gray-700 mb-3 flex items-center gap-2">
+          <h3 className="text-lg xl:text-2xl font-semibold text-gray-700 mb-3 flex items-center gap-2">
             <FaClock className="text-emerald-500" />
             Turnos para hoy:
           </h3>
@@ -144,7 +144,7 @@ export default function AgregarTurno() {
               {turnosHoy.map((turno) => (
                 <span
                   key={turno.id}
-                  className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm lg:text-xl font-medium"
+                  className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm xl:text-xl font-medium"
                 >
                   {turno.hora.slice(0, 5)}
                 </span>
@@ -172,7 +172,7 @@ export default function AgregarTurno() {
                 value={hora}
                 onChange={(e) => handleHorarioChange(index, e.target.value)}
                 required
-                className="flex-1 px-4 py-3 lg:py-5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
+                className="flex-1 px-4 py-3 xl:py-5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
               />
               {horarios.length > 1 && (
                 <button

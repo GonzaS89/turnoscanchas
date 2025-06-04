@@ -66,10 +66,10 @@ export default function MiCuenta() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-full flex items-center px-4"
+      className="min-h-screen w-screen lg:w-full flex items-center"
     >
       {/* Contenedor principal */}
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+      <div className="w-screen xl:max-w-4xl lg:mx-auto bg-white shadow-lg overflow-hidden border border-gray-200">
         {/* Encabezado */}
         <div className="bg-emerald-600 p-6 text-white flex justify-between items-center">
           <button
@@ -86,7 +86,7 @@ export default function MiCuenta() {
         </div>
 
         {/* Información de la cancha */}
-        <div className="p-6 grid md:grid-cols-2 gap-6">
+        <div className="p-6 flex gap-6">
           {/* Información Básica */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-800 border-b pb-2 border-gray-200">
@@ -179,12 +179,12 @@ export default function MiCuenta() {
 
         {/* Botón para editar credenciales */}
         <div className="max-w-4xl mx-auto mt-6 flex justify-end px-6 pb-6">
-          <button
+          {/* <button
             onClick={handleOpenModal}
             className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-white rounded-lg shadow-md transition-all"
           >
             Editar Credenciales
-          </button>
+          </button> */}
         </div>
       </div>
 

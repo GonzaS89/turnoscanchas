@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import {
   FaFutbol,
-  FaUser,
   FaArrowRight,
   FaWhatsapp,
   FaInstagram,
@@ -41,13 +40,13 @@ export default function PantallaInicial () {
       >
         <div className="flex flex-col gap-8 items-center">
           {/* Icono + Título */}
-          <FaFutbol className="inline-block mr-3 text-green-500 text-7xl" />
-          <h1 className="text-5xl sm:text-5xl lg:text-7xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 bg-clip-text text-transparent tex">
+          <FaFutbol className="inline-block mr-3 text-green-500 text-6xl xl:text-7xl" />
+          <h1 className="text-4xl lg:text-5xl xl:text-7xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 bg-clip-text text-transparent tex">
             Bienvenido a TurnoGol
           </h1>
 
           {/* Descripción */}
-          <p className="text-xl sm:text-xl xl:text-2xl text-gray-100 max-w-lg mx-auto">
+          <p className="text-base sm:text-base xl:text-2xl text-gray-100 max-w-lg mx-auto">
             Tu plataforma para reservar canchas de fútbol de forma rápida y sencilla.
             ¡Disfruta del mejor fútbol con amigos!
           </p>

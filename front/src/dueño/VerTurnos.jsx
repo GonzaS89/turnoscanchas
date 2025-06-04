@@ -116,19 +116,20 @@ export default function VerTurnos() {
   };
 
   const formatFecha = (fechaStr) => {
-    const fecha = new Date(fechaStr);
+    const [year, month, day] = fechaStr.split('-');
+    const fecha = new Date(year, month - 1, day); // Mes es 0-based
     const options = { weekday: "long", day: "numeric", month: "long" };
     return fecha.toLocaleDateString("es-ES", options);
   };
 
   return (
-    <div className="min-h-screen w-full text-gray-800 flex flex-col p-6">
+    <div className="min-h-screen w-full text-gray-800 flex flex-col p-6 relative">
       <div className="max-w-4xl mx-auto w-full">
         {/* Header */}
         <header className="flex items-center justify-center mb-6 pb-2 border-b border-gray-200">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-800 transition-colors lg:hidden"
+            className="flex items-center gap-2 text-gray-600 hover:text-emerald-800 transition-colors lg:hidden absolute left-0 ml-6"
           >
             <FaArrowLeft />
             <span className="hidden sm:inline">Volver</span>
@@ -168,7 +169,7 @@ export default function VerTurnos() {
             {Object.entries(turnosAgrupados).map(([fecha, turnosPorFecha]) => (
               <div key={fecha} className="rounded-xl shadow-md overflow-hidden border border-gray-200">
                 {/* Encabezado de fecha */}
-                <div className="flex justify-between items-center px-4 py-3 bg-emerald-100 border-b border-emerald-200 lg:text-xl lg:py-8">
+                <div className="flex justify-between items-center px-4 bg-gray-50 border-b border-emerald-200 lg:text-xl py-3 lg:py-4 xl:py-6 uppercase">
                   <h3 className="font-semibold text-emerald-800">{formatFecha(fecha)}</h3>
                   <button
                     onClick={() => toggleFechaVisibility(fecha)}

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa";
 import { useCanchas } from "../customHooks/useCanchas";
 import { useObtenerTodosLosTurnos } from "../customHooks/useObtenerTodosLosTurnos";
@@ -17,9 +16,26 @@ export default function Canchas () {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredCanchas = canchas.filter((cancha) =>
+  const turnosLibres = (id) =>
+    turnos.reduce(
+      (total, turno) =>
+        turno.estado === "disponible" &&
+        turno.cancha_id === id &&
+        formatearFecha(turno.fecha) === getFechaHoy()
+          ? total + 1
+          : total,
+      0
+    );
+
+  const filteredCanchas = canchas
+  .filter((cancha) =>
     cancha.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  )
+  .sort((a, b) => {
+    const turnosA = turnosLibres(a.id);
+    const turnosB = turnosLibres(b.id);
+    return turnosB - turnosA; // De mayor a menor
+  });
 
   function formatearFecha(fechaISO) {
     const fecha = new Date(fechaISO);
@@ -36,16 +52,7 @@ export default function Canchas () {
     return `${dia}-${mes}-${anio}`;
   }
 
-  const turnosLibres = (id) =>
-    turnos.reduce(
-      (total, turno) =>
-        turno.estado === "disponible" &&
-        turno.cancha_id === id &&
-        formatearFecha(turno.fecha) === getFechaHoy()
-          ? total + 1
-          : total,
-      0
-    );
+  
 
   return (
     <section className="w-full min-h-screen flex flex-col items-center justify-around py-6 px-2 sm:px-4">
@@ -57,7 +64,7 @@ export default function Canchas () {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="text-3xl md:text-4xl lg:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 bg-clip-text text-transparent animate-gradient-x"
+      className="text-3xl md:text-4xl xl:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 bg-clip-text text-emerald-700"
     >
       Elegí tu Cancha
     </h1>
@@ -65,7 +72,7 @@ export default function Canchas () {
       initial={{ y: 10, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.3, duration: 0.5 }}
-      className="text-gray-600 mt-2 text-sm md:text-base lg:text-xl"
+      className="text-gray-600 mt-2 text-base lg:text-xl"
     >
       Seleccioná una cancha para reservar tu turno
     </p>
@@ -98,7 +105,7 @@ export default function Canchas () {
         No se encontraron canchas con ese nombre
       </div>
     ) : (
-      <div className="flex flex-col gap-3 md:grid md:grid-cols-2 overflow-y-auto px-2 sm:px-3">
+      <div className="flex flex-col gap-3 md:grid lg:grid-cols-2 xl:grid-cols-3 overflow-y-auto px-2 sm:px-3">
         {filteredCanchas.map((cancha, index) => (
           <div
             key={cancha.id}

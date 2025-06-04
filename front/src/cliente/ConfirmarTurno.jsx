@@ -220,12 +220,12 @@ export default function ConfirmarTurno () {
               exit={{ scale: 0.9 }}
               className="bg-white rounded-xl shadow-xl w-full max-w-xl pb-6"
             >
-              <h3 className="text-xl lg:text-2xl text-center font-bold mb-10 uppercase bg-emerald-500 py-4 text-gray-50">
+              <h3 className="text-xl md:text-xl xl:text-2xl text-center font-bold mb-10 uppercase bg-emerald-500 py-4 text-gray-50">
                 Confirmar solicitud
               </h3>
               {/* Campo de método de pago */}
               {/* Datos del cliente */}
-              <div className="space-y-3 mb-6 text-gray-700 px-4">
+              <div className="md:space-y-1 mb-6 text-gray-700 px-4 md:text-sm">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                     <FaUser className="text-emerald-600 text-sm" />
@@ -258,12 +258,12 @@ export default function ConfirmarTurno () {
                 </div>
               </div>
               {/* Detalles del turno + Datos bancarios si aplica */}
-              <div className="bg-emerald-50 rounded-lg mb-6 p-6">
-                <p className="font-semibold text-emerald-800 mb-1">Detalles del turno:</p>
-                <p><span className="capitalize">{cancha?.nombre}</span> - {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs</p>
+              <div className="bg-emerald-50 rounded-lg mb-6 p-6 md:p-4">
+                <p className="font-semibold md:text-sm text-emerald-800 mb-1">Detalles del turno:</p>
+                <p className="md:text-sm"><span className="capitalize md:text-sm">{cancha?.nombre}</span> - {formatearFecha(turno?.fecha)} a las {formatearHora(turno?.hora)} hs</p>
               </div>
                <div className="mb-6 px-6">
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block text-gray-700 font-medium mb-2 md:text-sm">
                   Método de pago de seña:
                 </label>
                 <select
