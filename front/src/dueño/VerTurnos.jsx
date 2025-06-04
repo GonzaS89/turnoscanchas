@@ -122,13 +122,13 @@ export default function VerTurnos() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-white text-gray-800 flex flex-col p-6">
+    <div className="min-h-screen w-full text-gray-800 flex flex-col p-6">
       <div className="max-w-4xl mx-auto w-full">
         {/* Header */}
-        <header className="flex items-center justify-between mb-6 pb-2 border-b border-gray-200">
+        <header className="flex items-center justify-center mb-6 pb-2 border-b border-gray-200">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-800 transition-colors"
+            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-800 transition-colors lg:hidden"
           >
             <FaArrowLeft />
             <span className="hidden sm:inline">Volver</span>
@@ -141,7 +141,7 @@ export default function VerTurnos() {
 
         {/* Información de la cancha */}
         <div className="bg-emerald-50 rounded-lg shadow-sm p-4 mb-6 text-center border border-emerald-100">
-          <p className="text-sm font-semibold text-gray-700">
+          <p className="text-sm lg:text-lg font-semibold text-gray-700">
             Administrá los turnos de tu cancha
           </p>
         </div>
@@ -168,11 +168,11 @@ export default function VerTurnos() {
             {Object.entries(turnosAgrupados).map(([fecha, turnosPorFecha]) => (
               <div key={fecha} className="rounded-xl shadow-md overflow-hidden border border-gray-200">
                 {/* Encabezado de fecha */}
-                <div className="flex justify-between items-center px-4 py-3 bg-emerald-100 border-b border-emerald-200">
+                <div className="flex justify-between items-center px-4 py-3 bg-emerald-100 border-b border-emerald-200 lg:text-xl lg:py-8">
                   <h3 className="font-semibold text-emerald-800">{formatFecha(fecha)}</h3>
                   <button
                     onClick={() => toggleFechaVisibility(fecha)}
-                    className="text-sm text-emerald-700 hover:text-emerald-900 px-3 py-1 rounded-lg hover:bg-gray-100 transition"
+                    className="text-sm lg:text-lg text-emerald-700 hover:text-emerald-900 px-3 py-1 rounded-lg hover:bg-gray-100 transition"
                   >
                     {fechaVisible[fecha] ? "Ocultar" : "Mostrar"} turnos
                   </button>

@@ -38,11 +38,11 @@ export default function LoginCancha() {
   };
 
   return (
-    <section className="w-full min-h-screen flex items-center justify-center bg-white p-6 sm:p-8">
+    <section className="w-full min-h-screen flex items-center justify-center p-6 sm:p-8 relative">
       {/* Tarjeta de login */}
       <form
         onSubmit={handleLogin}
-        className="relative bg-white rounded-3xl shadow-xl border border-gray-200 p-8 w-full max-w-md flex flex-col gap-6"
+        className="relative bg-white rounded-3xl shadow-xl border border-gray-200 p-8 w-full max-w-md flex flex-col gap-6 z-50"
       >
         {/* Logo */}
         <div className="flex justify-center mb-2">

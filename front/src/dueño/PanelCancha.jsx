@@ -1,10 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { FcCalendar, FcPlus } from "react-icons/fc";
-import { IoSettingsSharp } from "react-icons/io5";
+import { useState } from "react";;
 import { FaSignOutAlt } from "react-icons/fa";
+import { SeccionPanelCancha } from "./components/SeccionPanelCancha";
 
 export default function PanelCancha() {
   const location = useLocation();
@@ -17,12 +14,19 @@ export default function PanelCancha() {
     navigate("/", { replace: true });
   };
 
+  const secciones = [
+    { seccion: "/verturnos", titulo: "Ver Turnos" },
+    { seccion: "/agregarturno", titulo: "Agregar Turnos" },
+    { seccion: "/micuenta", titulo: "Mi Cuenta" },
+  ];
+
+
   return (
     <section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-white text-gray-800 flex flex-col items-center justify-start px-4 py-8 sm:py-12"
+      className="min-h-screen w-full text-gray-800 flex flex-col items-center justify-start px-4 py-8 sm:py-12"
     >
       {/* Header - Bienvenida */}
       <div className="w-full max-w-4xl flex justify-end mb-6 px-4">
@@ -43,7 +47,7 @@ export default function PanelCancha() {
         className="text-center mb-8 sm:mb-12 flex flex-col items-center gap-4"
       >
         {/* Logo */}
-        <div className="w-20 h-20 rounded-full bg-gradient-to-r from-green-400 to-emerald-600 flex items-center justify-center shadow-lg">
+        <div className="w-20 h-20 lg:w-44 lg:h-44 rounded-full bg-gradient-to-r from-green-400 to-emerald-600 flex items-center justify-center shadow-lg">
           <img
             src={cancha?.logo || "/default-logo.png"}
             alt="Logo de la cancha"
@@ -52,14 +56,14 @@ export default function PanelCancha() {
         </div>
 
         {/* Mensaje de bienvenida */}
-        <div>
-          <p className="text-xl text-emerald-700 font-medium mb-1">
+        <div className="flex flex-col gap-4">
+          <p className="text-xl lg:text-3xl text-emerald-700 font-medium mb-1">
             Hola, {cancha?.propietario_nombre || "Propietario"} 👋
           </p>
-          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
             Panel de Gestión
           </h1>
-          <p className="text-sm text-gray-500 mt-2">
+          <p className="text-sm lg:text-xl text-gray-500 mt-2">
             Cancha:{" "}
             <span className="font-medium text-gray-700 uppercase">
               {cancha?.nombre || "Tu cancha"}
@@ -69,8 +73,22 @@ export default function PanelCancha() {
       </header>
 
       {/* Tarjetas de Acción */}
-      <div className="w-full max-w-4xl px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-        <div
+      <div className="w-full max-w-4xl px-4 grid grid-cols-1 gap-5 sm:gap-6">
+        {secciones.map((item, index) => (
+          <SeccionPanelCancha
+            key={index}
+            seccion={item.seccion}
+            titulo={item.titulo}
+            cancha={cancha}
+          />
+        ))}
+
+        {/* Ejemplo de tarjeta adicional */}
+        {/* <div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        {/* <div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.5 }}
@@ -134,11 +152,11 @@ export default function PanelCancha() {
               </div>
             </div>
           </Link>
-        </div>
+        </div> */}
       </div>
 
       {/* Información adicional */}
-      <div
+      {/* <div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.5 }}
@@ -150,7 +168,7 @@ export default function PanelCancha() {
             Contacta a nuestro soporte
           </span>
         </p>
-      </div>
+      </div> */}
     </section>
   );
 }

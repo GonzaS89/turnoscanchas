@@ -5,11 +5,11 @@ import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha"
 import { FaFutbol, FaClock } from "react-icons/fa";
 // Obtener el id de la cancha desde el estado de la ubicación
 
-export default function ReservaDeTurno () {
+export default function ReservaDeTurno() {
   const location = useLocation();
-  const { seccioncancha : seccion } = useParams();
-  const { idCancha : id } = location.state || {}; 
-  const { datos: canchas, isLoading : loadingCancha } = useCanchas();
+  const { seccioncancha: seccion } = useParams();
+  const { idCancha: id } = location.state || {};
+  const { datos: canchas, isLoading: loadingCancha } = useCanchas();
   const cancha = canchas.find((item) => item.seccion === seccion);
   const { turnos, isLoading, error } = useObtenerTurnosxCancha(cancha?.id);
 
@@ -40,96 +40,89 @@ export default function ReservaDeTurno () {
       transition={{ duration: 0.5 }}
       className="w-full min-h-screen flex flex-col gap-4 sm:gap-6"
     >
-{/* Header con efecto blur, logo dentro y texto destacado */}
-{/* Banner con loader */}
-<div className="w-full relative">
-  {/* Imagen de portada */}
-  <div className="h-44  w-full bg-gray-200 overflow-hidden relative">
-    {cancha?.portada ? (
-      <img
-        src={cancha.portada}
-        alt={`Portada de ${cancha.nombre}`}
-        className="w-full h-full object-cover"
-      />
-    ) : (
-      <div className="w-full h-full bg-gradient-to-r from-green-600 to-emerald-800"></div>
-    )}
-
-    {/* Overlay sutil */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent backdrop-brightness-50 backdrop-blur-sm"></div>
-  </div>
-
-  {/* Loader mientras carga */}
-  {loadingCancha ? (
-    <div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center backdrop-blur-sm"
-    >
-      <div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        className="w-12 h-12 border-4 border-emerald-300 border-t-transparent rounded-full"
-      />
-    </div>
-  ) : (
-    <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-between px-4 sm:px-6">
-      {/* Logo circular */}
-      <div className="flex items-center gap-3 sm:gap-4">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white shadow-lg overflow-hidden flex-shrink-0 z-10">
-          {cancha?.logo ? (
+      {/* Header con efecto blur, logo dentro y texto destacado */}
+      {/* Banner con loader */}
+      <div className="relative">
+        {/* Imagen de portada */}
+        <div className="h-44 lg:h-60 w-full bg-gray-200 overflow-hidden relative">
+          {cancha?.portada ? (
             <img
-              src={cancha.logo}
-              alt={`Logo de ${cancha.nombre}`}
+              src={cancha.portada}
+              alt={`Portada de ${cancha.nombre}`}
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-emerald-500 flex items-center justify-center">
-              <FaFutbol className="text-white text-xl sm:text-2xl" />
-            </div>
+            <div className="w-full h-full bg-gradient-to-r from-green-600 to-emerald-800"></div>
           )}
+
+          {/* Overlay sutil */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent backdrop-brightness-50 backdrop-blur-sm"></div>
         </div>
-        {/* Texto del nombre y ubicación */}
-        <div className="text-white drop-shadow-lg px-4 py-3 sm:px-5 sm:py-4 rounded-xl inline-block max-w-md">
-          <h2 className="text-xl sm:text-2xl font-extrabold capitalize tracking-wide">
-            {cancha?.nombre || "Cancha"}
-          </h2>
-          <p className="text-sm sm:text-base text-white/90 mt-1 flex items-center gap-2">
-            <span className="text-emerald-300">📍</span>
-            {cancha?.direccion ? `${cancha.direccion} - ` : ""}{cancha?.localidad || "Localidad no disponible"}
-          </p>
-          <p className="text-xs sm:text-sm text-emerald-200 mt-1 flex items-center gap-2">
-            <span className="text-emerald-300">💰</span>
-            Precio por turno: $ {cancha?.tarifa1 } {cancha?.tarifa2 ? `- $${cancha.tarifa2}` : ""}
-          </p>
-       
-        </div>
+
+        {/* Loader mientras carga */}
+        {loadingCancha ? (
+          <div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center backdrop-blur-sm"
+          >
+            <div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-12 h-12 border-4 border-emerald-300 border-t-transparent rounded-full"
+            />
+          </div>
+        ) : (
+          <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-between px-4 sm:px-6 xl:w-[1200px] xl:mx-auto">
+            {/* Logo circular */}
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-32 lg:h-32 rounded-full border-2 border-white shadow-lg overflow-hidden flex-shrink-0 z-10">
+                {cancha?.logo ? (
+                  <img
+                    src={cancha.logo}
+                    alt={`Logo de ${cancha.nombre}`}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-emerald-500 flex items-center justify-center">
+                    <FaFutbol className="text-white text-xl sm:text-2xl" />
+                  </div>
+                )}
+              </div>
+              {/* Texto del nombre y ubicación */}
+              <div className="text-white drop-shadow-lg px-4 py-3 sm:px-5 sm:py-4 rounded-xl inline-block max-w-md">
+                <h2 className="text-xl sm:text-2xl lg:text-4xl font-extrabold capitalize tracking-wide">
+                  {cancha?.nombre || "Cancha"}
+                </h2>
+                <p className="text-sm sm:text-base lg:text-xl text-white/90 mt-1 flex items-center gap-2">
+                  <span className="text-emerald-300">📍</span>
+                  {cancha?.direccion ? `${cancha.direccion} - ` : ""}
+                  {cancha?.localidad || "Localidad no disponible"}
+                </p>
+                <p className="text-xs sm:text-sm lg:text-lg text-emerald-200 mt-1 flex items-center gap-2">
+                  <span className="text-emerald-300">💰</span>
+                  Precios por turno: $ {Math.trunc(cancha?.tarifa1)} - ${" "}
+                  {Math.trunc(cancha.tarifa2)}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Información adicional opcional */}
-      <div className="hidden sm:flex flex-col items-end text-right text-white/90 text-xs">
-        <span className="inline-block px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full">
-          {cancha?.tipo || "Césped natural"}
-        </span>
-        <span className="mt-1">Capacidad: {cancha?.capacidad || 10} jugadores</span>
-      </div>
-    </div>
-  )}
-</div>
-  
       {/* Contenido principal */}
-      <div className="mt-8 sm:mt-16 md:mt-2 px-4 sm:px-5 pb-4 sm:pb-5 flex-1 flex flex-col">
+      <div className="mt-8 sm:mt-16 md:mt-2 lg:px-4 sm:px-5 pb-4 sm:pb-5 flex-1 flex flex-col xl:w-[1200x] lg:mx-auto">
         <header
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
           className="mb-3 sm:mb-4 text-center"
         >
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-2xl md:text-3xl xl:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-emerald-600 animate-gradient-x tracking-tight">
             Elegí tu Turno
           </h1>
         </header>
-  
+
         <div className="flex-1 flex flex-col items-center">
           {isLoading ? (
             <div className="flex justify-center items-center h-40">
@@ -159,15 +152,15 @@ export default function ReservaDeTurno () {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
-              className="w-full md:max-w-3xl"
+              className="w-full md:max-w-3xl xl:max-w-7xl"
             >
-              <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-3 sm:p-4 mb-1 sm:mb-2">
-                <p className="text-center text-xs sm:text-sm font-medium text-emerald-700">
+              <div className="rounded-lg sm:rounded-xl p-3 sm:p-4 xl:py-6 mb-1 sm:mb-2">
+                <p className="text-center text-sm sm:text-sm xl:text-2xl font-medium text-emerald-700">
                   Turnos disponibles para hoy
                 </p>
               </div>
-  
-              <div className="md:grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+              <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 place-items-center">
                 {turnosDeHoy?.map((turno) => (
                   <div
                     key={turno.id}
@@ -177,17 +170,21 @@ export default function ReservaDeTurno () {
                       type: "spring",
                       stiffness: 300,
                       damping: 15,
-                      mass: 0.5
+                      mass: 0.5,
                     }}
-                    className="w-full mb-3 sm:mb-4"
+                    className="w-full sm:mb-4 px-2 sm:px-3 md:px-4 lg:px-0"
                   >
                     <Link
-                      to={turno.estado === "disponible" ? "/confirmaciondeturno" : "#"}
+                      to={
+                        turno.estado === "disponible"
+                          ? "/confirmaciondeturno"
+                          : "#"
+                      }
                       state={{ idCancha: cancha.id, idTurno: turno.id }}
-                      className={`block w-full p-4 sm:p-5 rounded-xl sm:rounded-2xl relative overflow-hidden ${
+                      className={`block w-full p-4 xl:py-10 sm:p-5 rounded-xl sm:rounded-2xl relative overflow-hidden ${
                         turno.estado === "disponible"
                           ? "bg-white border-2 border-emerald-300/30 hover:border-emerald-400/50"
-                          : "bg-gray-100/80 border-2 border-gray-200/50"
+                          : "bg-gray-100 border-2 border-gray-200/50"
                       } transition-all duration-300 shadow-sm hover:shadow-md`}
                     >
                       {turno.estado === "disponible" && (
@@ -198,13 +195,13 @@ export default function ReservaDeTurno () {
                           className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-transparent via-white/70 to-transparent"
                         />
                       )}
-  
-                      <div className="flex items-center justify-between relative z-10">
+
+                      <div className="flex items-center justify-between relative z-10 gap-10">
                         <div className="flex items-center space-x-3 sm:space-x-4">
                           <div
                             animate={{
                               scale: [1, 1.05, 1],
-                              transition: { repeat: Infinity, duration: 2 }
+                              transition: { repeat: Infinity, duration: 2 },
                             }}
                             className={`p-2 sm:p-3 rounded-lg sm:rounded-xl ${
                               turno.estado === "disponible"
@@ -213,8 +210,8 @@ export default function ReservaDeTurno () {
                             } shadow-md`}
                           >
                             <svg
-                              width="18"
-                              height="18"
+                              width="25"
+                              height="25"
                               viewBox="0 0 24 24"
                               fill="none"
                               stroke="currentColor"
@@ -225,21 +222,31 @@ export default function ReservaDeTurno () {
                               <polyline points="12 6 12 12 16 14" />
                             </svg>
                           </div>
-  
+
                           <div>
-                            <span className={`text-xl sm:text-2xl font-bold ${
-                              turno.estado === "disponible" ? "text-gray-900" : "text-gray-600"
-                            }`}>
+                            <span
+                              className={`text-xl sm:text-2xl lg:text-4xl font-bold ${
+                                turno.estado === "disponible"
+                                  ? "text-gray-900"
+                                  : "text-gray-600"
+                              }`}
+                            >
                               {formatearHora(turno.hora)}
                             </span>
-                            <p className={`text-xs ${
-                              turno.estado === "disponible" ? "text-emerald-600" : "text-gray-500"
-                            } font-medium mt-1`}>
-                              {turno.estado === "disponible" ? "Disponible ahora" : "Turno ocupado"}
+                            <p
+                              className={`text-xs lg:text-lg ${
+                                turno.estado === "disponible"
+                                  ? "text-emerald-600"
+                                  : "text-gray-500"
+                              } font-medium mt-1`}
+                            >
+                              {turno.estado === "disponible"
+                                ? "Disponible ahora"
+                                : "Turno ocupado"}
                             </p>
                           </div>
                         </div>
-  
+
                         <div
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -249,10 +256,16 @@ export default function ReservaDeTurno () {
                               : "bg-gradient-to-r from-gray-400 to-gray-500 shadow-gray-400/20"
                           }`}
                         >
-                          <span className={`text-xs sm:text-sm font-extrabold tracking-wider ${
-                            turno.estado === "disponible" ? "text-white" : "text-gray-100"
-                          }`}>
-                            {turno.estado === "disponible" ? "RESERVAR" : "RESERVADO"}
+                          <span
+                            className={`text-xs sm:text-sm font-extrabold tracking-wider ${
+                              turno.estado === "disponible"
+                                ? "text-white"
+                                : "text-gray-100"
+                            }`}
+                          >
+                            {turno.estado === "disponible"
+                              ? "RESERVAR"
+                              : "RESERVADO"}
                           </span>
                         </div>
                       </div>
@@ -266,4 +279,4 @@ export default function ReservaDeTurno () {
       </div>
     </div>
   );
-};
+}

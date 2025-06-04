@@ -21,7 +21,7 @@ export default function PantallaInicial () {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="w-full h-screen relative flex items-center justify-center"
+      className="w-full relative flex items-center justify-center h-screen"
       style={{
         backgroundImage: `url(${imgHero})`,
         backgroundSize: "cover",
@@ -37,26 +37,17 @@ export default function PantallaInicial () {
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.6 }}
-        className="relative z-10 max-w-xl mx-auto text-center px-6 py-12 space-y-8 flex flex-col justify-between h-screen"
+        className="z-10 max-w-xl mx-auto text-center px-6 py-12 space-y-8 flex flex-col justify-start h-[80%]"
       >
-        {/* Botón Login */}
-        <div className="flex justify-end">
-          <Link
-            to="/login"
-            className="flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white py-2 px-5 rounded-lg text-sm mt-4 shadow-md transition-colors"
-          >
-            <FaUser /> Iniciar sesión
-          </Link>
-        </div>
         <div className="flex flex-col gap-8 items-center">
           {/* Icono + Título */}
-          <h1 className="text-5xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 bg-clip-text text-transparent">
-            <FaFutbol className="inline-block mr-3 text-green-500" />
+          <FaFutbol className="inline-block mr-3 text-green-500 text-7xl" />
+          <h1 className="text-5xl sm:text-5xl lg:text-7xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 bg-clip-text text-transparent tex">
             Bienvenido a TurnoGol
           </h1>
 
           {/* Descripción */}
-          <p className="text-xl sm:text-xl text-gray-200 max-w-lg mx-auto">
+          <p className="text-xl sm:text-xl xl:text-2xl text-gray-100 max-w-lg mx-auto">
             Tu plataforma para reservar canchas de fútbol de forma rápida y sencilla.
             ¡Disfruta del mejor fútbol con amigos!
           </p>
@@ -64,9 +55,10 @@ export default function PantallaInicial () {
           {/* Botón principal */}
           <Link
             to="/canchas"
-            className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 active:scale-[0.98] lg:w-3/4"
+            className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 active:scale-[0.98] lg:w-3/4 xl:py-6 xl:text-xl xl:px-8"
+            aria-label="Reservar cancha"
           >
-            <FaFutbol className="text-lg" />
+            <FaFutbol className="text-lg xl:text-3xl" />
             <span>Quiero reservar un turno</span>
             <FaArrowRight className="ml-1 group-hover:translate-x-1 transition-transform duration-300" />
           </Link>
@@ -74,14 +66,14 @@ export default function PantallaInicial () {
 
 
         {/* Info trabajo */}
-        <div className="mt-6 text-center text-gray-50">
+        <div className="mt-6 xl:text-lg text-center text-gray-50 absolute bottom-10 left-1/2 transform -translate-x-1/2 gap-4 flex flex-col items-center">
           <p>¿Querés trabajar con nosotros?</p>
           <button
             onClick={() => setShowModal(true)}
-            className="font-medium text-gray-800 transition-colors duration-300 group mt-1 inline-flex items-center gap-1 bg-gray-50 py-2 px-4 rounded-md"
+            className="font-medium text-gray-800 xl:text-md transition-colors duration-300 group mt-1 inline-flex items-center gap-1 bg-gray-50 py-2 px-4 rounded-md"
           >
             Más info aquí
-            <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform duration-300" />
+            <FaArrowRight className="text-xs xl:text-lg group-hover:translate-x-1 transition-transform duration-300" />
           </button>
         </div>
       </div>
@@ -94,7 +86,7 @@ export default function PantallaInicial () {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 absolute"
             onClick={() => setShowModal(false)}
           >
             <div
@@ -102,7 +94,7 @@ export default function PantallaInicial () {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 50 }}
               transition={{ type: "spring", damping: 25 }}
-              className="bg-white rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
+              className="bg-white rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl relative"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Botón cerrar */}

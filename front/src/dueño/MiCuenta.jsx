@@ -62,11 +62,11 @@ export default function MiCuenta() {
   };
 
   return (
-    <motion.section
+    <section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-gray-50 py-8 px-4"
+      className="min-h-screen w-full flex items-center px-4"
     >
       {/* Contenedor principal */}
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
@@ -74,7 +74,7 @@ export default function MiCuenta() {
         <div className="bg-emerald-600 p-6 text-white flex justify-between items-center">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-emerald-100 hover:text-white transition-colors"
+            className="flex items-center gap-2 text-emerald-100 hover:text-white transition-colors lg:hidden"
           >
             <FaArrowLeft />
             <span className="hidden sm:inline">Volver</span>
@@ -191,13 +191,13 @@ export default function MiCuenta() {
       {/* Modal para editar credenciales */}
       <AnimatePresence>
         {showModal && (
-          <motion.div
+          <div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
-            <motion.div
+            <div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 20, opacity: 0 }}
@@ -300,10 +300,10 @@ export default function MiCuenta() {
                   </div>
                 </form>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
       </AnimatePresence>
-    </motion.section>
+    </section>
   );
 }
