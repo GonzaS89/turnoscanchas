@@ -75,9 +75,9 @@ export default function ConfirmarTurno () {
   🧑‍🦱 *Cliente:* ${formData.nombre}
   📞 *Teléfono:* ${formData.telefono}
   🪪 *DNI:* ${formData.dni}
-  💳 *Método de pago:* ${formData.metodoPago === "presencial"
-          ? "Pago presencial"
-          : "Pago por transferencia"
+  💳 *Método de pago:* ${formData.metodoPago === "efectivo"
+          ? "Efectivo"
+          : "Transferencia"
         }
   🔗 [${formData.metodoPago === 'presencial' ? 'Coordiná un horario con el propietario para abonar la seña,' : 'Recorda que debes enviarle a éste número el comprobante por el pago de la seña, '} para que el turno sea confirmado.] 
 `;
