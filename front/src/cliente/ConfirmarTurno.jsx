@@ -372,10 +372,6 @@ export default function ConfirmarTurno () {
                   <p className="text-sm"><strong>Banco: </strong>{cancha.wallet_banco}</p>
                 </div>
               )}
-              {formData.metodoPago === "presencial" ? (
-                <button onClick={closeModal} className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition font-medium mb-4">
-                  Finalizar
-                </button>) : (
 
                 <a
                   href={whatsappLink}
@@ -384,11 +380,9 @@ export default function ConfirmarTurno () {
                   className="flex items-center justify-center gap-2 w-full py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition font-medium mb-4"
                   onClick={closeModal}
                 >
-                  <FaWhatsapp /> Enviar al propietario
+                  <FaWhatsapp /> Notificar al propietario
                 </a>
-              )}
-
-
+              
             </div>
           </div>
         )}
