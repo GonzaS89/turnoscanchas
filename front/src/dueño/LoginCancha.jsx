@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCanchas } from "../customHooks/useCanchas";
+import Cookies from "js-cookie";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginCancha() {
@@ -12,13 +13,19 @@ export default function LoginCancha() {
   const navigate = useNavigate();
   const { datos: canchas } = useCanchas();
 
+  useEffect(() => {
+    const token = Cookies.get("authToken");
+    if (token) {
+      navigate("/panelcancha", { replace: true });
+    }
+  }, [navigate]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
     try {
-      // Simular delay
       await new Promise((resolve) => setTimeout(resolve, 800));
 
       const canchaEncontrada = canchas.find(
@@ -26,6 +33,18 @@ export default function LoginCancha() {
       );
 
       if (canchaEncontrada) {
+        // Simular que el backend devuelve un token
+        const fakeToken = btoa(JSON.stringify({ id: canchaEncontrada.id, exp: Date.now() + 3600000 })); // 1 hora de validez
+
+        // Guardar token en cookie (seguro)
+        Cookies.set("authToken", fakeToken, {
+          expires: 1, // 1 día
+          secure: true, // Solo en HTTPS
+          sameSite: "strict", // Protección CSRF
+          path: "/",
+        });
+
+        // Redirigir
         navigate("/panelcancha", { state: { cancha: canchaEncontrada } });
       } else {
         setError("Usuario o contraseña incorrectos");
