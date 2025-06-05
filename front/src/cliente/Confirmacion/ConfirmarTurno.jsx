@@ -444,7 +444,7 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
               {/* Mensaje principal */}
               <p className="text-gray-600 px-6 mb-6 text-center">
                 {formData.metodoPago === "transferencia"
-                  ? "Contactá con el propietario de la cancha para enviarle el comprobante por la seña. Aquí te dejamos los datos para transferir:"
+                  ? "Contactá con el propietario de la cancha para enviarle el comprobante por la seña."
                   : "Tu solicitud ha sido enviada exitosamente. El propietario de la cancha espera que abones para confirmar el turno."}
               </p>
 

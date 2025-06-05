@@ -81,7 +81,7 @@ export default function PanelCancha() {
       transition={{ duration: 0.5 }}
       className="min-h-screen w-full text-gray-800 flex flex-col items-center justify-start px-4 py-6 sm:py-12"
     >
-      {/* Header - Cerrar sesión */}
+      {/* Botón de cerrar sesión */}
       <div className="w-full max-w-4xl flex justify-end mb-6">
         <button
           onClick={handleLogout}
@@ -93,7 +93,7 @@ export default function PanelCancha() {
         </button>
       </div>
 
-      {/* Mensaje de bienvenida */}
+      {/* Bienvenida */}
       <header className="text-center mb-8 sm:mb-12 flex flex-col items-center gap-5">
         {/* Logo circular */}
         <div className="w-24 h-24 lg:h-auto rounded-full bg-gradient-to-r from-green-400 to-emerald-600 p-[2px] shadow-xl">
@@ -121,16 +121,17 @@ export default function PanelCancha() {
         </div>
       </header>
 
-      {/* Tarjetas de Acción */}
-      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 px-2 sm:px-4">
+      {/* Tarjetas de Acción - Más modernas y responsivas */}
+      <div className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1 gap-5 sm:gap-6 px-2 sm:px-4">
         {secciones.map((item, index) => (
-          <SeccionPanelCancha
-            key={index}
-            seccion={item.seccion}
-            titulo={item.titulo}
-            cancha={canchaData}
-            icono={item.icono}
-          />
+         
+            <SeccionPanelCancha
+              seccion={item.seccion}
+              titulo={item.titulo}
+              cancha={canchaData}
+              icono={item.icono}
+            />
+         
         ))}
       </div>
     </motion.div>
