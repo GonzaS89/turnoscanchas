@@ -33,18 +33,18 @@ export default function LoginCancha() {
       );
 
       if (canchaEncontrada) {
-        // Simular que el backend devuelve un token
-        const fakeToken = btoa(JSON.stringify({ id: canchaEncontrada.id, exp: Date.now() + 3600000 })); // 1 hora de validez
-
-        // Guardar token en cookie (seguro)
+        const fakeToken = btoa(JSON.stringify({ id: canchaEncontrada.id, exp: Date.now() + 3600000 }));
+      
         Cookies.set("authToken", fakeToken, {
-          expires: 1, // 1 día
-          secure: true, // Solo en HTTPS
-          sameSite: "strict", // Protección CSRF
+          expires: 1,
+          secure: true,
+          sameSite: "strict",
           path: "/",
         });
-
-        // Redirigir
+      
+        // Guardar datos de la cancha en localStorage
+        localStorage.setItem("datosCancha", JSON.stringify(canchaEncontrada));
+      
         navigate("/panelcancha", { state: { cancha: canchaEncontrada } });
       } else {
         setError("Usuario o contraseña incorrectos");

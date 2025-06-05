@@ -7,15 +7,40 @@ import {
   FaUserCog,
 } from "react-icons/fa";
 import { SeccionPanelCancha } from "./components/SeccionPanelCancha";
+import { useEffect, useState } from "react";
 
 export default function PanelCancha() {
   const location = useLocation();
   const navigate = useNavigate();
-  const cancha = location.state?.cancha;
+  const [canchaData, setCanchaData] = useState(null);
+
+  // Cargar datos de la cancha al montar el componente
+  useEffect(() => {
+    if (location.state?.cancha) {
+      const canchaDesdeLogin = location.state.cancha;
+
+      // Guardar en localStorage para persistencia
+      localStorage.setItem("datosCancha", JSON.stringify(canchaDesdeLogin));
+
+      // Actualizar estado local
+      setCanchaData(canchaDesdeLogin);
+    } else {
+      const storedCancha = localStorage.getItem("datosCancha");
+
+      if (storedCancha) {
+        // Recuperar del localStorage
+        setCanchaData(JSON.parse(storedCancha));
+      }
+    }
+  }, [location]);
 
   const handleLogout = () => {
-    // Lógica para cerrar sesión
-    navigate(-1);
+    // Limpiar token y datos del usuario
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("datosCancha");
+
+    // Redirigir al login
+    navigate("/");
   };
 
   const secciones = [
@@ -57,7 +82,7 @@ export default function PanelCancha() {
         {/* Logo circular */}
         <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-green-400 to-emerald-600 p-[2px] shadow-xl">
           <img
-            src={cancha?.logo || "/default-logo.png"}
+            src={canchaData?.logo || "/default-logo.png"}
             alt="Logo de la cancha"
             className="rounded-full object-cover w-full h-full"
           />
@@ -66,7 +91,7 @@ export default function PanelCancha() {
         {/* Título */}
         <div className="flex flex-col gap-3">
           <p className="text-xl sm:text-2xl text-emerald-700 font-semibold mb-1">
-            Hola, {cancha?.propietario_nombre || "Propietario"} 👋
+            Hola, {canchaData?.propietario_nombre || "Propietario"} 👋
           </p>
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
             Panel de Gestión
@@ -74,7 +99,7 @@ export default function PanelCancha() {
           <p className="text-sm sm:text-base text-gray-500 mt-1">
             Cancha:{" "}
             <span className="font-medium text-gray-700 uppercase">
-              {cancha?.nombre || "Tu cancha"}
+              {canchaData?.nombre || "Tu cancha"}
             </span>
           </p>
         </div>
@@ -87,7 +112,7 @@ export default function PanelCancha() {
             key={index}
             seccion={item.seccion}
             titulo={item.titulo}
-            cancha={cancha}
+            cancha={canchaData}
             icono={item.icono}
           />
         ))}
