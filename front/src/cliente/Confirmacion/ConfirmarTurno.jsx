@@ -66,6 +66,13 @@ export default function ConfirmarTurno() {
         metodoPago: formData.metodoPago,
       });
 
+      setTimeout(() => {
+        whatsappLink();
+        closeModal();
+      }, 1000);
+
+      
+
       // Generamos mensaje para WhatsApp
       const mensaje = `
   📞 *Nueva solicitud de turno*
@@ -429,7 +436,7 @@ export default function ConfirmarTurno() {
         )}
 
         {/* Botón de WhatsApp */}
-        <a
+        {/* <a
           href={whatsappLink}
           target="_blank"
           rel="noopener noreferrer"
@@ -437,7 +444,7 @@ export default function ConfirmarTurno() {
           onClick={closeModal}
         >
           <FaWhatsapp /> Notificar al propietario
-        </a>
+        </a> */}
       </div>
     </div>
   )}
