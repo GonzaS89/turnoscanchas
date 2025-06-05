@@ -83,25 +83,37 @@ export default function ConfirmarTurno() {
       });
   
       // Generamos mensaje para WhatsApp
+  
       const mensaje = `
-        📞 *Nueva solicitud de turno*
-        👟 *Cancha:* ${cancha.nombre}
-        📅 *Fecha:* ${formatearFecha(turno.fecha)}
-        ⏰ *Hora:* ${formatearHora(turno.hora)} hs
-        🧑‍🦱 *Cliente:* ${formData.nombre}
-        📞 *Teléfono:* ${formData.telefono}
-        🪪 *DNI:* ${formData.dni}
-        💰 *Precio:* $${Math.trunc(turno.precio)}
-        💰 *Seña:* $${Math.trunc(cancha.adelanto)} 
-        💳 *Método de pago:* ${
-          formData.metodoPago === "efectivo" ? "Efectivo" : "Transferencia"
-        }
-        ${formData.metodoPago === "transferencia" ? `
-        🏦 *Alias:* ${cancha.alias || "No disponible"}
-        🏦 *CVU / CBU:* ${cancha.cvu || "No disponible"}
-        🏦 *A nombre de:* ${cancha.wallet_nombre || "No disponible"}
-        🏦 *Banco:* ${cancha.wallet_banco || "No disponible"}
-        ` : ''}
+      ¡Hola! Soy ${formData.nombre}, y me pongo en contacto para reservar un turno".
+      
+      📅 Fecha: ${formatearFecha(turno.fecha)}  
+      ⏰ Hora: ${formatearHora(turno.hora)} hs
+      
+      📞 Teléfono: ${formData.telefono}  
+      🪪 DNI: ${formData.dni}
+      
+      💰 Precio total del turno: $${Math.trunc(turno.precio)}  
+      💵 Seña a abonar: $${Math.trunc(cancha.adelanto)}
+      
+      💳 Método de pago de la seña: ${
+        formData.metodoPago === "efectivo" ? "Efectivo" : "Transferencia"
+      }
+      
+      ${
+        formData.metodoPago === "transferencia"
+          ? `He elegido pagar por transferencia a los siguientes datos:
+      
+      🏦 Alias: ${cancha.alias || "No disponible"}  
+      🏦 CVU / CBU: ${cancha.cvu || "No disponible"}  
+      🏦 A nombre de: ${cancha.wallet_nombre || "No disponible"}  
+      🏦 Banco: ${cancha.wallet_banco || "No disponible"}
+      
+      📌 Una vez realizado, te enviaré el comprobante por este medio.`
+          : `Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y horario para realizar el pago de la seña.`
+      }
+      
+      Quedo a la espera de la confirmación del turno.
       `;
   
       const mensajeCodificado = encodeURIComponent(mensaje);
@@ -113,8 +125,7 @@ export default function ConfirmarTurno() {
       // Redirige automáticamente a WhatsApp después de 1 segundo
       setTimeout(() => {
         window.location.href = link;
-        
-      }, 1000);
+      }, 500);
       
       setTimeout(() => {
         closeModal()
