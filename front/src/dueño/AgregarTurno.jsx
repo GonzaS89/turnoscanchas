@@ -101,116 +101,122 @@ export default function AgregarTurno() {
       transition={{ duration: 0.3 }}
       className="min-h-screen w-full py-8 px-4 flex justify-center items-center"
     >
-      <div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-        className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 max-w-md w-full border border-gray-200"
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors lg:hidden"
+      <motion.div
+  initial={{ y: 20, opacity: 0 }}
+  animate={{ y: 0, opacity: 1 }}
+  transition={{ delay: 0.2, duration: 0.5 }}
+  className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 max-w-md w-full border border-gray-200"
+>
+  {/* Header */}
+  <div className="flex items-center justify-between mb-6">
+    <button
+      onClick={() => navigate(-1)}
+      className="flex items-center gap-2 text-gray-700 hover:text-emerald-600 transition-colors lg:hidden"
+      aria-label="Volver"
+    >
+      <FaArrowLeft />
+      <span className="hidden sm:inline">Volver</span>
+    </button>
+    <h2 className="text-xl sm:text-2xl xl:text-3xl font-bold text-emerald-600 text-center flex-1">
+      Agregar Turnos
+    </h2>
+    <div className="w-6"></div> {/* Spacer derecho */}
+  </div>
+
+  {/* Info Cancha */}
+  <div className="rounded-lg p-4 mb-6 bg-emerald-50 border border-emerald-200 shadow-sm">
+    <p className="text-center text-emerald-800 font-medium xl:text-lg">
+      Cancha: <span className="uppercase">{cancha?.nombre}</span>
+    </p>
+  </div>
+
+  {/* Horarios existentes */}
+  <div className="mb-8">
+    <h3 className="text-lg xl:text-xl font-semibold text-gray-700 mb-3 flex items-center gap-2">
+      <FaClock className="text-emerald-500" /> Turnos para hoy:
+    </h3>
+    {isLoading ? (
+      <div className="flex justify-center py-3">
+        <div className="animate-spin h-6 w-6 border-t-2 border-b-2 border-emerald-400 rounded-full"></div>
+      </div>
+    ) : turnosHoy.length > 0 ? (
+      <div className="flex flex-wrap gap-2">
+        {turnosHoy.map((turno) => (
+          <span
+            key={turno.id}
+            className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm md:text-base font-medium"
           >
-            <FaArrowLeft />
-            <span className="hidden sm:inline">Volver</span>
-          </button>
-          <h2 className="text-xl sm:text-2xl xl:text-3xl font-bold text-green-600 text-center flex-1">
-            Agregar Turnos
-          </h2>
-          <div className="w-6"></div> {/* Spacer */}
-        </div>
+            {turno.hora.slice(0, 5)} hs
+          </span>
+        ))}
+      </div>
+    ) : (
+      <p className="text-gray-400 text-sm lg:text-base italic">
+        No hay turnos cargados para hoy.
+      </p>
+    )}
+  </div>
 
-        {/* Info Cancha */}
-        <div className="rounded-lg p-4 mb-6 bg-emerald-50 border border-emerald-200">
-          <p className="text-center text-emerald-800 font-medium xl:text-lg">
-            Cancha: <span className="uppercase">{cancha?.nombre}</span>
-          </p>
-        </div>
+  {/* Formulario */}
+  <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+    {horarios.map((hora, index) => (
+      <motion.div
+        key={index}
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.2 }}
+        className="flex items-center gap-3 group"
+      >
+        <input
+          type="time"
+          value={hora}
+          onChange={(e) => handleHorarioChange(index, e.target.value)}
+          required
+          className="flex-1 px-4 py-3 xl:py-4 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
+        />
 
-        {/* Horarios existentes */}
-        <div className="mb-8">
-          <h3 className="text-lg xl:text-2xl font-semibold text-gray-700 mb-3 flex items-center gap-2">
-            <FaClock className="text-emerald-500" />
-            Turnos para hoy:
-          </h3>
-          {isLoading ? (
-            <div className="flex justify-center py-2">
-              <div className="animate-spin h-6 w-6 border-t-2 border-b-2 border-emerald-400 rounded-full"></div>
-            </div>
-          ) : turnosHoy.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {turnosHoy.map((turno) => (
-                <span
-                  key={turno.id}
-                  className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm xl:text-xl font-medium"
-                >
-                  {turno.hora.slice(0, 5)}
-                </span>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-400 text-sm lg:text-base italic">
-              No hay turnos cargados para hoy.
-            </p>
-          )}
-        </div>
-
-        {/* Formulario */}
-        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-          {horarios.map((hora, index) => (
-            <div
-              key={index}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.2 }}
-              className="flex items-center gap-2"
-            >
-              <input
-                type="time"
-                value={hora}
-                onChange={(e) => handleHorarioChange(index, e.target.value)}
-                required
-                className="flex-1 px-4 py-3 xl:py-5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
-              />
-              {horarios.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => eliminarCampo(index)}
-                  className="text-red-500 hover:text-red-700 transition-colors p-2"
-                  title="Eliminar horario"
-                >
-                  <FaTimes />
-                </button>
-              )}
-            </div>
-          ))}
-
+        {horarios.length > 1 && (
           <button
             type="button"
-            onClick={agregarCampo}
-            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-800 font-medium transition-colors text-sm lg:text-lg"
+            onClick={() => eliminarCampo(index)}
+            className="text-red-500 hover:text-red-700 hover:bg-red-100 p-2 rounded-lg transition-all group-hover:opacity-100 opacity-70 group-hover:scale-110"
+            title="Eliminar horario"
           >
-            <FaPlus /> Agregar otro horario
+            <FaTimes />
           </button>
+        )}
+      </motion.div>
+    ))}
 
-          <div className="pt-4">
-            <button
-              type="button"
-              onClick={() => setConfIngresos(true)}
-              disabled={horarios.some((h) => !h)}
-              className={`w-full py-3 px-4 rounded-lg font-semibold shadow-md transition-all ${
-                horarios.some((h) => !h)
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-white shadow-emerald-300/50 hover:shadow-lg"
-              }`}
-            >
-              Guardar Turnos
-            </button>
-          </div>
-        </form>
+    {/* Botón + Horario */}
+    <button
+      type="button"
+      onClick={agregarCampo}
+      className="group flex items-center gap-2 text-emerald-600 hover:text-emerald-800 font-medium transition-colors text-sm lg:text-lg"
+    >
+      <div className="w-8 h-8 rounded-full flex items-center justify-center bg-emerald-100 group-hover:bg-emerald-200 transition">
+        <FaPlus />
       </div>
+      <span>Agregar otro horario</span>
+    </button>
+
+    {/* Botón Guardar */}
+    <div className="pt-4">
+      <button
+        type="button"
+        onClick={() => setConfIngresos(true)}
+        disabled={horarios.some((h) => !h)}
+        className={`w-full py-3 px-4 rounded-lg font-semibold shadow-md transition-all duration-200 transform active:scale-95 ${
+          horarios.some((h) => !h)
+            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+            : "bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-white shadow-emerald-300/50 hover:shadow-lg"
+        }`}
+      >
+        Guardar Turnos
+      </button>
+    </div>
+  </form>
+</motion.div>
 
       {/* Modal Confirmación */}
       <AnimatePresence>

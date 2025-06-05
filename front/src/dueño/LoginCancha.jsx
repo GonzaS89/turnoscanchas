@@ -68,47 +68,49 @@ export default function LoginCancha() {
         </h2>
 
         {/* Campos del formulario */}
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="usuario" className="block text-sm font-medium text-gray-800 mb-1 mx-1">
-              Usuario
-            </label>
-            <input
-              id="usuario"
-              type="text"
-              placeholder="Ingresa tu usuario"
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-white text-gray-900 placeholder:text-gray-400 transition"
-              required
-            />
-          </div>
+        <div className="space-y-4 backdrop-blur-sm bg-white/80 p-5 rounded-xl shadow-md border border-gray-200">
+  {/* Campo Usuario */}
+  <div>
+    <label htmlFor="usuario" className="block text-sm font-medium text-gray-800 mb-1 mx-1">
+      Usuario
+    </label>
+    <input
+      id="usuario"
+      type="text"
+      placeholder="Ingresa tu usuario"
+      value={usuario}
+      onChange={(e) => setUsuario(e.target.value)}
+      className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-white/70 text-gray-900 placeholder:text-gray-400 transition duration-200"
+      required
+    />
+  </div>
 
-          <div>
-            <label htmlFor="contrasena" className="block text-sm font-medium text-gray-800 mb-1 mx-1">
-              Contraseña
-            </label>
-            <div className="relative">
-              <input
-                id="contrasena"
-                type={verContrasena ? "text" : "password"}
-                placeholder="Ingresa tu contraseña"
-                value={contrasena}
-                onChange={(e) => setContrasena(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-white text-gray-900 pr-10 transition"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setVerContrasena(!verContrasena)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-emerald-500 transition-colors"
-                aria-label={verContrasena ? "Ocultar contraseña" : "Mostrar contraseña"}
-              >
-                {verContrasena ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-          </div>
-        </div>
+  {/* Campo Contraseña */}
+  <div>
+    <label htmlFor="contrasena" className="block text-sm font-medium text-gray-800 mb-1 mx-1">
+      Contraseña
+    </label>
+    <div className="relative group">
+      <input
+        id="contrasena"
+        type={verContrasena ? "text" : "password"}
+        placeholder="Ingresa tu contraseña"
+        value={contrasena}
+        onChange={(e) => setContrasena(e.target.value)}
+        className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-white/70 text-gray-900 pr-10 placeholder:text-gray-400 transition duration-200"
+        required
+      />
+      <button
+        type="button"
+        onClick={() => setVerContrasena(!verContrasena)}
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-emerald-500 transition-colors duration-200"
+        aria-label={verContrasena ? "Ocultar contraseña" : "Mostrar contraseña"}
+      >
+        {verContrasena ? <EyeOff size={20} /> : <Eye size={20} />}
+      </button>
+    </div>
+  </div>
+</div>
 
         {error && (
           <div className="text-red-600 text-sm text-center py-2 px-3 bg-red-50 rounded-lg border border-red-100">

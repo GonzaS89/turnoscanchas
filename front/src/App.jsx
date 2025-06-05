@@ -3,9 +3,9 @@ import './App.css';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 import PantallaInicial from './PantallaInicial';
-import Canchas from './cliente/Canchas';
-import ReservaDeTurno from './cliente/ReservaDeTurno';
-import ConfirmarTurno from './cliente/ConfirmarTurno';
+import Canchas from './cliente/Canchas/Canchas';
+import ReservaDeTurno from './cliente/Turnos/ReservaDeTurno';
+import ConfirmarTurno from './cliente/Confirmacion/ConfirmarTurno';
 import LoginCancha from './dueño/LoginCancha';
 import PanelCancha from './dueño/PanelCancha';
 import VerTurnos from './dueño/VerTurnos';
@@ -14,17 +14,17 @@ import MiCuenta from './dueño/MiCuenta';
 import Footer from './Footer'; // Importamos el footer
 
 // Componente para ocultar footer en PantallaInicial
-const Layout = ({ children }) => {
-  const location = useLocation();
-  const showFooter = location.pathname !== '/';
+// const Layout = ({ children }) => {
+//   const location = useLocation();
+//   const showFooter = location.pathname !== '/';
 
-  return (
-    <>
-      {children}
-      {showFooter && <Footer />}
-    </>
-  );
-};
+//   return (
+//     <>
+//       {children}
+//       {showFooter && <Footer />}
+//     </>
+//   );
+// };
 
 function App() {
   const [idCancha, setIdCancha] = useState();
@@ -32,8 +32,8 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="gap-8 bg-gradient-to-br from-white via-green-50 to-emerald-200 min-h-screen flex flex-col items-center justify-around relative fondo-app">
-        <Layout>
+      <div className="gap-8 bg-gradient-to-br from-green-100 via-emerald-50 to-green-500 min-h-screen flex flex-col items-center justify-around relative fondo-app">
+        
           <Routes>
             {/* Pantalla inicial */}
             <Route path="/" element={<PantallaInicial />} />
@@ -56,7 +56,7 @@ function App() {
             <Route path="/agregarturno" element={<AgregarTurno />} />
             <Route path="/micuenta" element={<MiCuenta />} />
           </Routes>
-        </Layout>
+        
       </div>
     </BrowserRouter>
   );

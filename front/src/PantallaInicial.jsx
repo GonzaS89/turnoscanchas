@@ -9,6 +9,8 @@ import {
   FaRegHandshake,
   FaTimes,
   FaCheck,
+  FaMoneyBillWave,
+  FaQuoteLeft
 } from "react-icons/fa";
 import imgHero from "/hero-cancha.jpeg";
 import logo from "/logo.png"; // Asegúrate de tener esta imagen
@@ -18,65 +20,83 @@ export default function PantallaInicial () {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <section
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
-      className="w-full relative flex h-screen"
-      style={{
-        backgroundImage: `url(${imgHero})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      {/* Overlay oscuro para mejorar contraste */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm backdrop-brightness-50"></div>
+     <section className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-emerald-900 to-emerald-700">
+      {/* Fondo - solo en móvil */}
+      <div className="lg:hidden absolute h-screen inset-0 bg-black/20 backdrop-blur-sm z-10">
+        <img
+          src={imgHero}
+          alt="Fondo de cancha"
+          className="w-full h-full object-cover blur-md brightness-75"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/70"></div>
+      </div>
 
-      {/* Contenido centrado */}
-      <div
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.6 }}
-        className="z-10 max-w-xl mx-auto text-center px-6 py-12 space-y-8 flex flex-col justify-between items-center"
-      >
-        <img src={logo} alt="" className="w-[140px] lg:w-[180px]"/>
-        <div className="flex flex-col gap-8 items-center h-3/4">
-          {/* Icono + Título */}
-          
-          <h1 className="text-4xl lg:text-5xl xl:text-7xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 bg-clip-text text-transparent tex">
+      {/* Imagen derecha - solo en desktop */}
+      <div className="hidden lg:block lg:w-1/2 lg:h-full lg:absolute lg:top-0 lg:right-0 z-0">
+        <img
+          src={imgHero}
+          alt="Fondo de cancha"
+          className="w-full h-full object-cover blur-xs brightness-75"
+        />
+      </div>
+
+      {/* Backdrop difuminado - solo en desktop */}
+      <div className="hidden lg:block absolute top-0 right-0 w-1/2 h-full bg-black/30 backdrop-blur-sm z-10"></div>
+
+      {/* Contenido - siempre a la izquierda */}
+      <div className="relative z-20 flex items-center justify-center lg:justify-start h-full px-6 text-white">
+        <div
+          initial={{ x: -30, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          className="max-w-xl w-full text-center lg:text-left space-y-6 p-6 lg:p-8 "
+        >
+          {/* Logo */}
+          <img
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            src="/logo.png"
+            alt="TurnoGol Logo"
+            className="w-[140px] sm:w-[180px] lg:w-[250px] mx-auto lg:mx-0"
+          />
+
+          {/* Título */}
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-tight bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 bg-clip-text text-transparent">
             Bienvenido a TurnoGol
           </h1>
 
           {/* Descripción */}
-          <p className="text-base sm:text-base xl:text-2xl text-gray-100 max-w-lg mx-auto">
-            Tu plataforma para reservar canchas de fútbol de forma rápida y sencilla.
-            ¡Disfruta del mejor fútbol con amigos!
+          <p className="text-base sm:text-lg text-gray-200 max-w-lg mx-auto lg:mx-0">
+            Tu plataforma para reservar canchas de fútbol de forma rápida y sencilla. ¡Disfruta del mejor fútbol con amigos!
           </p>
 
-          {/* Botón principal */}
+          {/* Botón */}
           <Link
             to="/canchas"
-            className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 active:scale-[0.98] lg:w-3/4 xl:py-6 xl:text-xl xl:px-8"
-            aria-label="Reservar cancha"
+            className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 active:scale-95 w-full sm:w-auto"
           >
-            <FaFutbol className="text-lg xl:text-3xl" />
+            <FaFutbol className="text-lg" />
             <span>Quiero reservar un turno</span>
             <FaArrowRight className="ml-1 group-hover:translate-x-1 transition-transform duration-300" />
           </Link>
-        </div>
 
-
-        {/* Info trabajo */}
-        <div className="mt-6 xl:text-lg text-center text-gray-50 gap-4 flex flex-col items-center">
-          <p>¿Querés trabajar con nosotros?</p>
-          <button
-            onClick={() => setShowModal(true)}
-            className="font-medium text-gray-800 xl:text-md transition-colors duration-300 group mt-1 inline-flex items-center gap-1 bg-gray-50 py-2 px-4 rounded-md"
+          {/* Info trabajo */}
+          <div
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="mt-6 text-center lg:text-left text-gray-300 flex flex-col items-center lg:items-start"
           >
-            Más info aquí
-            <FaArrowRight className="text-xs xl:text-lg group-hover:translate-x-1 transition-transform duration-300" />
-          </button>
+            <p>¿Querés trabajar con nosotros?</p>
+            <button
+              onClick={() => setShowModal(true)}
+              className="font-medium text-gray-800 mt-1 inline-flex items-center gap-1 bg-gray-50 py-2 px-4 rounded-md hover:bg-gray-100 transition-colors duration-300 group"
+            >
+              Más info aquí
+              <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform duration-300" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -88,7 +108,7 @@ export default function PantallaInicial () {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 absolute"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={() => setShowModal(false)}
           >
             <div
@@ -114,20 +134,15 @@ export default function PantallaInicial () {
                   <div className="p-3 bg-emerald-100 rounded-full">
                     <FaRegHandshake className="text-emerald-600 text-xl" />
                   </div>
-                  <h2 className="text-2xl font-bold text-emerald-800">
-                    Sumá tu cancha a TurnoGol
-                  </h2>
+                  <h2 className="text-2xl font-bold text-emerald-800">Sumá tu cancha a TurnoGol</h2>
                 </div>
 
                 <p className="text-gray-600 mb-6">
-                  Si sos dueño de una cancha de fútbol y querés aumentar tus
-                  reservas, ¡este es el momento! Con TurnoGol, podés gestionar
-                  tus turnos de forma fácil y rápida.
+                  Si sos dueño de una cancha de fútbol y querés aumentar tus reservas, ¡este es el momento! Con TurnoGol, podés gestionar tus turnos de forma fácil y rápida.
                 </p>
+
                 <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-emerald-700 mb-3">
-                    Beneficios:
-                  </h3>
+                  <h3 className="text-lg font-semibold text-emerald-700 mb-3">Beneficios:</h3>
                   <ul className="space-y-3">
                     {[
                       "Gestión automatizada de reservas 24/7",
@@ -141,29 +156,19 @@ export default function PantallaInicial () {
                     ))}
                   </ul>
                 </div>
+
                 <div className="border-t border-gray-200 pt-6">
-                  <h3 className="text-lg font-semibold text-emerald-700 mb-4">
-                    Contacto directo:
-                  </h3>
+                  <h3 className="text-lg font-semibold text-emerald-700 mb-4">Contacto directo:</h3>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <a
-                      href="https://wa.me/5491234567890"
+                      href="https://wa.me/5491234567890" 
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-4 py-3 rounded-lg transition-colors"
+                      className="group flex items-center justify-center sm:justify-start gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-4 py-3 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
                     >
-                      <FaWhatsapp className="text-xl" />
+                      <FaWhatsapp className="text-green-600 group-hover:scale-110 transition-transform" />
                       <span>WhatsApp</span>
                     </a>
-                    {/* <a
-                      href="https://instagram.com/turnogol"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-4 py-3 rounded-lg transition-colors"
-                    >
-                      <FaInstagram className="text-xl" />
-                      <span>@turnogol</span>
-                    </a> */}
                   </div>
                 </div>
               </div>

@@ -1,14 +1,14 @@
-import { Link, useLocation, useParams } from "react-router-dom";
-import { motion } from "framer-motion";
-import { useCanchas } from "../customHooks/useCanchas";
-import { useObtenerTurnosxCancha } from "../customHooks/useObtenerTurnosxCancha";
+import { useLocation, useParams } from "react-router-dom";
+import { useCanchas } from "../../customHooks/useCanchas";
+import { useObtenerTurnosxCancha } from "../../customHooks/useObtenerTurnosxCancha";
 import { FaFutbol, FaClock } from "react-icons/fa";
+import { Turno } from "./components/Turno";
 // Obtener el id de la cancha desde el estado de la ubicación
 
 export default function ReservaDeTurno() {
   const location = useLocation();
   const { seccioncancha: seccion } = useParams();
-  const { idCancha: id } = location.state || {};
+  // const { idCancha: canchaId } = location.state || {};
   const { datos: canchas, isLoading: loadingCancha } = useCanchas();
   const cancha = canchas.find((item) => item.seccion === seccion);
   const { turnos, isLoading, error } = useObtenerTurnosxCancha(cancha?.id);
@@ -30,8 +30,6 @@ export default function ReservaDeTurno() {
   const turnosDeHoy = ordenarTurnos(
     turnos?.filter((turno) => turno.fecha.split("T")[0] === fechaHoy)
   );
-
-  const formatearHora = (horaStr) => horaStr.slice(0, 5);
 
   return (
     <div
@@ -162,116 +160,13 @@ export default function ReservaDeTurno() {
 
               <div className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4 place-items-center">
                 {turnosDeHoy?.map((turno) => (
-                  <div
-                    key={turno.id}
-                    whileHover={{ y: -4 }}
-                    whileTap={{ scale: 0.96 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 15,
-                      mass: 0.5,
-                    }}
-                    className="w-full sm:mb-4 px-2 sm:px-3 md:px-4 lg:px-0"
-                  >
-                    <Link
-                      to={
-                        turno.estado === "disponible"
-                          ? "/confirmaciondeturno"
-                          : "#"
-                      }
-                      state={{ idCancha: cancha.id, idTurno: turno.id }}
-                      className={`block w-full p-4 xl:py-10 sm:p-5 rounded-xl sm:rounded-2xl relative overflow-hidden ${
-                        turno.estado === "disponible"
-                          ? "bg-white border-2 border-emerald-300/30 hover:border-emerald-400/50"
-                          : "bg-gray-100 border-2 border-gray-200/50"
-                      } transition-all duration-300 shadow-sm hover:shadow-md`}
-                    >
-                      {turno.estado === "disponible" && (
-                        <div
-                          initial={{ opacity: 0, x: -100 }}
-                          whileHover={{ opacity: 0.4, x: 100 }}
-                          transition={{ duration: 0.8 }}
-                          className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-transparent via-white/70 to-transparent"
-                        />
-                      )}
-
-                      <div className="flex items-center justify-between relative z-10 gap-10">
-                        <div className="flex items-center space-x-3 sm:space-x-4">
-                          <div
-                            animate={{
-                              scale: [1, 1.05, 1],
-                              transition: { repeat: Infinity, duration: 2 },
-                            }}
-                            className={`p-2 sm:p-3 rounded-lg sm:rounded-xl ${
-                              turno.estado === "disponible"
-                                ? "bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-emerald-300/50"
-                                : "bg-gradient-to-br from-gray-400 to-gray-500 text-gray-100 shadow-gray-400/30"
-                            } shadow-md`}
-                          >
-                            <svg
-                              width="25"
-                              height="25"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2.5"
-                              strokeLinecap="round"
-                            >
-                              <circle cx="12" cy="12" r="10" />
-                              <polyline points="12 6 12 12 16 14" />
-                            </svg>
-                          </div>
-
-                          <div>
-                            <span
-                              className={`text-xl md:text-2xl xl:text-4xl font-bold ${
-                                turno.estado === "disponible"
-                                  ? "text-gray-900"
-                                  : "text-gray-600"
-                              }`}
-                            >
-                              {formatearHora(turno.hora)}
-                            </span>
-                            <p
-                              className={`text-xs md:text-sm xl:text-lg ${
-                                turno.estado === "disponible"
-                                  ? "text-emerald-600"
-                                  : "text-gray-500"
-                              } font-medium mt-1`}
-                            >
-                              {turno.estado === "disponible"
-                                ? "Disponible ahora"
-                                : "Turno ocupado"}
-                            </p>
-                            <p className={`text-xs lg:text-base xl:text-2xl ${turno.estado === 'disponible' ? 'text-emerald-600' : 'text-gray-500'} font-medium`}> $ {Math.trunc(turno.precio)}</p>
-                          </div>
-                        </div>
-
-                        <div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className={`px-3 py-2 sm:px-5 sm:py-3 rounded-lg sm:rounded-xl ${
-                            turno.estado === "disponible"
-                              ? "bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-400/30"
-                              : "bg-gradient-to-r from-gray-400 to-gray-500 shadow-gray-400/20"
-                          }`}
-                        >
-                          <span
-                            className={`text-xs sm:text-sm font-extrabold tracking-wider ${
-                              turno.estado === "disponible"
-                                ? "text-white"
-                                : "text-gray-100"
-                            }`}
-                          >
-                            {turno.estado === "disponible"
-                              ? "RESERVAR"
-                              : "RESERVADO"}
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
+                  <Turno
+                    id={turno.id}
+                    hora={turno.hora}
+                    estado={turno.estado}
+                    precio={turno.precio}
+                    cancha={cancha.id}
+                  />
                 ))}
               </div>
             </div>

@@ -174,10 +174,6 @@ app.delete("/api/turnos_canchas/:id", async (req, res) => {
   }
 });
 
-
-
-
-
 app.listen(PORT, () => {
   console.log(`Backend corriendo en http://localhost:${PORT}`);
 });

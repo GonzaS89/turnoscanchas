@@ -25,15 +25,23 @@ export default function VerTurnos() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const isReservado = (estado) => estado === "reservado" || estado === "pendiente";
+  const isReservado = (estado) =>
+    estado === "reservado" || estado === "pendiente";
+
+  const [modalDelete, setModalDelete] = useState(false)
+   
 
   // Cargar turnos desde API
   useEffect(() => {
     const fetchTurnos = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`https://turnogol.site/api/turnos_canchas/canchas?id=${cancha.id}`);
-        const turnosOrdenados = res.data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        const res = await axios.get(
+          `https://turnogol.site/api/turnos_canchas/canchas?id=${cancha.id}`
+        );
+        const turnosOrdenados = res.data.sort(
+          (a, b) => new Date(b.fecha) - new Date(a.fecha)
+        );
         setTurnos(turnosOrdenados);
       } catch (err) {
         console.error("Error al obtener turnos:", err);
@@ -107,16 +115,14 @@ export default function VerTurnos() {
 
     try {
       await axios.delete(`https://turnogol.site/api/turnos_canchas/${turnoId}`);
-      setTurnos((prevTurnos) =>
-        prevTurnos.filter((t) => t.id !== turnoId)
-      );
+      setTurnos((prevTurnos) => prevTurnos.filter((t) => t.id !== turnoId));
     } catch (error) {
       alert("Error al eliminar el turno");
     }
   };
 
   const formatFecha = (fechaStr) => {
-    const [year, month, day] = fechaStr.split('-');
+    const [year, month, day] = fechaStr.split("-");
     const fecha = new Date(year, month - 1, day); // Mes es 0-based
     const options = { weekday: "long", day: "numeric", month: "long" };
     return fecha.toLocaleDateString("es-ES", options);
@@ -162,15 +168,22 @@ export default function VerTurnos() {
             <h3 className="text-xl font-medium text-gray-700 mb-1">
               No hay turnos registrados
             </h3>
-            <p className="text-gray-500">Aún no hay turnos cargados para esta cancha</p>
+            <p className="text-gray-500">
+              Aún no hay turnos cargados para esta cancha
+            </p>
           </div>
         ) : (
           <div className="space-y-6">
             {Object.entries(turnosAgrupados).map(([fecha, turnosPorFecha]) => (
-              <div key={fecha} className="rounded-xl shadow-md overflow-hidden border border-gray-200">
+              <div
+                key={fecha}
+                className="rounded-xl shadow-md overflow-hidden border border-gray-200"
+              >
                 {/* Encabezado de fecha */}
                 <div className="flex justify-between items-center px-4 bg-gray-50 border-b border-emerald-200 lg:text-xl py-3 lg:py-4 xl:py-6 uppercase">
-                  <h3 className="font-semibold text-emerald-800">{formatFecha(fecha)}</h3>
+                  <h3 className="font-semibold text-emerald-800">
+                    {formatFecha(fecha)}
+                  </h3>
                   <button
                     onClick={() => toggleFechaVisibility(fecha)}
                     className="text-sm lg:text-lg text-emerald-700 hover:text-emerald-900 px-3 py-1 rounded-lg hover:bg-gray-100 transition"
@@ -185,13 +198,14 @@ export default function VerTurnos() {
                     {turnosPorFecha.map((turno) => (
                       <li
                         key={turno.id}
-                        className={`p-4 ${
+                        className={`p-4 rounded-lg transition-colors duration-200 ${
                           turno.estado === "disponible"
-                            ? "hover:bg-emerald-50"
+                            ? "bg-gray-50 border-l-4 border-gray-200"
                             : turno.estado === "pendiente"
-                            ? "bg-yellow-50 hover:bg-yellow-100"
-                            : "bg-green-50 hover:bg-green-100"
-                        } transition-colors`}
+                            ? "bg-yellow-50 hover:bg-yellow-100 border-l-4 border-yellow-400"
+                            : "bg-emerald-50 hover:bg-emerald-100 border-l-4 border-emerald-400" 
+                            
+                        }`}
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                           {/* Información del turno */}
@@ -206,10 +220,12 @@ export default function VerTurnos() {
                               {isReservado(turno.estado) ? (
                                 <div className="mt-2 space-y-1">
                                   <p className="flex items-center gap-2 text-sm text-gray-700">
-                                    <FaUser /> {turno.nombre}
+                                    <FaUser />{" "}
+                                    {turno.nombre || "Nombre no disponible"}
                                   </p>
                                   <p className="flex items-center gap-2 text-sm text-gray-700">
-                                    <FaIdCard /> DNI: {turno.dni}
+                                    <FaIdCard /> DNI:{" "}
+                                    {turno.dni || "No disponible"}
                                   </p>
                                   {turno.telefono && (
                                     <p className="flex items-center gap-2 text-sm text-gray-700">
@@ -218,11 +234,11 @@ export default function VerTurnos() {
                                   )}
                                   <div>
                                     {turno.estado === "pendiente" ? (
-                                      <span className="text-yellow-600 font-medium text-xs inline-flex items-center gap-1 mt-1">
-                                        <FaClock /> Pendiente de confirmación
+                                      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-yellow-700 bg-yellow-100 rounded-full">
+                                        <FaClock /> Pendiente
                                       </span>
                                     ) : (
-                                      <span className="text-green-600 font-medium text-xs inline-flex items-center gap-1 mt-1">
+                                      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-emerald-700 bg-emerald-100 rounded-full">
                                         <FaRegThumbsUp /> Reservado
                                       </span>
                                     )}
@@ -241,7 +257,7 @@ export default function VerTurnos() {
                             {turno.estado === "reservado" && (
                               <button
                                 onClick={() => ponerDisponible(turno.id)}
-                                className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition"
+                                className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-all active:scale-95"
                               >
                                 <FaTimes />
                                 <span>Liberar</span>
@@ -252,14 +268,14 @@ export default function VerTurnos() {
                               <>
                                 <button
                                   onClick={() => confirmarPendiente(turno.id)}
-                                  className="flex items-center gap-2 px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition"
+                                  className="flex items-center gap-2 px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-all active:scale-95"
                                 >
                                   <FaCheck />
                                   <span>Confirmar</span>
                                 </button>
                                 <button
                                   onClick={() => ponerDisponible(turno.id)}
-                                  className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition"
+                                  className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-all active:scale-95"
                                 >
                                   <FaTimes />
                                   <span>Cancelar</span>
@@ -270,7 +286,7 @@ export default function VerTurnos() {
                             {turno.estado === "disponible" && (
                               <button
                                 onClick={() => eliminarTurno(turno.id)}
-                                className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition"
+                                className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-all active:scale-95"
                                 title="Eliminar turno"
                               >
                                 <FaTrashAlt />
