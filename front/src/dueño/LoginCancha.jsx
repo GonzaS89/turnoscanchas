@@ -13,10 +13,23 @@ export default function LoginCancha() {
   const navigate = useNavigate();
   const { datos: canchas } = useCanchas();
 
+  // Redirigir si ya hay sesión activa y datos válidos
   useEffect(() => {
     const token = Cookies.get("authToken");
-    if (token) {
-      navigate("/panelcancha", { replace: true });
+    const storedCancha = localStorage.getItem("datosCancha");
+
+    if (token && storedCancha) {
+      try {
+        const parsed = JSON.parse(storedCancha);
+        if (parsed.nombre && parsed.propietario_nombre) {
+          navigate("/panelcancha", { replace: true });
+        } else {
+          localStorage.removeItem("datosCancha");
+        }
+      } catch (e) {
+        localStorage.removeItem("datosCancha");
+        Cookies.remove("authToken");
+      }
     }
   }, [navigate]);
 
@@ -34,18 +47,20 @@ export default function LoginCancha() {
 
       if (canchaEncontrada) {
         const fakeToken = btoa(JSON.stringify({ id: canchaEncontrada.id, exp: Date.now() + 3600000 }));
-      
+
         Cookies.set("authToken", fakeToken, {
           expires: 1,
           secure: true,
           sameSite: "strict",
           path: "/",
         });
-      
-        // Guardar datos de la cancha en localStorage
+
         localStorage.setItem("datosCancha", JSON.stringify(canchaEncontrada));
-      
-        navigate("/panelcancha", { state: { cancha: canchaEncontrada } });
+
+        navigate("/panelcancha", {
+          state: { cancha: canchaEncontrada },
+          replace: true,
+        });
       } else {
         setError("Usuario o contraseña incorrectos");
       }
@@ -88,48 +103,48 @@ export default function LoginCancha() {
 
         {/* Campos del formulario */}
         <div className="space-y-4 backdrop-blur-sm bg-white/80 p-5 rounded-xl shadow-md border border-gray-200">
-  {/* Campo Usuario */}
-  <div>
-    <label htmlFor="usuario" className="block text-sm font-medium text-gray-800 mb-1 mx-1">
-      Usuario
-    </label>
-    <input
-      id="usuario"
-      type="text"
-      placeholder="Ingresa tu usuario"
-      value={usuario}
-      onChange={(e) => setUsuario(e.target.value)}
-      className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-white/70 text-gray-900 placeholder:text-gray-400 transition duration-200"
-      required
-    />
-  </div>
+          {/* Campo Usuario */}
+          <div>
+            <label htmlFor="usuario" className="block text-sm font-medium text-gray-800 mb-1 mx-1">
+              Usuario
+            </label>
+            <input
+              id="usuario"
+              type="text"
+              placeholder="Ingresa tu usuario"
+              value={usuario}
+              onChange={(e) => setUsuario(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-white/70 text-gray-900 placeholder:text-gray-400 transition duration-200"
+              required
+            />
+          </div>
 
-  {/* Campo Contraseña */}
-  <div>
-    <label htmlFor="contrasena" className="block text-sm font-medium text-gray-800 mb-1 mx-1">
-      Contraseña
-    </label>
-    <div className="relative group">
-      <input
-        id="contrasena"
-        type={verContrasena ? "text" : "password"}
-        placeholder="Ingresa tu contraseña"
-        value={contrasena}
-        onChange={(e) => setContrasena(e.target.value)}
-        className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-white/70 text-gray-900 pr-10 placeholder:text-gray-400 transition duration-200"
-        required
-      />
-      <button
-        type="button"
-        onClick={() => setVerContrasena(!verContrasena)}
-        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-emerald-500 transition-colors duration-200"
-        aria-label={verContrasena ? "Ocultar contraseña" : "Mostrar contraseña"}
-      >
-        {verContrasena ? <EyeOff size={20} /> : <Eye size={20} />}
-      </button>
-    </div>
-  </div>
-</div>
+          {/* Campo Contraseña */}
+          <div>
+            <label htmlFor="contrasena" className="block text-sm font-medium text-gray-800 mb-1 mx-1">
+              Contraseña
+            </label>
+            <div className="relative group">
+              <input
+                id="contrasena"
+                type={verContrasena ? "text" : "password"}
+                placeholder="Ingresa tu contraseña"
+                value={contrasena}
+                onChange={(e) => setContrasena(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-white/70 text-gray-900 pr-10 placeholder:text-gray-400 transition duration-200"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setVerContrasena(!verContrasena)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-emerald-500 transition-colors duration-200"
+                aria-label={verContrasena ? "Ocultar contraseña" : "Mostrar contraseña"}
+              >
+                {verContrasena ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+          </div>
+        </div>
 
         {error && (
           <div className="text-red-600 text-sm text-center py-2 px-3 bg-red-50 rounded-lg border border-red-100">
@@ -192,18 +207,6 @@ export default function LoginCancha() {
             )}
           </span>
         </button>
-
-        {/* Enlace opcional */}
-        {/* <div className="text-center text-sm text-gray-500 mt-4">
-          ¿Olvidaste tu contraseña?{" "}
-          <button
-            type="button"
-            onClick={() => alert("Contacta al soporte técnico")}
-            className="text-emerald-500 hover:text-emerald-600 font-medium transition-colors"
-          >
-            Recupérala aquí
-          </button>
-        </div> */}
       </form>
     </section>
   );

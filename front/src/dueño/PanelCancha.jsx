@@ -14,53 +14,68 @@ export default function PanelCancha() {
   const navigate = useNavigate();
   const [canchaData, setCanchaData] = useState(null);
 
-  // Cargar datos desde location.state o localStorage
+  // Cargar datos desde location.state (solo al montar)
   useEffect(() => {
     if (location.state?.cancha) {
       const canchaDesdeLogin = location.state.cancha;
-
-      // Guardar en localStorage para persistencia
       localStorage.setItem("datosCancha", JSON.stringify(canchaDesdeLogin));
-
-      // Actualizar estado local
       setCanchaData(canchaDesdeLogin);
     }
-  }, [location]);
+  }, []);
 
-  // Si no viene de login, intentar recuperar de localStorage
+  // Si no hay datos en estado, intentar recuperar de localStorage
   useEffect(() => {
     if (!canchaData) {
       const storedCancha = localStorage.getItem("datosCancha");
 
       if (storedCancha) {
-        setCanchaData(JSON.parse(storedCancha));
+        try {
+          const parsed = JSON.parse(storedCancha);
+
+          // Validamos campos mínimos
+          if (parsed && parsed.nombre && parsed.propietario_nombre) {
+            setCanchaData(parsed);
+          } else {
+            console.warn("Datos incompletos en localStorage");
+            navigate("/login", { replace: true });
+          }
+        } catch (error) {
+          console.error("Error al parsear datos:", error);
+          navigate("/login", { replace: true });
+        }
+      } else {
+        console.warn("No hay datos guardados");
+        navigate("/login", { replace: true });
       }
     }
-  }, [canchaData]);
+  }, [canchaData, navigate]);
 
   const handleLogout = () => {
-    // Limpiar token y datos del usuario
     localStorage.removeItem("authToken");
     localStorage.removeItem("datosCancha");
-  
-    console.log("Sesión cerrada, redirigiendo...");
-  
-    // Redirigir al login
     navigate("/login", { replace: true });
   };
 
   const secciones = [
     { seccion: "/verturnos", titulo: "Ver Turnos", icono: <FaCalendarAlt /> },
-    {
-      seccion: "/agregarturno",
-      titulo: "Agregar Turnos",
-      icono: <FaRegClock />,
-    },
+    { seccion: "/agregarturno", titulo: "Agregar Turnos", icono: <FaRegClock /> },
     { seccion: "/micuenta", titulo: "Mi Cuenta", icono: <FaUserCog /> },
   ];
 
+  // Mientras carga o si no hay datos
+  if (!canchaData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center p-6 bg-white shadow rounded-lg">
+          <h2 className="text-xl font-semibold text-red-600">Sin datos</h2>
+          <p className="mt-2 text-gray-600">Redirigiendo al login...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <section
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -79,18 +94,13 @@ export default function PanelCancha() {
       </div>
 
       {/* Mensaje de bienvenida */}
-      <header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-        className="text-center mb-8 sm:mb-12 flex flex-col items-center gap-5"
-      >
+      <header className="text-center mb-8 sm:mb-12 flex flex-col items-center gap-5">
         {/* Logo circular */}
         <div className="w-24 h-24 lg:h-auto rounded-full bg-gradient-to-r from-green-400 to-emerald-600 p-[2px] shadow-xl">
           <img
             src={canchaData?.logo || "/default-logo.png"}
             alt="Logo de la cancha"
-            className="rounded-full object-cover w-full lg:w-[100px] h-full lg:h-[100px]"
+            className="rounded-full object-cover w-full h-full"
           />
         </div>
 
@@ -112,7 +122,7 @@ export default function PanelCancha() {
       </header>
 
       {/* Tarjetas de Acción */}
-      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-3 place-i gap-5 sm:gap-6 px-2 sm:px-4">
+      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 px-2 sm:px-4">
         {secciones.map((item, index) => (
           <SeccionPanelCancha
             key={index}
@@ -123,6 +133,6 @@ export default function PanelCancha() {
           />
         ))}
       </div>
-    </section>
+    </motion.div>
   );
 }
