@@ -95,7 +95,6 @@ export default function ConfirmarTurno() {
     setShowModal(false);
     setFormData({
       nombre: "",
-      telefono: "",
       dni: "",
       metodoPago: "efectivo",
     });
@@ -120,32 +119,35 @@ export default function ConfirmarTurno() {
       // Generamos mensaje para WhatsApp
 
       const mensaje = `
-      ¡Hola! Soy ${formData.nombre}, y me pongo en contacto para reservar un turno".
-      
-      📅 Fecha: ${formatearFecha(turno.fecha)}  
-      ⏰ Hora: ${formatearHora(turno.hora)} hs
-      
-      📞 Teléfono: ${formData.telefono}  
-      🪪 DNI: ${formData.dni}
-      
-      💰 Precio total del turno: $${Math.trunc(turno.precio)}  
-      💵 Seña a abonar: $${Math.trunc(cancha.adelanto)}
-      
-      💳 Método de pago de la seña: ${formData.metodoPago === "efectivo" ? "Efectivo" : "Transferencia"
+¡Hola! Soy ${formData.nombre}, y me pongo en contacto para reservar un turno.
+
+📅 Fecha: ${formatearFecha(turno.fecha)}
+⏰ Hora: ${formatearHora(turno.hora)} hs
+
+🪪 DNI: ${formData.dni}
+
+💰 Precio total del turno: $${Math.trunc(turno.precio)}
+💵 Seña a abonar: $${Math.trunc(cancha.adelanto)}
+
+💳 Método de pago de la seña: ${formData.metodoPago === "efectivo" ? "Efectivo" : "Transferencia"
         }
-      
-      ${formData.metodoPago === "transferencia"
-          ? `He elegido pagar por transferencia a los siguientes datos:
-      
-      🏦 Alias: ${cancha.alias || "No disponible"}  
-      🏦 CVU / CBU: ${cancha.cvu || "No disponible"}  
-      🏦 A nombre de: ${cancha.wallet_nombre || "No disponible"}  
-      🏦 Banco: ${cancha.wallet_banco || "No disponible"}
-      
-      📌 Una vez realizado, te enviaré el comprobante por este medio.`
-          : `Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y horario para realizar el pago de la seña.`
+
+${formData.metodoPago === "transferencia"
+          ? `
+He elegido pagar por transferencia a los siguientes datos:
+
+🏦 Alias: ${cancha.alias || "No disponible"}
+🏦 CVU / CBU: ${cancha.cvu || "No disponible"}
+🏦 A nombre de: ${cancha.wallet_nombre || "No disponible"}
+ Banco: ${cancha.wallet_banco || "No disponible"}
+
+📌 Una vez realizado, te enviaré el comprobante por este medio.
+`
+          : `
+Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y horario para realizar el pago de la seña.
+`
         }
-      `;
+`.trim();
 
       const mensajeCodificado = encodeURIComponent(mensaje);
       const link = `https://wa.me/${cancha.telefono}?text=${mensajeCodificado}`;
@@ -241,7 +243,7 @@ export default function ConfirmarTurno() {
               {errorDni && <p className="text-red-500 text-sm">{errorDni}</p>}
 
               {/* Campo Teléfono */}
-              <div className="flex items-center gap-4 bg-gray-50 px-4 py-3 rounded-xl focus-within:ring-2 focus-within:ring-emerald-400 focus-within:bg-white transition-all duration-200 group">
+              {/* <div className="flex items-center gap-4 bg-gray-50 px-4 py-3 rounded-xl focus-within:ring-2 focus-within:ring-emerald-400 focus-within:bg-white transition-all duration-200 group">
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl flex items-center justify-center shadow-md transform transition-transform group-hover:scale-105">
                   <FaPhone className="text-white text-lg sm:text-xl" />
                 </div>
@@ -254,7 +256,7 @@ export default function ConfirmarTurno() {
                   required
                   className="flex-1 bg-transparent border-none outline-none text-base sm:text-lg text-gray-800 placeholder-gray-400"
                 />
-              </div>
+              </div> */}
               {errorTelefono && <p className="text-red-500 text-sm">{errorTelefono}</p>}
             </div>
 
@@ -263,8 +265,8 @@ export default function ConfirmarTurno() {
               disabled={!formData.nombre || formData.dni.length !== 8 || formData.telefono.length !== 10}
               onClick={() => setShowModal(true)}
               className={`w-full py-4 rounded-xl font-bold text-white text-lg sm:text-xl transition-all duration-300 transform active:scale-95 shadow-lg ${formData.nombre && formData.dni && formData.telefono && formData.dni.length === 8 && formData.telefono.length === 10
-                  ? "bg-gradient-to-r from-emerald-500 via-green-500 to-teal-600 hover:from-emerald-600 hover:to-green-700"
-                  : "bg-gray-300 cursor-not-allowed"
+                ? "bg-gradient-to-r from-emerald-500 via-green-500 to-teal-600 hover:from-emerald-600 hover:to-green-700"
+                : "bg-gray-300 cursor-not-allowed"
                 }`}
             >
               Continuar
@@ -303,11 +305,11 @@ export default function ConfirmarTurno() {
                   {[
                     { label: "Nombre", value: formData.nombre, icon: <FaUser /> },
                     { label: "DNI", value: formData.dni, icon: <FaIdCard /> },
-                    {
-                      label: "Teléfono",
-                      value: formData.telefono,
-                      icon: <FaPhone />,
-                    },
+                    // {
+                    //   label: "Teléfono",
+                    //   value: formData.telefono,
+                    //   icon: <FaPhone />,
+                    // },
                     {
                       label: "Precio",
                       value: `$${Math.trunc(turno.precio)}`,
