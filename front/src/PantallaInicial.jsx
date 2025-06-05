@@ -5,12 +5,9 @@ import {
   FaFutbol,
   FaArrowRight,
   FaWhatsapp,
-  FaInstagram,
   FaRegHandshake,
   FaTimes,
-  FaCheck,
-  FaMoneyBillWave,
-  FaQuoteLeft
+  FaCheck
 } from "react-icons/fa";
 import imgHero from "/hero-cancha.jpeg";
 import logo from "/logo.png"; // Asegúrate de tener esta imagen
@@ -49,7 +46,7 @@ export default function PantallaInicial () {
           initial={{ x: -30, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="max-w-xl w-full text-center lg:text-left space-y-6 p-6 lg:p-8 "
+          className="max-w-xl lg:w-1/2 text-center lg:text-left space-y-6 p-6 lg:p-8 flex flex-col justify-center h-[90vh] lg:h-auto lg:justify-around"
         >
           {/* Logo */}
           <img
@@ -58,40 +55,46 @@ export default function PantallaInicial () {
             transition={{ delay: 0.4 }}
             src="/logo.png"
             alt="TurnoGol Logo"
-            className="w-[140px] sm:w-[180px] lg:w-[250px] mx-auto lg:mx-0"
-          />
-
-          {/* Título */}
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-tight bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 bg-clip-text text-transparent">
+            className="w-[140px] sm:w-[180px] xl:w-[250px] mx-auto lg:mx-0"
+          />  
+          {/* Espacio entre logo y título */}
+          <div className="flex flex-col justify-center gap-6 h-2/3">
+              {/* Título */}
+              <div>
+              <h1 className="text-4xl sm:text-5xl xl:text-7xl font-extrabold leading-tight bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 bg-clip-text text-transparent">
             Bienvenido a TurnoGol
           </h1>
 
           {/* Descripción */}
-          <p className="text-base sm:text-lg text-gray-200 max-w-lg mx-auto lg:mx-0">
+          <p className="text-base sm:text-lg md:text-base xl:text-2xl text-gray-200 max-w-lg mx-auto lg:mx-0 w-full">
             Tu plataforma para reservar canchas de fútbol de forma rápida y sencilla. ¡Disfruta del mejor fútbol con amigos!
           </p>
+              </div>
+          
 
           {/* Botón */}
           <Link
             to="/canchas"
-            className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 active:scale-95 w-full sm:w-auto"
+            className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 active:scale-95 w-full sm:w-auto xl:text-2xl xl:py-4"
           >
-            <FaFutbol className="text-lg" />
+            <FaFutbol className="text-lg xl:text-2xl" />
             <span>Quiero reservar un turno</span>
             <FaArrowRight className="ml-1 group-hover:translate-x-1 transition-transform duration-300" />
           </Link>
+          </div>
+          
 
           {/* Info trabajo */}
           <div
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="mt-6 text-center lg:text-left text-gray-300 flex flex-col items-center lg:items-start"
+            className="mt-6 text-center lg:text-left xl:text-xl text-gray-300 flex flex-col items-center lg:items-start"
           >
             <p>¿Querés trabajar con nosotros?</p>
             <button
               onClick={() => setShowModal(true)}
-              className="font-medium text-gray-800 mt-1 inline-flex items-center gap-1 bg-gray-50 py-2 px-4 rounded-md hover:bg-gray-100 transition-colors duration-300 group"
+              className="font-medium text-gray-800 mt-1 inline-flex items-center gap-1 bg-gray-50 py-2 px-4 rounded-md hover:bg-gray-100 transition-colors duration-300 group xl:text-lg"
             >
               Más info aquí
               <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform duration-300" />

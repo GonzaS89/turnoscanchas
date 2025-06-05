@@ -45,7 +45,7 @@ export const Turno = ({ id, estado, cancha, hora, precio }) => {
               className={`p-2 sm:p-3 rounded-lg sm:rounded-xl ${
                 estado === "disponible"
                   ? "bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-emerald-300/50"
-                  : "bg-gradient-to-br from-gray-400 to-gray-500 text-gray-100 shadow-gray-400/30"
+                  : estado === 'reservado' ? "bg-gradient-to-br from-gray-400 to-gray-500 text-gray-100 shadow-gray-400/30" : "bg-gradient-to-br from-yellow-500 to-yellow-700 text-gray-100 shadow-yellow-400/30"
               } shadow-md`}
             >
               <svg
@@ -75,7 +75,7 @@ export const Turno = ({ id, estado, cancha, hora, precio }) => {
                   estado === "disponible" ? "text-emerald-600" : "text-gray-500"
                 } font-medium mt-1`}
               >
-                {estado === "disponible" ? "Disponible ahora" : "Turno ocupado"}
+                {estado === "disponible" ? "Disponible ahora" : estado === 'reservado' ? "Turno ocupado" : "En proceso de reserva"}
               </p>
               <p
                 className={`text-xs lg:text-base xl:text-2xl ${
@@ -94,7 +94,7 @@ export const Turno = ({ id, estado, cancha, hora, precio }) => {
             className={`px-3 py-2 sm:px-5 sm:py-3 rounded-lg sm:rounded-xl ${
               estado === "disponible"
                 ? "bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-400/30"
-                : "bg-gradient-to-r from-gray-400 to-gray-500 shadow-gray-400/20"
+                : estado === 'reservado' ? "bg-gradient-to-r from-gray-400 to-gray-500 shadow-gray-400/20" : "bg-gradient-to-br from-yellow-500 to-yellow-700 text-gray-100 shadow-yellow-400/30"
             }`}
           >
             <span
@@ -102,7 +102,7 @@ export const Turno = ({ id, estado, cancha, hora, precio }) => {
                 estado === "disponible" ? "text-white" : "text-gray-100"
               }`}
             >
-              {estado === "disponible" ? "RESERVAR" : "RESERVADO"}
+              {estado === "disponible" ? "RESERVAR" : estado === "reservado" ? "RESERVADO" : "PENDIENTE"}
             </span>
           </div>
         </div>
