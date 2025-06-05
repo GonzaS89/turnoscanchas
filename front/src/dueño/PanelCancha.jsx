@@ -42,9 +42,11 @@ export default function PanelCancha() {
     // Limpiar token y datos del usuario
     localStorage.removeItem("authToken");
     localStorage.removeItem("datosCancha");
-
+  
+    console.log("Sesión cerrada, redirigiendo...");
+  
     // Redirigir al login
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
 
   const secciones = [
