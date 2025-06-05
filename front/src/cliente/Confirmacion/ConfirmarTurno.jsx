@@ -96,12 +96,12 @@ export default function ConfirmarTurno() {
         💳 *Método de pago:* ${
           formData.metodoPago === "efectivo" ? "Efectivo" : "Transferencia"
         }
-        ${formData.metodoPago === "transferencia" && `
+        ${formData.metodoPago === "transferencia" ? `
         🏦 *Alias:* ${cancha.alias || "No disponible"}
         🏦 *CVU / CBU:* ${cancha.cvu || "No disponible"}
         🏦 *A nombre de:* ${cancha.wallet_nombre || "No disponible"}
         🏦 *Banco:* ${cancha.wallet_banco || "No disponible"}
-        `}
+        ` : ''}
       `;
   
       const mensajeCodificado = encodeURIComponent(mensaje);
@@ -406,7 +406,7 @@ export default function ConfirmarTurno() {
         </p>
 
         {/* Datos bancarios si aplica */}
-        {formData.metodoPago === "transferencia" && (
+        {/* {formData.metodoPago === "transferencia" && (
           <div className="px-6 mb-6">
             <div className="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 space-y-3">
               <h4 className="font-semibold text-blue-800 text-sm">Datos bancarios:</h4>
@@ -439,7 +439,7 @@ export default function ConfirmarTurno() {
               <p className="text-sm text-gray-700"><strong>Banco:</strong> {cancha.wallet_banco}</p>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Botón de WhatsApp */}
         {/* <a
