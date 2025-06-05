@@ -224,52 +224,51 @@ export default function ConfirmarTurno() {
               </div>
 
               {/* Campo DNI */}
-<div className="flex items-center gap-4 bg-gray-50 px-4 py-3 rounded-xl focus-within:ring-2 focus-within:ring-emerald-400 focus-within:bg-white transition-all duration-200 group">
-  <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl flex items-center justify-center shadow-md transform transition-transform group-hover:scale-105">
-    <FaIdCard className="text-white text-lg sm:text-xl" />
-  </div>
-  <input
-    type="text"
-    name="dni"
-    placeholder="DNI"
-    value={formData.dni}
-    onChange={handleChange}
-    required
-    className="flex-1 bg-transparent border-none outline-none text-base sm:text-lg text-gray-800 placeholder-gray-400"
-  />
-</div>
-{errorDni && <p className="text-red-500 text-sm">{errorDni}</p>}
+              <div className="flex items-center gap-4 bg-gray-50 px-4 py-3 rounded-xl focus-within:ring-2 focus-within:ring-emerald-400 focus-within:bg-white transition-all duration-200 group">
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl flex items-center justify-center shadow-md transform transition-transform group-hover:scale-105">
+                  <FaIdCard className="text-white text-lg sm:text-xl" />
+                </div>
+                <input
+                  type="number"
+                  name="dni"
+                  placeholder="DNI"
+                  value={formData.dni}
+                  onChange={handleChange}
+                  required
+                  className="flex-1 bg-transparent border-none outline-none text-base sm:text-lg text-gray-800 placeholder-gray-400"
+                />
+              </div>
+              {errorDni && <p className="text-red-500 text-sm">{errorDni}</p>}
 
               {/* Campo Teléfono */}
-<div className="flex items-center gap-4 bg-gray-50 px-4 py-3 rounded-xl focus-within:ring-2 focus-within:ring-emerald-400 focus-within:bg-white transition-all duration-200 group">
-  <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl flex items-center justify-center shadow-md transform transition-transform group-hover:scale-105">
-    <FaPhone className="text-white text-lg sm:text-xl" />
-  </div>
-  <input
-    type="tel"
-    name="telefono"
-    placeholder="Teléfono"
-    value={formData.telefono}
-    onChange={handleChange}
-    required
-    className="flex-1 bg-transparent border-none outline-none text-base sm:text-lg text-gray-800 placeholder-gray-400"
-  />
-</div>
-{errorTelefono && <p className="text-red-500 text-sm">{errorTelefono}</p>}
+              <div className="flex items-center gap-4 bg-gray-50 px-4 py-3 rounded-xl focus-within:ring-2 focus-within:ring-emerald-400 focus-within:bg-white transition-all duration-200 group">
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl flex items-center justify-center shadow-md transform transition-transform group-hover:scale-105">
+                  <FaPhone className="text-white text-lg sm:text-xl" />
+                </div>
+                <input
+                  type="tel"
+                  name="telefono"
+                  placeholder="Teléfono"
+                  value={formData.telefono}
+                  onChange={handleChange}
+                  required
+                  className="flex-1 bg-transparent border-none outline-none text-base sm:text-lg text-gray-800 placeholder-gray-400"
+                />
+              </div>
+              {errorTelefono && <p className="text-red-500 text-sm">{errorTelefono}</p>}
             </div>
 
             {/* Botón Submit */}
             <button
-  disabled={!formData.nombre || formData.dni.length !== 8 || formData.telefono.length !== 10}
-  onClick={() => setShowModal(true)}
-  className={`w-full py-4 rounded-xl font-bold text-white text-lg sm:text-xl transition-all duration-300 transform active:scale-95 shadow-lg ${
-    formData.nombre && formData.dni && formData.telefono && formData.dni.length === 8 && formData.telefono.length === 10
-      ? "bg-gradient-to-r from-emerald-500 via-green-500 to-teal-600 hover:from-emerald-600 hover:to-green-700"
-      : "bg-gray-300 cursor-not-allowed"
-  }`}
->
-  Continuar
-</button>
+              disabled={!formData.nombre || formData.dni.length !== 8 || formData.telefono.length !== 10}
+              onClick={() => setShowModal(true)}
+              className={`w-full py-4 rounded-xl font-bold text-white text-lg sm:text-xl transition-all duration-300 transform active:scale-95 shadow-lg ${formData.nombre && formData.dni && formData.telefono && formData.dni.length === 8 && formData.telefono.length === 10
+                  ? "bg-gradient-to-r from-emerald-500 via-green-500 to-teal-600 hover:from-emerald-600 hover:to-green-700"
+                  : "bg-gray-300 cursor-not-allowed"
+                }`}
+            >
+              Continuar
+            </button>
           </div>
         </div>
       )}
@@ -376,8 +375,8 @@ export default function ConfirmarTurno() {
                   onClick={reservarTurno}
                   disabled={isLoading}
                   className={`flex-1 py-2 sm:py-3 px-4 rounded-lg font-medium text-white transition-all flex items-center justify-center gap-2 active:scale-95 ${isLoading
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-md"
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-md"
                     } text-sm`}
                 >
                   {isLoading ? (
