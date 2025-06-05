@@ -67,8 +67,7 @@ export default function ConfirmarTurno() {
       });
 
       setTimeout(() => {
-        whatsappLink();
-        closeModal();
+        closeModal;
       }, 1000);
 
       
