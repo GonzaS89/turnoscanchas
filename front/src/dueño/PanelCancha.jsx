@@ -14,7 +14,7 @@ export default function PanelCancha() {
   const navigate = useNavigate();
   const [canchaData, setCanchaData] = useState(null);
 
-  // Cargar datos de la cancha al montar el componente
+  // Cargar datos desde location.state o localStorage
   useEffect(() => {
     if (location.state?.cancha) {
       const canchaDesdeLogin = location.state.cancha;
@@ -24,15 +24,19 @@ export default function PanelCancha() {
 
       // Actualizar estado local
       setCanchaData(canchaDesdeLogin);
-    } else {
+    }
+  }, [location]);
+
+  // Si no viene de login, intentar recuperar de localStorage
+  useEffect(() => {
+    if (!canchaData) {
       const storedCancha = localStorage.getItem("datosCancha");
 
       if (storedCancha) {
-        // Recuperar del localStorage
         setCanchaData(JSON.parse(storedCancha));
       }
     }
-  }, [location]);
+  }, [canchaData]);
 
   const handleLogout = () => {
     // Limpiar token y datos del usuario
@@ -40,7 +44,7 @@ export default function PanelCancha() {
     localStorage.removeItem("datosCancha");
 
     // Redirigir al login
-    navigate("/");
+    navigate("/login");
   };
 
   const secciones = [
@@ -80,23 +84,23 @@ export default function PanelCancha() {
         className="text-center mb-8 sm:mb-12 flex flex-col items-center gap-5"
       >
         {/* Logo circular */}
-        <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-green-400 to-emerald-600 p-[2px] shadow-xl">
+        <div className="w-24 h-24 lg:h-auto rounded-full bg-gradient-to-r from-green-400 to-emerald-600 p-[2px] shadow-xl">
           <img
             src={canchaData?.logo || "/default-logo.png"}
             alt="Logo de la cancha"
-            className="rounded-full object-cover w-full h-full"
+            className="rounded-full object-cover w-full lg:w-[100px] h-full lg:h-[100px]"
           />
         </div>
 
         {/* Título */}
         <div className="flex flex-col gap-3">
-          <p className="text-xl sm:text-2xl text-emerald-700 font-semibold mb-1">
+          <p className="text-xl sm:text-2xl lg:text-lg text-emerald-700 font-semibold mb-1">
             Hola, {canchaData?.propietario_nombre || "Propietario"} 👋
           </p>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl lg:text-2xl font-extrabold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
             Panel de Gestión
           </h1>
-          <p className="text-sm sm:text-base text-gray-500 mt-1">
+          <p className="text-sm sm:text-base lg:text-sm text-gray-500 mt-1">
             Cancha:{" "}
             <span className="font-medium text-gray-700 uppercase">
               {canchaData?.nombre || "Tu cancha"}
@@ -106,7 +110,7 @@ export default function PanelCancha() {
       </header>
 
       {/* Tarjetas de Acción */}
-      <div className="w-full max-w-4xl grid grid-cols-1 gap-5 sm:gap-6 px-2 sm:px-4">
+      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-3 place-items-center gap-5 sm:gap-6 px-2 sm:px-4">
         {secciones.map((item, index) => (
           <SeccionPanelCancha
             key={index}

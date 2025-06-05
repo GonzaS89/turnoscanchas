@@ -101,7 +101,7 @@ export default function AgregarTurno() {
       transition={{ duration: 0.3 }}
       className="min-h-screen w-full py-8 px-4 flex justify-center items-center"
     >
-      <motion.div
+      <div
   initial={{ y: 20, opacity: 0 }}
   animate={{ y: 0, opacity: 1 }}
   transition={{ delay: 0.2, duration: 0.5 }}
@@ -160,7 +160,7 @@ export default function AgregarTurno() {
   {/* Formulario */}
   <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
     {horarios.map((hora, index) => (
-      <motion.div
+      <div
         key={index}
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
@@ -185,7 +185,7 @@ export default function AgregarTurno() {
             <FaTimes />
           </button>
         )}
-      </motion.div>
+      </div>
     ))}
 
     {/* Botón + Horario */}
@@ -216,7 +216,7 @@ export default function AgregarTurno() {
       </button>
     </div>
   </form>
-</motion.div>
+</div>
 
       {/* Modal Confirmación */}
       <AnimatePresence>
