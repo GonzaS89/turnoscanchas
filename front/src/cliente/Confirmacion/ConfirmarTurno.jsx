@@ -55,59 +55,6 @@ export default function ConfirmarTurno() {
 
   const formatearHora = (hora) => hora.slice(0, 5);
 
-  const reservarTurno = async () => {
-    try {
-      setIsLoading(true);
-      // Actualizamos los datos del turno
-      await axios.put(`https://turnogol.site/api/turnos/${idTurno}`, {
-        nombre: formData.nombre,
-        telefono: formData.telefono,
-        dni: formData.dni,
-        metodoPago: formData.metodoPago,
-      });
-
-      setTimeout(() => {
-        closeModal;
-      }, 1000);
-
-      
-
-      // Generamos mensaje para WhatsApp
-      const mensaje = `
-  📞 *Nueva solicitud de turno*
-  👟 *Cancha:* ${cancha.nombre}
-  📅 *Fecha:* ${formatearFecha(turno.fecha)}
-  ⏰ *Hora:* ${formatearHora(turno.hora)} hs
-  🧑‍🦱 *Cliente:* ${formData.nombre}
-  📞 *Teléfono:* ${formData.telefono}
-  🪪 *DNI:* ${formData.dni}
- 💰 *Precio:* $${Math.trunc(turno.precio)}
- 💰 *Seña:* $${Math.trunc(cancha.adelanto)} 
-  💳 *Método de pago:* ${
-    formData.metodoPago === "efectivo" ? "Efectivo" : "Transferencia"
-  }
-        }  
-  🔗 [${
-    formData.metodoPago === "efectivo"
-      ? "Coordiná un horario con el propietario para abonar la seña,"
-      : "Recorda que debes enviarle a éste número el comprobante por el pago de la seña, "
-  } para que el turno sea confirmado.] 
-`;
-      const mensajeCodificado = encodeURIComponent(mensaje);
-      const link = `https://wa.me/${cancha.telefono}?text=${mensajeCodificado}`;
-      setWhatsappLink(link);
-      setTurnoConfirmado(true);
-    } catch (err) {
-      console.error(
-        "Error al reservar turno:",
-        err.response?.data || err.message
-      );
-      alert("Hubo un error al procesar tu solicitud");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const closeModal = () => {
     navigate("/");
     setShowModal(false);
@@ -122,6 +69,66 @@ export default function ConfirmarTurno() {
     setInfoCopiadaAlias(false);
     setInfoCopiadaCVU(false);
   };
+
+  const reservarTurno = async () => {
+    try {
+      setIsLoading(true);
+  
+      // Actualizamos los datos del turno
+      await axios.put(`https://turnogol.site/api/turnos/${idTurno}`,  {
+        nombre: formData.nombre,
+        telefono: formData.telefono,
+        dni: formData.dni,
+        metodoPago: formData.metodoPago,
+      });
+  
+      // Generamos mensaje para WhatsApp
+      const mensaje = `
+        📞 *Nueva solicitud de turno*
+        👟 *Cancha:* ${cancha.nombre}
+        📅 *Fecha:* ${formatearFecha(turno.fecha)}
+        ⏰ *Hora:* ${formatearHora(turno.hora)} hs
+        🧑‍🦱 *Cliente:* ${formData.nombre}
+        📞 *Teléfono:* ${formData.telefono}
+        🪪 *DNI:* ${formData.dni}
+        💰 *Precio:* $${Math.trunc(turno.precio)}
+        💰 *Seña:* $${Math.trunc(cancha.adelanto)} 
+        💳 *Método de pago:* ${
+          formData.metodoPago === "efectivo" ? "Efectivo" : "Transferencia"
+        }
+        ${formData.metodoPago === "transferencia" && `
+        🏦 *Alias:* ${cancha.alias || "No disponible"}
+        🏦 *CVU / CBU:* ${cancha.cvu || "No disponible"}
+        🏦 *A nombre de:* ${cancha.wallet_nombre || "No disponible"}
+        🏦 *Banco:* ${cancha.wallet_banco || "No disponible"}
+        `}
+      `;
+  
+      const mensajeCodificado = encodeURIComponent(mensaje);
+      const link = `https://wa.me/${cancha.telefono}?text=${mensajeCodificado}`;
+      setWhatsappLink(link);
+  
+      setTurnoConfirmado(true); // Muestra el modal de éxito
+  
+      // Redirige automáticamente a WhatsApp después de 1 segundo
+      setTimeout(() => {
+        window.location.href = link;
+        
+      }, 1000);
+      
+      setTimeout(() => {
+        closeModal()
+      }, 3000);// 1 segundo de espera
+  
+    } catch (err) {
+      console.error("Error al reservar turno:", err.response?.data || err.message);
+      alert("Hubo un error al procesar tu solicitud");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  
 
   const copiarAlPortapapeles = (texto, tipo) => {
     if (!texto || texto === "No disponible") return;
