@@ -65,7 +65,7 @@ export default function AgregarTurno() {
 
   const precioDeTurno = (horaIngresada, cambioTarifa) => {
     const hora = parseInt(horaIngresada.split(":")[0], 10);
-    return hora <= cambioTarifa ? cancha?.tarifa1 : cancha?.tarifa2;
+    return hora >= cambioTarifa || hora === 0 ? cancha?.tarifa2 : cancha?.tarifa1;
   };
 
   // Enviar turnos
