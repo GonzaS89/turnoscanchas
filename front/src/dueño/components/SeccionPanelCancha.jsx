@@ -20,7 +20,7 @@ export const SeccionPanelCancha = ({seccion, titulo, cancha}) => {
      <div
         >
           <Link to={seccion} state={{ cancha }} className="group flex flex-col items-center justify-center w-full h-full">
-            <div className="w-[350px] lg:w-auto flex items-center justify-between h-full p-4 sm:p-6 rounded-xl bg-white border border-emerald-200 hover:bg-emerald-50/70 transition-all duration-300 shadow-md hover:shadow-emerald-200/50">
+            <div className="w-full lg:w-auto flex items-center justify-between h-full p-4 sm:p-6 rounded-xl bg-white border border-emerald-200 hover:bg-emerald-50/70 transition-all duration-300 shadow-md hover:shadow-emerald-200/50">
               <div className="flex items-center gap-4">
                 <div className="p-3 lg:p-6 bg-emerald-100 rounded-lg group-hover:bg-emerald-200 transition-colors">
                   {obtenerIcono(titulo)}
