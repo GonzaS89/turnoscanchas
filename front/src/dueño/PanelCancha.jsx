@@ -110,7 +110,7 @@ export default function PanelCancha() {
       </header>
 
       {/* Tarjetas de Acción */}
-      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-3 place-items-center gap-5 sm:gap-6 px-2 sm:px-4">
+      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-3 place-i gap-5 sm:gap-6 px-2 sm:px-4">
         {secciones.map((item, index) => (
           <SeccionPanelCancha
             key={index}
