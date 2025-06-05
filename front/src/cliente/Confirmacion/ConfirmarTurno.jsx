@@ -262,10 +262,9 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
 
             {/* Botón Submit */}
             <button
-              disabled={!formData.nombre || formData.dni.length !== 8 || formData.telefono.length !== 10}
+              disabled={!formData.nombre || formData.dni.length !== 8}
               onClick={() => setShowModal(true)}
-              className={`w-full py-4 rounded-xl font-bold text-white text-lg sm:text-xl transition-all duration-300 transform active:scale-95 shadow-lg ${formData.nombre && formData.dni && formData.telefono && formData.dni.length === 8 && formData.telefono.length === 10
-                ? "bg-gradient-to-r from-emerald-500 via-green-500 to-teal-600 hover:from-emerald-600 hover:to-green-700"
+              className={`w-full py-4 rounded-xl font-bold text-white text-lg sm:text-xl transition-all duration-300 transform active:scale-95 shadow-lg ${formData.nombre && formData.dni  && formData.dni.length === 8 ? "bg-gradient-to-r from-emerald-500 via-green-500 to-teal-600 hover:from-emerald-600 hover:to-green-700"
                 : "bg-gray-300 cursor-not-allowed"
                 }`}
             >
