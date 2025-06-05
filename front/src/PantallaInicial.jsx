@@ -164,7 +164,7 @@ export default function PantallaInicial () {
                   <h3 className="text-lg font-semibold text-emerald-700 mb-4">Contacto directo:</h3>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <a
-                      href="https://wa.me/5491234567890" 
+                      href="https://wa.me/5493814482619" 
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group flex items-center justify-center sm:justify-start gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-4 py-3 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
