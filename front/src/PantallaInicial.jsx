@@ -46,7 +46,7 @@ export default function PantallaInicial () {
           initial={{ x: -30, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="max-w-xl lg:w-1/2 text-center lg:text-left space-y-6 p-6 lg:p-8 flex flex-col justify-center h-[90vh] lg:h-auto lg:justify-around"
+          className="max-w-xl lg:w-1/2 text-center lg:text-left space-y-6 p-6 lg:p-8 flex flex-col justify-center h-[75vh] lg:h-auto lg:justify-around"
         >
           {/* Logo */}
           <img

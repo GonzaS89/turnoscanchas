@@ -112,8 +112,6 @@ export default function ConfirmarTurno() {
       📌 Una vez realizado, te enviaré el comprobante por este medio.`
           : `Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y horario para realizar el pago de la seña.`
       }
-      
-      Quedo a la espera de la confirmación del turno.
       `;
   
       const mensajeCodificado = encodeURIComponent(mensaje);
