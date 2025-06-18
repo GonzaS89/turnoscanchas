@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export const useCanchas = () => {
+export const usePropietarios = () => {
   const [datos, setDatos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const serverLocal = 'http://localhost:3001';
+  const serverExterno = 'https://turnogol.site';
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -14,11 +15,11 @@ export const useCanchas = () => {
       setError(null); // Reiniciar error en cada nueva carga
 
       try {
-        const res = await axios.get(`https://turnogol.site/api/canchas`);
+        const res = await axios.get(`${serverExterno}/api/propietarios`);
         setDatos(res.data);
       } catch (err) {
-        console.error('Error al obtener canchas:', err);
-        setError(err.message || 'Hubo un error al cargar las canchas');
+        console.error('Error al obtener propietarios:', err);
+        setError(err.message || 'Hubo un error al cargar las propietarios');
         setDatos([]); // Opcional: reiniciar datos en caso de error
       } finally {
         setIsLoading(false);

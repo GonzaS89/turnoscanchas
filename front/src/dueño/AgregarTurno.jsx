@@ -8,7 +8,11 @@ import {
   FaTimes,
   FaArrowLeft,
   FaClock,
+  FaCalendarAlt,
 } from "react-icons/fa";
+import dayjs from "dayjs";
+import 'dayjs/locale/es';
+dayjs.locale('es');
 
 export default function AgregarTurno() {
   const navigate = useNavigate();
@@ -16,41 +20,59 @@ export default function AgregarTurno() {
   const cancha = location.state?.cancha;
 
   const [horarios, setHorarios] = useState([""]);
-  const [showModal, setShowModal] = useState(false);
-  const [confIngresos, setConfIngresos] = useState(false);
+  const [showModalSuccess, setShowModalSuccess] = useState(false);
+  const [showModalConfirm, setShowModalConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [horariosExistentes, setHorariosExistentes] = useState([]);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(() => {
+    return dayjs().format("YYYY-MM-DD");
+  });
+  const [loadingExisting, setLoadingExisting] = useState(true);
 
-  // Obtener horarios existentes
+  // --- Efectos y Lógica de Datos ---
+
   useEffect(() => {
-    const obtenerHorarios = async () => {
+    const obtenerHorariosExistentes = async () => {
+      if (!cancha?.id || !fechaSeleccionada) {
+        setHorariosExistentes([]);
+        setLoadingExisting(false);
+        return;
+      }
+
       try {
-        setIsLoading(true);
-        const { data } = await axios.get(`https://turnogol.site/api/turnos_canchas/canchas`,  {
-          params: { id: cancha?.id },
-        });
-        setHorariosExistentes(data);
+        setLoadingExisting(true);
+        const { data } = await axios.get(
+          `https://turnogol.site/api/turnos_canchas/canchas`,
+          { params: { id: cancha?.id } }
+        );
+
+        const turnosDeFecha = data
+          .filter((turno) => dayjs(turno.fecha).isSame(fechaSeleccionada, 'day'))
+          .sort((a, b) => {
+            // Lógica de ordenación: 00:00 se trata como 24:00 para que vaya al final
+            const horaA = a.hora === "00:00" ? "24:00" : a.hora.slice(0, 5); // Usa slice(0,5) aquí si el formato es HH:mm:ss
+            const horaB = b.hora === "00:00" ? "24:00" : b.hora.slice(0, 5); // Usa slice(0,5) aquí si el formato es HH:mm:ss
+            return horaA.localeCompare(horaB);
+          });
+
+        setHorariosExistentes(turnosDeFecha);
       } catch (error) {
         console.error("Error al obtener horarios existentes:", error);
+        setHorariosExistentes([]);
       } finally {
-        setIsLoading(false);
+        setLoadingExisting(false);
       }
     };
-    if (cancha?.id) obtenerHorarios();
-  }, [cancha]);
+    obtenerHorariosExistentes();
+  }, [cancha?.id, fechaSeleccionada]);
 
-  // Formatear fecha actual
-  const hoy = new Date();
-  hoy.setHours(0, 0, 0, 0); // Normalizar a inicio del día
-  const turnosHoy = horariosExistentes
-    .filter((turno) => {
-      const fechaTurno = new Date(turno.fecha);
-      fechaTurno.setHours(0, 0, 0, 0);
-      return fechaTurno.getTime() === hoy.getTime();
-    })
-    .sort((a, b) => a.hora.localeCompare(b.hora));
+  useEffect(() => {
+    setHorarios([""]);
+  }, [fechaSeleccionada]);
 
-  // Manejo de horarios
+
+  // --- Manejo de Horarios del Formulario ---
+
   const handleHorarioChange = (index, value) => {
     const nuevosHorarios = [...horarios];
     nuevosHorarios[index] = value;
@@ -58,260 +80,326 @@ export default function AgregarTurno() {
   };
 
   const agregarCampo = () => setHorarios([...horarios, ""]);
+
   const eliminarCampo = (index) => {
     const nuevosHorarios = horarios.filter((_, i) => i !== index);
     setHorarios(nuevosHorarios);
+    if (nuevosHorarios.length === 0) {
+      setHorarios([""]);
+    }
   };
 
-  const precioDeTurno = (horaIngresada, cambioTarifa) => {
+  const precioDeTurno = (horaIngresada) => {
     const hora = parseInt(horaIngresada.split(":")[0], 10);
-    return hora >= cambioTarifa || hora === 0 ? cancha?.tarifa2 : cancha?.tarifa1;
+    const cambioTarifa = cancha?.cambio_de_tarifa !== undefined ? parseInt(cancha.cambio_de_tarifa, 10) : 20;
+
+    return hora > cambioTarifa || hora === 0
+      ? cancha?.tarifa2 || 0
+      : cancha?.tarifa1 || 0;
   };
 
-  // Enviar turnos
+  // --- Enviar Turnos ---
+
   const handleSubmit = async () => {
+    const horariosValidos = horarios.filter(h => h.trim() !== '');
+
+    if (horariosValidos.length === 0 || !fechaSeleccionada) {
+      alert("Por favor, ingresa al menos un horario y selecciona una fecha.");
+      return;
+    }
+
     try {
       setIsLoading(true);
       await Promise.all(
-        horarios.map((hora) =>
-          axios.post(`https://turnogol.site/api/turnos_canchas`,  {
-            hora,
+        horariosValidos.map((hora) =>
+          axios.post(`https://turnogol.site/api/turnos_canchas`, {
+            hora: hora, // Se envía 00:00 si el usuario lo ingresó así
             cancha_id: cancha.id,
             estado: "disponible",
-            precio: precioDeTurno(hora, cancha?.cambio_de_tarifa),
+            precio: precioDeTurno(hora),
+            fecha: fechaSeleccionada,
           })
         )
       );
-      setShowModal(true);
-      setConfIngresos(false);
+      setShowModalConfirm(false);
+      setShowModalSuccess(true);
       setHorarios([""]);
-      setTimeout(() => navigate(-1), 1500);
+
+      setTimeout(() => navigate(-1), 2000);
     } catch (error) {
       console.error("Error al agregar turnos:", error);
-      alert("Error al guardar los turnos");
+      alert("Error al guardar los turnos. Por favor, intente de nuevo.");
     } finally {
       setIsLoading(false);
     }
   };
 
+  if (!cancha) {
+    return (
+        <div className="min-h-screen flex items-center justify-center p-4">
+            <p className="text-xl text-gray-700 font-medium animate-pulse">
+                Cargando información de la cancha o datos no disponibles...
+            </p>
+        </div>
+    );
+  }
+
   return (
-    <section
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      className="min-h-screen w-full py-8 px-4 flex justify-center items-center"
-    >
-      <div
-  initial={{ y: 20, opacity: 0 }}
-  animate={{ y: 0, opacity: 1 }}
-  transition={{ delay: 0.2, duration: 0.5 }}
-  className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 max-w-md w-full border border-gray-200"
->
-  {/* Header */}
-  <div className="flex items-center justify-between mb-6">
-    <button
-      onClick={() => navigate(-1)}
-      className="flex items-center gap-2 text-gray-700 hover:text-emerald-600 transition-colors lg:hidden"
-      aria-label="Volver"
-    >
-      <FaArrowLeft />
-      <span className="hidden sm:inline">Volver</span>
-    </button>
-    <h2 className="text-xl sm:text-2xl xl:text-3xl font-bold text-emerald-600 text-center flex-1">
-      Agregar Turnos
-    </h2>
-    <div className="w-6"></div> {/* Spacer derecho */}
-  </div>
+    <section className="min-h-screen w-full py-8 px-4 sm:px-6 xl:px-8 flex justify-center items-center font-sans text-gray-800 bg-gradient-to-br from-emerald-50 via-white to-emerald-50">
+      {/* Tarjeta principal del formulario */}
+      <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 max-w-4xl w-full border border-gray-200 relative">
+        {/* Botón de volver */}
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-2 text-gray-600 hover:text-emerald-700 transition-colors px-3 py-2 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 z-10"
+        >
+          <FaArrowLeft className="text-xl sm:text-2xl" />
+          <span className="font-medium hidden sm:inline">Volver al Panel</span>
+        </button>
 
-  {/* Info Cancha */}
-  <div className="rounded-lg p-4 mb-6 bg-emerald-50 border border-emerald-200 shadow-sm">
-    <p className="text-center text-emerald-800 font-medium xl:text-lg">
-      Cancha: <span className="uppercase">{cancha?.nombre}</span>
-    </p>
-  </div>
+        {/* Header Principal */}
+        <header className="flex flex-col sm:flex-row items-center justify-between mb-8 relative">
+          {/* Título principal y nombre de la cancha */}
+          <div className="text-center w-full flex-1">
+            <h2 className="text-2xl sm:text-3xl xl:text-4xl font-extrabold text-emerald-600 mt-4 sm:mt-0">
+              Agregar Turnos
+            </h2>
+            <p className="text-sm sm:text-base xl:text-lg text-gray-600 mt-1">
+              Cancha: <span className="uppercase font-semibold">{cancha?.nombre || "No especificado"}</span>
+            </p>
+          </div>
+          <div className="w-8 hidden sm:block"></div> {/* Spacer derecho */}
+        </header>
 
-  {/* Horarios existentes */}
-  <div className="mb-8">
-    <h3 className="text-lg xl:text-xl font-semibold text-gray-700 mb-3 flex items-center gap-2">
-      <FaClock className="text-emerald-500" /> Turnos para hoy:
-    </h3>
-    {isLoading ? (
-      <div className="flex justify-center py-3">
-        <div className="animate-spin h-6 w-6 border-t-2 border-b-2 border-emerald-400 rounded-full"></div>
+        {/* Contenido Principal: Dos Columnas (o apiladas en móvil) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xl:gap-8">
+          {/* Columna Izquierda (Selección de Fecha y Horarios Existentes) */}
+          <div className="flex flex-col gap-6">
+            {/* Campo de fecha */}
+            <div className="p-5 bg-gray-50 rounded-lg border border-gray-200 shadow-inner">
+              <label
+                htmlFor="fecha"
+                className="block text-base sm:text-lg font-medium text-gray-700 mb-2"
+              >
+                <FaCalendarAlt className="inline-block mr-2 text-emerald-600 text-xl" />
+                Seleccionar Fecha
+              </label>
+              <input
+                id="fecha"
+                type="date"
+                value={fechaSeleccionada}
+                onChange={(e) => setFechaSeleccionada(e.target.value)}
+                required
+                className="w-full px-4 py-3 sm:py-3.5 bg-white border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 text-base sm:text-lg"
+              />
+            </div>
+
+            {/* Horarios existentes */}
+            <div className="p-5 bg-gray-50 rounded-lg border border-gray-200 shadow-inner flex-1">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <FaClock className="text-emerald-500 text-xl" />{" "}
+                <span>
+                  Turnos ya cargados ({dayjs(fechaSeleccionada).format("DD/MM/YYYY")})
+                </span>
+              </h3>
+              {loadingExisting ? (
+                <div className="flex justify-center items-center h-24">
+                  <div className="animate-spin h-8 w-8 border-t-2 border-b-2 border-emerald-400 rounded-full"></div>
+                </div>
+              ) : horariosExistentes.length > 0 ? (
+                <div className="flex flex-wrap gap-2 sm:gap-3 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                  {horariosExistentes.map((turno) => (
+                    <span
+                      key={turno.id}
+                      className="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-full text-sm sm:text-base font-medium whitespace-nowrap shadow-sm"
+                    >
+                      {/* Lógica de visualización: si la hora es "00:00", mostrar "24:00" */}
+                      {turno.hora.slice(0, 5) === "00:00" ? "24:00" : turno.hora.slice(0, 5)} hs
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-sm sm:text-base italic py-2">
+                  No hay turnos cargados para esta fecha. ¡Es un buen momento para agregar algunos!
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Columna Derecha (Formulario para Agregar Nuevos Horarios) */}
+          <div className="flex flex-col gap-6">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 mt-4 xl:mt-0">
+              Añadir Nuevos Horarios
+            </h3>
+            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+              {horarios.map((hora, index) => (
+                <div key={index} className="flex items-center gap-3 group">
+                  <input
+                    type="time"
+                    value={hora}
+                    onChange={(e) => handleHorarioChange(index, e.target.value)}
+                    required
+                    className="flex-1 px-4 py-3 sm:py-3.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 text-base sm:text-lg"
+                  />
+                  {horarios.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => eliminarCampo(index)}
+                      className="text-red-500 hover:text-red-700 hover:bg-red-100 p-2 rounded-full transition-all group-hover:opacity-100 opacity-80 group-hover:scale-110"
+                      title="Eliminar horario"
+                    >
+                      <FaTimes className="text-xl" />
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              {/* Botón + Horario */}
+              <button
+                type="button"
+                onClick={agregarCampo}
+                className="group flex items-center gap-2 text-emerald-600 hover:text-emerald-800 font-medium transition-colors text-base sm:text-lg"
+              >
+                <div className="w-9 h-9 rounded-full flex items-center justify-center bg-emerald-100 group-hover:bg-emerald-200 transition text-xl">
+                  <FaPlus />
+                </div>
+                <span>Agregar otro horario</span>
+              </button>
+
+              {/* Botón Guardar */}
+              <div className="pt-4 sm:pt-6">
+                <button
+                  type="button"
+                  onClick={() => setShowModalConfirm(true)}
+                  disabled={horarios.some((h) => !h) || !fechaSeleccionada || isLoading}
+                  className={`w-full py-3 sm:py-3.5 px-4 rounded-lg font-semibold shadow-md transition-all duration-200 transform active:scale-95 text-base sm:text-lg
+                    ${(horarios.some((h) => !h) || !fechaSeleccionada || isLoading)
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white shadow-emerald-300/50 hover:shadow-lg"
+                    }`}
+                >
+                  Guardar Turnos
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
-    ) : turnosHoy.length > 0 ? (
-      <div className="flex flex-wrap gap-2">
-        {turnosHoy.map((turno) => (
-          <span
-            key={turno.id}
-            className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm md:text-base font-medium"
-          >
-            {turno.hora.slice(0, 5)} hs
-          </span>
-        ))}
-      </div>
-    ) : (
-      <p className="text-gray-400 text-sm lg:text-base italic">
-        No hay turnos cargados para hoy.
-      </p>
-    )}
-  </div>
-
-  {/* Formulario */}
-  <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-    {horarios.map((hora, index) => (
-      <div
-        key={index}
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.2 }}
-        className="flex items-center gap-3 group"
-      >
-        <input
-          type="time"
-          value={hora}
-          onChange={(e) => handleHorarioChange(index, e.target.value)}
-          required
-          className="flex-1 px-4 py-3 xl:py-4 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
-        />
-
-        {horarios.length > 1 && (
-          <button
-            type="button"
-            onClick={() => eliminarCampo(index)}
-            className="text-red-500 hover:text-red-700 hover:bg-red-100 p-2 rounded-lg transition-all group-hover:opacity-100 opacity-70 group-hover:scale-110"
-            title="Eliminar horario"
-          >
-            <FaTimes />
-          </button>
-        )}
-      </div>
-    ))}
-
-    {/* Botón + Horario */}
-    <button
-      type="button"
-      onClick={agregarCampo}
-      className="group flex items-center gap-2 text-emerald-600 hover:text-emerald-800 font-medium transition-colors text-sm lg:text-lg"
-    >
-      <div className="w-8 h-8 rounded-full flex items-center justify-center bg-emerald-100 group-hover:bg-emerald-200 transition">
-        <FaPlus />
-      </div>
-      <span>Agregar otro horario</span>
-    </button>
-
-    {/* Botón Guardar */}
-    <div className="pt-4">
-      <button
-        type="button"
-        onClick={() => setConfIngresos(true)}
-        disabled={horarios.some((h) => !h)}
-        className={`w-full py-3 px-4 rounded-lg font-semibold shadow-md transition-all duration-200 transform active:scale-95 ${
-          horarios.some((h) => !h)
-            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-white shadow-emerald-300/50 hover:shadow-lg"
-        }`}
-      >
-        Guardar Turnos
-      </button>
-    </div>
-  </form>
-</div>
 
       {/* Modal Confirmación */}
       <AnimatePresence>
-        {confIngresos && (
-          <div
+        {showModalConfirm && (
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
-            <div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
+            <motion.div
+              initial={{ scale: 0.9, y: 50 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 50 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md border border-gray-200"
+              className="bg-white rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-sm border border-gray-200 text-center"
             >
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Confirmar turnos</h3>
-              <p className="text-gray-600 mb-6">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
+                Confirmar turnos
+              </h3>
+              <p className="text-base sm:text-lg text-gray-600 mb-6">
                 ¿Estás seguro de agregar{" "}
                 <span className="font-semibold">{horarios.length}</span>{" "}
-                {horarios.length === 1 ? "turno" : "turnos"}?
+                {horarios.length === 1 ? "turno" : "turnos"} para el{" "}
+                <span className="font-semibold">{dayjs(fechaSeleccionada).format("DD/MM/YYYY")}</span>?
               </p>
-              <ul className="mb-6 flex flex-wrap gap-2">
-                {horarios.map((hora, i) => (
-                  <li key={i}>
-                    <span className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm">
-                      {hora}
+              <div className="mb-6 max-h-32 overflow-y-auto pr-2 custom-scrollbar">
+                <div className="flex flex-wrap justify-center gap-2">
+                  {horarios.map((hora, i) => (
+                    <span key={i} className="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-full text-sm sm:text-base font-medium">
+                      {/* Lógica de visualización en el modal: si la hora es "00:00", mostrar "24:00" */}
+                      {hora === "00:00" ? "24:00" : hora} hs
                     </span>
-                  </li>
-                ))}
-              </ul>
-              <div className="flex justify-end gap-3">
+                  ))}
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row justify-center gap-3">
                 <button
-                  onClick={() => setConfIngresos(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 transition"
+                  onClick={() => setShowModalConfirm(false)}
+                  className="px-5 py-2 sm:py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-base sm:text-lg flex-1"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={isLoading}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition flex items-center gap-2"
+                  className={`px-5 py-2 sm:py-2.5 rounded-lg font-semibold shadow-md transition-all duration-200 flex items-center justify-center gap-2 text-base sm:text-lg flex-1
+                    ${isLoading
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-400/50 hover:shadow-lg"
+                    }`}
                 >
                   {isLoading ? (
                     <>
-                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
                         <path
                           className="opacity-75"
                           fill="currentColor"
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         />
                       </svg>
-                      Procesando...
+                      <span>Procesando...</span>
                     </>
                   ) : (
-                    "Confirmar"
+                    <span>Confirmar</span>
                   )}
                 </button>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
 
       {/* Modal Éxito */}
       <AnimatePresence>
-        {showModal && (
-          <div
+        {showModalSuccess && (
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
-            <div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
+            <motion.div
+              initial={{ scale: 0.9, y: 50 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 50 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-xl shadow-xl p-8 text-center max-w-sm w-full border border-emerald-200"
+              className="bg-white rounded-xl shadow-2xl p-8 text-center max-w-sm w-full border border-emerald-200"
             >
               <FaCheckCircle className="mx-auto text-6xl text-emerald-500 mb-4" />
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">¡Turnos agregados!</h3>
-              <p className="text-gray-600 mb-6">Los turnos se han registrado correctamente.</p>
-              <div className="h-1 bg-emerald-100 rounded-full overflow-hidden">
-                <div
+              <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
+                ¡Turnos agregados!
+              </h3>
+              <p className="text-base sm:text-lg text-gray-600 mb-6">
+                Los turnos se han registrado correctamente.
+              </p>
+              {/* Barra de progreso visual */}
+              <div className="h-2 bg-emerald-100 rounded-full overflow-hidden">
+                <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: "100%" }}
                   transition={{ duration: 1.5 }}
                   className="h-full bg-emerald-500"
                 />
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </section>

@@ -1,25 +1,19 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useCanchas } from "../../customHooks/useCanchas";
+import { usePropietarios } from "../../customHooks/usePropietarios";
 import { useObtenerTurnosxCancha } from "../../customHooks/useObtenerTurnosxCancha";
-import {
-  FaClock,
-  FaUser,
-  FaIdCard,
-  FaPhone,
-  FaWhatsapp,
-  FaMoneyBillWave,
-} from "react-icons/fa";
+import { FaUser, FaIdCard, FaMoneyBillWave, FaPhone} from "react-icons/fa";
 import { FaMoneyBill1Wave } from "react-icons/fa6";
-import { IoCopyOutline } from "react-icons/io5";
+import { GiConfirmed } from "react-icons/gi";
+import { User, CreditCard, Phone } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 
 export default function ConfirmarTurno() {
   const location = useLocation();
   const { idCancha } = location.state || {};
   const { idTurno } = location.state || {};
-  const { datos: canchas } = useCanchas();
+  const { datos: canchas } = usePropietarios();
   const { turnos } = useObtenerTurnosxCancha(idCancha);
   const cancha = canchas.find((c) => c.id === idCancha);
   const turno = turnos?.find((t) => t.id === idTurno);
@@ -32,12 +26,12 @@ export default function ConfirmarTurno() {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [turnoConfirmado, setTurnoConfirmado] = useState(false);
-  const [whatsappLink, setWhatsappLink] = useState("");
-  const [infoCopiadaAlias, setInfoCopiadaAlias] = useState(false);
-  const [infoCopiadaCVU, setInfoCopiadaCVU] = useState(false);
   const [errorDni, setErrorDni] = useState("");
   const [errorTelefono, setErrorTelefono] = useState("");
   const navigate = useNavigate();
+
+  const serverLocal = 'http://localhost:3001';
+  const serverExterno = 'https://turnogol.site';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -96,12 +90,10 @@ export default function ConfirmarTurno() {
     setFormData({
       nombre: "",
       dni: "",
+      telefono: "",
       metodoPago: "efectivo",
     });
     setTurnoConfirmado(false);
-    setWhatsappLink("");
-    setInfoCopiadaAlias(false);
-    setInfoCopiadaCVU(false);
   };
 
   const reservarTurno = async () => {
@@ -109,10 +101,10 @@ export default function ConfirmarTurno() {
       setIsLoading(true);
 
       // Actualizamos los datos del turno
-      await axios.put(`https://turnogol.site/api/turnos/${idTurno}`, {
+      await axios.put(`${serverExterno}/api/turnos/${idTurno}`, {
         nombre: formData.nombre,
-        telefono: formData.telefono,
         dni: formData.dni,
+        telefono: formData.telefono,
         metodoPago: formData.metodoPago,
       });
 
@@ -151,7 +143,6 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
 
       const mensajeCodificado = encodeURIComponent(mensaje);
       const link = `https://wa.me/${cancha.telefono}?text=${mensajeCodificado}`;
-      setWhatsappLink(link);
 
       setTurnoConfirmado(true); // Muestra el modal de éxito
 
@@ -161,31 +152,17 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
       }, 500);
 
       setTimeout(() => {
-        closeModal()
-      }, 3000);// 1 segundo de espera
-
+        closeModal();
+      }, 3000); // 1 segundo de espera
     } catch (err) {
-      console.error("Error al reservar turno:", err.response?.data || err.message);
+      console.error(
+        "Error al reservar turno:",
+        err.response?.data || err.message
+      );
       alert("Hubo un error al procesar tu solicitud");
     } finally {
       setIsLoading(false);
     }
-  };
-
-
-
-  const copiarAlPortapapeles = (texto, tipo) => {
-    if (!texto || texto === "No disponible") return;
-
-    navigator.clipboard.writeText(texto).then(() => {
-      if (tipo === "alias") {
-        setInfoCopiadaAlias(true);
-        setTimeout(() => setInfoCopiadaAlias(false), 2000);
-      } else if (tipo === "cvu") {
-        setInfoCopiadaCVU(true);
-        setTimeout(() => setInfoCopiadaCVU(false), 2000);
-      }
-    });
   };
 
   return (
@@ -195,24 +172,61 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
       transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
       className="min-h-screen w-full flex flex-col items-center justify-center"
     >
+      <div className="absolute inset-0 z-0 opacity-10">
+        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" fill="none">
+          <circle cx="25" cy="25" r="10" fill="url(#gradientCircle)" opacity="0.6" />
+          <circle cx="75" cy="75" r="15" fill="url(#gradientCircle)" opacity="0.6" />
+          <path d="M0 50 L20 70 L50 40 L80 60 L100 40 V0 H0 Z" fill="url(#gradientPath)" opacity="0.3" />
+          <defs>
+            <radiaxlradient id="gradientCircle" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+              <stop offset="0%" stopColor="#34D399" /> {/* green-400 */}
+              <stop offset="100%" stopColor="#059669" /> {/* emerald-600 */}
+            </radiaxlradient>
+            <linearGradient id="gradientPath" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#10B981" /> {/* emerald-500 */}
+              <stop offset="100%" stopColor="#065F46" /> {/* green-900 */}
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
       {cancha && turno && (
         <div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="w-full lg:w-[1000px] flex flex-col lg:flex-row justify-center items-center gap-4 max-[]:xl:max-w-5xl lg:max-w-6xl xl:max-w-7xl 2xl:max-w-8xl"
+          className="w-full xl:w-[1000px] flex flex-col xl:flex-row justify-center items-center gap-4 max-[]:xl:max-w-5xl xl:max-w-6xl xl:max-w-7xl 2xl:max-w-8xl"
         >
           {/* Tarjeta de información */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-6 md:mb-0 border border-emerald-100 md:w-1/2 mx-auto transform transition-all hover:shadow-2xl duration-300">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-emerald-900 mb-6 uppercase tracking-wider">
+          <div
+            className="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 mb-6 md:mb-0
+                    border border-emerald-100 w- md:w-1/2 xl:w-2/3 xl:w-1/2
+                    mx-auto transform transition-all duration-300
+                    hover:scale-[1.01] hover:shadow-emerald-300/40 focus-within:shadow-emerald-300/50"
+          >
+            {/* Form Title */}
+            <h2
+              className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center
+                     text-emerald-800 mb-8 uppercase tracking-wider
+                     bg-gradient-to-r from-emerald-600 to-green-700 bg-clip-text text-transparent"
+            >
               Ingresá tus datos
             </h2>
 
-            <div className="space-y-5 mb-7">
+            {/* Input Fields Section */}
+            <div className="space-y-6 sm:space-y-6 mb-8">
               {/* Campo Nombre */}
-              <div className="flex items-center gap-4 bg-gray-50 px-4 py-3 rounded-xl focus-within:ring-2 focus-within:ring-emerald-400 focus-within:bg-white transition-all duration-200 group">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl flex items-center justify-center shadow-md transform transition-transform group-hover:scale-105">
-                  <FaUser className="text-white text-lg sm:text-xl" />
+              <div
+                className="flex items-center gap-4 bg-gray-50 px-5 py-1 xl:py-3.5 rounded-2xl
+                        focus-within:ring-2 focus-within:ring-emerald-400 focus-within:bg-white
+                        transition-all duration-300 group shadow-sm hover:shadow-md"
+              >
+                <div
+                  className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl
+                          flex items-center justify-center shadow-md transform transition-transform
+                          group-hover:scale-105 group-focus-within:scale-105"
+                >
+                  <User className="text-white text-xl sm:text-2xl" />{" "}
+                  {/* Lucide User Icon */}
                 </div>
                 <input
                   type="text"
@@ -221,14 +235,25 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
                   value={formData.nombre}
                   onChange={handleChange}
                   required
-                  className="flex-1 bg-transparent border-none outline-none text-base sm:text-lg text-gray-800 placeholder-gray-400"
+                  className="flex-1 bg-transparent border-none outline-none
+                       text-base sm:text-xl text-gray-800 placeholder-gray-400
+                       font-medium"
                 />
               </div>
 
               {/* Campo DNI */}
-              <div className="flex items-center gap-4 bg-gray-50 px-4 py-3 rounded-xl focus-within:ring-2 focus-within:ring-emerald-400 focus-within:bg-white transition-all duration-200 group">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl flex items-center justify-center shadow-md transform transition-transform group-hover:scale-105">
-                  <FaIdCard className="text-white text-lg sm:text-xl" />
+              <div
+                className="flex items-center gap-4 bg-gray-50 px-5 py-3.5 rounded-2xl
+                        focus-within:ring-2 focus-within:ring-emerald-400 focus-within:bg-white
+                        transition-all duration-300 group shadow-sm hover:shadow-md"
+              >
+                <div
+                  className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl
+                          flex items-center justify-center shadow-md transform transition-transform
+                          group-hover:scale-105 group-focus-within:scale-105"
+                >
+                  <CreditCard className="text-white text-xl sm:text-2xl" />{" "}
+                  {/* Lucide CreditCard Icon */}
                 </div>
                 <input
                   type="number"
@@ -237,35 +262,57 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
                   value={formData.dni}
                   onChange={handleChange}
                   required
-                  className="flex-1 bg-transparent border-none outline-none text-base sm:text-lg text-gray-800 placeholder-gray-400"
+                  className="flex-1 bg-transparent border-none outline-none
+                       text-base sm:text-xl text-gray-800 placeholder-gray-400
+                       font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" // Tailwind class for number input styling
                 />
               </div>
-              {errorDni && <p className="text-red-500 text-sm">{errorDni}</p>}
-
-              {/* Campo Teléfono */}
-              {/* <div className="flex items-center gap-4 bg-gray-50 px-4 py-3 rounded-xl focus-within:ring-2 focus-within:ring-emerald-400 focus-within:bg-white transition-all duration-200 group">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl flex items-center justify-center shadow-md transform transition-transform group-hover:scale-105">
-                  <FaPhone className="text-white text-lg sm:text-xl" />
+              {/* DNI Error Message */}
+              {errorDni && (
+                <p className="text-red-600 text-sm mt-1 px-2">{errorDni}</p>
+              )}
+              <div
+                className="flex items-center gap-4 bg-gray-50 px-5 py-3.5 rounded-2xl
+                        focus-within:ring-2 focus-within:ring-emerald-400 focus-within:bg-white
+                        transition-all duration-300 group shadow-sm hover:shadow-md"
+              >
+                <div
+                  className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl
+                          flex items-center justify-center shadow-md transform transition-transform
+                          group-hover:scale-105 group-focus-within:scale-105"
+                >
+                  <Phone className="text-white text-xl sm:text-2xl" />{" "}
+                  {/* Lucide CreditCard Icon */}
                 </div>
                 <input
-                  type="tel"
+                  type="text"
                   name="telefono"
-                  placeholder="Teléfono"
+                  placeholder="Telefono"
                   value={formData.telefono}
                   onChange={handleChange}
                   required
-                  className="flex-1 bg-transparent border-none outline-none text-base sm:text-lg text-gray-800 placeholder-gray-400"
+                  className="flex-1 bg-transparent border-none outline-none
+                       text-base sm:text-xl text-gray-800 placeholder-gray-400
+                       font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" // Tailwind class for number input styling
                 />
-              </div> */}
-              {errorTelefono && <p className="text-red-500 text-sm">{errorTelefono}</p>}
+              </div>
+              {errorTelefono && (
+                <p className="text-red-600 text-sm mt-1 px-2">{errorTelefono}</p>
+              )}
             </div>
 
-            {/* Botón Submit */}
+            {/* Submit Button */}
             <button
-              disabled={!formData.nombre || formData.dni.length !== 8}
-              onClick={() => setShowModal(true)}
-              className={`w-full py-4 rounded-xl font-bold text-white text-lg sm:text-xl transition-all duration-300 transform active:scale-95 shadow-lg ${formData.nombre && formData.dni  && formData.dni.length === 8 ? "bg-gradient-to-r from-emerald-500 via-green-500 to-teal-600 hover:from-emerald-600 hover:to-green-700"
-                : "bg-gray-300 cursor-not-allowed"
+              disabled={!formData.nombre || formData.dni.length !== 8 && formData.telefono.lenght !== 10} // Original validation logic
+              onClick={() => setShowModal(true)} // Using the mock modal handler
+              className={`w-full py-4 rounded-xl font-extrabold text-white text-xl sm:text-xl
+                    transition-all duration-300 transform active:scale-98 shadow-xl
+                    ${formData.nombre &&
+                  formData.dni &&
+                  formData.dni.length === 8 &&
+                  formData.telefono.length === 10
+                  ? "bg-gradient-to-r from-emerald-500 via-green-500 to-teal-600 hover:from-emerald-600 hover:to-green-700 hover:shadow-emerald-500/50"
+                  : "bg-gray-300 text-gray-600 cursor-not-allowed shadow-none"
                 }`}
             >
               Continuar
@@ -291,24 +338,27 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
             >
               {/* Título */}
               <div className="bg-gradient-to-r from-emerald-500 to-green-600 py-4 sm:py-5 text-center">
-                <h3 className="text-lg sm:text-xl font-bold uppercase tracking-wide text-white">
+                <h3 className="text-xl sm:text-xl font-bold uppercase tracking-wide text-white">
                   Confirmar solicitud
                 </h3>
               </div>
 
               {/* Contenido scrollable */}
               <div className="overflow-y-auto px-4 sm:px-5 py-4 flex-1">
-
                 {/* Datos del cliente */}
                 <div className="space-y-3 mb-4">
                   {[
-                    { label: "Nombre", value: formData.nombre, icon: <FaUser /> },
+                    {
+                      label: "Nombre",
+                      value: formData.nombre,
+                      icon: <FaUser />,
+                    },
                     { label: "DNI", value: formData.dni, icon: <FaIdCard /> },
-                    // {
-                    //   label: "Teléfono",
-                    //   value: formData.telefono,
-                    //   icon: <FaPhone />,
-                    // },
+                    {
+                      label: "Teléfono",
+                      value: formData.telefono,
+                      icon: <FaPhone />,
+                    },
                     {
                       label: "Precio",
                       value: `$${Math.trunc(turno.precio)}`,
@@ -320,7 +370,10 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
                       icon: <FaMoneyBillWave />,
                     },
                   ].map((item, index) => (
-                    <div key={index} className="flex items-center gap-2 sm:gap-3">
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 sm:gap-3"
+                    >
                       <div className="w-8 h-8 sm:w-9 sm:h-9 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-700">
                         {item.icon}
                       </div>
@@ -335,7 +388,7 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
                 </div>
 
                 {/* Detalles del turno */}
-                <div className="bg-emerald-50 px-4 py-3 mx-2 my-3 rounded-lg border border-emerald-100">
+                <div className="bg-emerald-50 px-4 py-3 mx-2 my-3 rounded-xl border border-emerald-100">
                   <p className="font-semibold text-emerald-800 text-sm sm:text-base mb-1">
                     Detalles del turno:
                   </p>
@@ -355,29 +408,42 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
                     name="metodoPago"
                     value={formData.metodoPago}
                     onChange={handleChange}
-                    className="w-full p-2 sm:p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-sm transition text-sm"
+                    className="w-full p-2 sm:p-3 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-sm transition text-sm"
                   >
                     <option value="efectivo">Efectivo</option>
                     <option value="transferencia">Transferencia</option>
                   </select>
                 </div>
 
+                {/* AVISO IMPORTANTE */}
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded-md shadow-inner mb-4">
+                  <p className="text-yellow-800 text-xs sm:text-sm font-medium">
+                    <span className="inline-block mr-1 align-middle">⚠️</span>
+                    <strong className="font-bold">AVISO:</strong> Tienes{" "}
+                    <span className="font-semibold text-red-600">
+                      30 minutos
+                    </span>{" "}
+                    para enviarle el comprobante de la seña o, si es en
+                    efectivo, coordinar el pago. De lo contrario, la solicitud
+                    se cancelará automáticamente.
+                  </p>
+                </div>
               </div>
 
               {/* Botones */}
               <div className="flex flex-col sm:flex-row gap-2 px-4 sm:px-5 pb-5 pt-2 border-t border-gray-200 bg-gray-50">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="flex-1 py-2 sm:py-3 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-all active:scale-95 text-sm"
+                  className="flex-1 py-2 sm:py-3 px-4 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-100 transition-all active:scale-95 text-sm"
                 >
                   Volver
                 </button>
                 <button
                   onClick={reservarTurno}
                   disabled={isLoading}
-                  className={`flex-1 py-2 sm:py-3 px-4 rounded-lg font-medium text-white transition-all flex items-center justify-center gap-2 active:scale-95 ${isLoading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-md"
+                  className={`flex-1 py-2 sm:py-3 px-4 rounded-xl font-medium text-white transition-all flex items-center justify-center gap-2 active:scale-95 ${isLoading
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-md"
                     } text-sm`}
                 >
                   {isLoading ? (
@@ -432,7 +498,7 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
               {/* Icono de éxito */}
               <div className="flex justify-center mt-6">
                 <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                  <FaWhatsapp className="text-green-500 text-4xl" />
+                  <GiConfirmed className="text-green-500 text-4xl" />
                 </div>
               </div>
 
@@ -443,57 +509,8 @@ Preferí abonar en efectivo. Me pongo a disposición para coordinar lugar y hora
 
               {/* Mensaje principal */}
               <p className="text-gray-600 px-6 mb-6 text-center">
-                {formData.metodoPago === "transferencia"
-                  ? "Contactá con el propietario de la cancha para enviarle el comprobante por la seña."
-                  : "Tu solicitud ha sido enviada exitosamente. El propietario de la cancha espera que abones para confirmar el turno."}
+                Te derivamos con el propietario de la cancha.
               </p>
-
-              {/* Datos bancarios si aplica */}
-              {/* {formData.metodoPago === "transferencia" && (
-          <div className="px-6 mb-6">
-            <div className="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 space-y-3">
-              <h4 className="font-semibold text-blue-800 text-sm">Datos bancarios:</h4>
-
-              <button
-                onClick={() => copiarAlPortapapeles(cancha.alias, "alias")}
-                className="flex items-center justify-between w-full text-left text-sm text-gray-700 hover:text-emerald-600 transition"
-                type="button"
-              >
-                <span><strong>Alias:</strong> {cancha.alias || "No disponible"}</span>
-                <div className="flex items-center gap-1">
-                  <IoCopyOutline className="text-gray-400 hover:text-emerald-600" />
-                  {infoCopiadaAlias && <span className="text-green-500 text-xs ml-1">Copiado</span>}
-                </div>
-              </button>
-
-              <button
-                onClick={() => copiarAlPortapapeles(cancha.cvu, "cvu")}
-                className="flex items-center justify-between w-full text-left text-sm text-gray-700 hover:text-emerald-600 transition"
-                type="button"
-              >
-                <span><strong>CVU / CBU:</strong> {cancha.cvu || "No disponible"}</span>
-                <div className="flex items-center gap-1">
-                  <IoCopyOutline className="text-gray-400 hover:text-emerald-600" />
-                  {infoCopiadaCVU && <span className="text-green-500 text-xs ml-1">Copiado</span>}
-                </div>
-              </button>
-
-              <p className="text-sm text-gray-700"><strong>A nombre de:</strong> {cancha.wallet_nombre}</p>
-              <p className="text-sm text-gray-700"><strong>Banco:</strong> {cancha.wallet_banco}</p>
-            </div>
-          </div>
-        )} */}
-
-              {/* Botón de WhatsApp */}
-              {/* <a
-          href={whatsappLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mx-6 mb-6 flex items-center justify-center gap-2 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-200 active:scale-95 shadow-md"
-          onClick={closeModal}
-        >
-          <FaWhatsapp /> Notificar al propietario
-        </a> */}
             </div>
           </div>
         )}
