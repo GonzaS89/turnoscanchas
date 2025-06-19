@@ -114,7 +114,7 @@ export default function PantallaInicial() {
               <FaCog className="text-4xl text-emerald-600 mr-4 flex-shrink-0 mt-1" />
               <div>
                 <h3 class="text-xl font-semibold text-gray-800 mb-2">
-                  Gestión Fácil y sin Complicaciones
+                  Gestión fácil y sin complicaciones
                 </h3>
                 <p class="text-gray-700 text-base">
                   Tu cancha organizada, sin estrés. Controlá reservas, pagos y horarios desde un solo lugar, de forma simple y eficiente.
